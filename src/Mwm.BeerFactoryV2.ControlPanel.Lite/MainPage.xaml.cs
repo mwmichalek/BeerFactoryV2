@@ -45,6 +45,83 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
 
         public MainPage() {
             this.InitializeComponent();
+        
+
+            //USB\VID_2341 & PID_0042 & REV_0001
+
+            connection = new UsbSerial("VID_2341", "PID_0042");   // COM3
+            //connection = new UsbSerial("VID_2341", "PID_0043");     // COM4
+
+            firmata = new UwpFirmata();
+            arduino = new RemoteDevice(firmata);
+
+            connection.ConnectionEstablished += OnConnectionEstablished;
+       
+                firmata.StringMessageReceived += OnStringMessageReceived;
+                firmata.FirmataConnectionReady += OnFirmataConnectionReady;
+                firmata.FirmataConnectionFailed += OnFirmataConnectionFailed;
+                firmata.FirmataConnectionLost += OnFirmataConnecitonLost;
+
+                Connect();
+        }
+
+        private void Connect() {
+            connection.begin(115200, SerialConfig.SERIAL_8N1);
+            firmata.begin(connection);
+        }
+
+        private async void OnStringMessageReceived(UwpFirmata caller, StringCallbackEventArgs argv) {
+            try {
+                var settingStr = argv.getString().Split('=');
+                var settingName = settingStr[0];
+                var settingValue = settingStr[1];
+                Debug.WriteLine($"Received: {settingName} = {settingValue}");
+
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => {
+                    //if (settingName == "T1") {
+                    //    temp1 = double.Parse(settingValue);
+                    //        //tempGauge1.MainScale.Pointers[0].Value = temp1;
+                    //        //tempDigital1.Value = temp1.ToString("00.00");
+                    //    } else if (settingName == "T2") {
+                    //    temp2 = double.Parse(settingValue);
+                    //        //tempGauge2.MainScale.Pointers[0].Value = temp2;
+                    //        //tempDigital2.Value = temp2.ToString("00.00");
+                    //    } else if (settingName == "T3") {
+                    //    temp3 = double.Parse(settingValue);
+                    //        //tempGauge3.MainScale.Pointers[0].Value = temp3;
+                    //        //tempDigital3.Value = temp3.ToString("00.00");
+                    //    } else if (settingName == "CFG") {
+                    //    Task.Run(PushSettings);
+                    //}
+                });
+
+            } catch (Exception) { }
+        }
+
+        private void OnFirmataConnecitonLost(string message) {
+            Debug.WriteLine("OnFirmataConnecitonLost.");
+        }
+
+        private void OnFirmataConnectionFailed(string message) {
+            Debug.WriteLine("OnFirmataConnectionFailed.");
+        }
+
+        private void OnFirmataConnectionReady() {
+            Debug.WriteLine("OnFirmataConnectionReady.");
+        }
+
+        private void OnConnectionEstablished() {
+            Debug.WriteLine("OnConnectionEstablished.");
+        }
+
+        private async Task PushSettings() {
+            await Task.Run(() => {
+                var msg = $"{heater1.ToString("D3")}:{heater2.ToString("D3")}:{pump1}:{pump2}:{DateTime.Now.ToString("h:mm:ss")}";
+                firmata.sendString(msg);
+                firmata.flush();
+                Debug.WriteLine($"Sent message to Arduino: '{msg}'.");
+            });
         }
     }
 }
