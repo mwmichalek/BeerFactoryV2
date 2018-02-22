@@ -23,7 +23,7 @@ public:
 	void update();
 	void handleCommand();
 	void displayStatus();
-
+	void receiveSettings(String lastCommand);
 
 private:
 	Thermometer* _thermometer1;
@@ -35,6 +35,7 @@ private:
 	double _temperature2;
 	double _temperature3;
 	int _nextDisplayUpdate;
+	String _lastCommand;
 	LiquidCrystal_I2C _lcd = LiquidCrystal_I2C(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 	//String inputString = "";         // a string to hold incoming data

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using System.Threading;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -57,12 +58,14 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
 
             connection.ConnectionEstablished += OnConnectionEstablished;
        
-                firmata.StringMessageReceived += OnStringMessageReceived;
-                firmata.FirmataConnectionReady += OnFirmataConnectionReady;
-                firmata.FirmataConnectionFailed += OnFirmataConnectionFailed;
-                firmata.FirmataConnectionLost += OnFirmataConnecitonLost;
+            firmata.StringMessageReceived += OnStringMessageReceived;
+            firmata.FirmataConnectionReady += OnFirmataConnectionReady;
+            firmata.FirmataConnectionFailed += OnFirmataConnectionFailed;
+            firmata.FirmataConnectionLost += OnFirmataConnecitonLost;
 
-                Connect();
+            Connect();
+
+            Task.Run(() => Ping());
         }
 
         private void Connect() {
@@ -113,6 +116,17 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
 
         private void OnConnectionEstablished() {
             Debug.WriteLine("OnConnectionEstablished.");
+        }
+
+
+        private void Ping() {
+            while (true) {
+                var cmd = $"{DateTime.Now.ToString("HH:mm:ss")}";
+                Debug.WriteLine("\t" + cmd);
+                firmata.sendString(cmd);
+                firmata.flush();
+                Task.Delay(1000).Wait();
+            }
         }
 
         private async Task PushSettings() {

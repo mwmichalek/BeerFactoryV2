@@ -130,11 +130,62 @@ void loop() {
 }
 
 void receiveSettings(char *msg) {
+	String msgString = String(msg);
+	localController.receiveSettings(msgString);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //	isConfigured = true;
 //
 //	//LastMessageReceived = millis();
 //
-	String msgString = String(msg);
+//	String msgString = String(msg);
 //	int heater1Index = msgString.indexOf(':');
 //	int heater2Index = msgString.indexOf(':', heater1Index + 1);
 //	int pump1Index = msgString.indexOf(':', heater2Index + 1);
@@ -148,12 +199,12 @@ void receiveSettings(char *msg) {
 //
 //	//heater1.setPercentage(heater1value);
 //	//heater2.setPercentage(heater2value);
-}
+//}
 
-void sendSetting(String settingName, double settingValue) {
-	String settingStr = settingName + "=" + String(settingValue, 2);
-	Firmata.sendString(settingStr.c_str());
-}
+//void sendSetting(String settingName, double settingValue) {
+//	String settingStr = settingName + "=" + String(settingValue, 2);
+//	Firmata.sendString(settingStr.c_str());
+//}
 
 
 //

@@ -26,7 +26,6 @@ LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermom
 
 	_boilKettle->setPercentage(90);
 	_boilKettle->engage(true);
-
 }
 
 void LocalController::update() {
@@ -35,26 +34,30 @@ void LocalController::update() {
 	_thermometer2->update();
 	_thermometer3->update();
 
-	
 	double newTemperature1 = _thermometer1->currentTemp();
 	if (newTemperature1 != _temperature1) {
-		//Serial.println("BF:T1=" + String(newTemperature1));
-		//Firmata.sendString("BF:T1=" + String(newTemperature1));
-		Firmata.sendString("T1=T1");
+		String temp = "BF:T1=" + String(newTemperature1);
+		char msgCopy[20];
+		temp.toCharArray(msgCopy, 20);
+		Firmata.sendString(msgCopy);
 		_temperature1 = newTemperature1;
 	}
 
 	double newTemperature2 = _thermometer2->currentTemp();
 	if (newTemperature2 != _temperature2) {
-		//Serial.println("BF:T2=" + String(newTemperature2));
-		Firmata.sendString("T2=T2");
+		String temp = "BF:T2=" + String(newTemperature2);
+		char msgCopy[20];
+		temp.toCharArray(msgCopy, 20);
+		Firmata.sendString(msgCopy);
 		_temperature2 = newTemperature2;
 	}
 	
 	double newTemperature3 = _thermometer3->currentTemp();
 	if (newTemperature3 != _temperature3) {
-		//Serial.println("BF:T3=" + String(newTemperature3));
-		Firmata.sendString("T3=T3");
+		String temp = "BF:T3=" + String(newTemperature3);
+		char msgCopy[20];
+		temp.toCharArray(msgCopy, 20);
+		Firmata.sendString(msgCopy);
 		_temperature3 = newTemperature3;
 	}
 
@@ -64,6 +67,10 @@ void LocalController::update() {
 	handleCommand();
 
 	displayStatus();
+}
+
+void LocalController::receiveSettings(String lastCommand) {
+	_lastCommand = lastCommand;
 }
 
 void LocalController::handleCommand() {
@@ -100,17 +107,8 @@ void LocalController::displayStatus() {
 	_lcd.print("T2:" + String(_temperature2));
 	_lcd.setCursor(0, 2);
 	_lcd.print("T3:" + String(_temperature3));
-	
-
-
-	//Serial.println("{BF3:[T1:" + String(_temperature1) + "][T2:" + String(_temperature2) + "][T3:" + String(_temperature3) + "]}");
-	
-	//_lcd.setCursor(0, 3);
-	//_lcd.print(" BK:%" + String(_boilKettle->currentPercentage()));
-
-	//Serial.println("temp1: " + String(_temperature1) + " temp2: " + String(_temperature2) + " temp3: " + String(_temperature3));
-	//Serial.println("hotLiquorTank: " + String(_hotLiquorTank->currentPercentage()) + " " + String(_hotLiquorTank->isEngaged()));
-	//Serial.println("boilKettle: " + String(_boilKettle->currentPercentage()) + " " + String(_boilKettle->isEngaged()));
+	_lcd.setCursor(0, 3);
+	_lcd.print("CMD:" + _lastCommand);
 }
 
 
