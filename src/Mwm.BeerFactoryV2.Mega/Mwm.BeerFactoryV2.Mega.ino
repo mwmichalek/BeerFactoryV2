@@ -1,3 +1,4 @@
+#include <DallasTemperature.h>
 #include <SerialCommand.h>
 #include <Firmata.h>
 #include <Boards.h>
