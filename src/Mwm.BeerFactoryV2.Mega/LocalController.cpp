@@ -1,6 +1,7 @@
 #include <LiquidCrystal_I2C.h>
 #include "LocalController.h"
 #include "Kettle.h"
+#include <Firmata.h>
 
 LocalController::LocalController() {
 }
@@ -37,19 +38,23 @@ void LocalController::update() {
 	
 	double newTemperature1 = _thermometer1->currentTemp();
 	if (newTemperature1 != _temperature1) {
-		Serial.println("BF:T1=" + String(newTemperature1));
+		//Serial.println("BF:T1=" + String(newTemperature1));
+		//Firmata.sendString("BF:T1=" + String(newTemperature1));
+		Firmata.sendString("T1=T1");
 		_temperature1 = newTemperature1;
 	}
 
 	double newTemperature2 = _thermometer2->currentTemp();
 	if (newTemperature2 != _temperature2) {
-		Serial.println("BF:T2=" + String(newTemperature2));
+		//Serial.println("BF:T2=" + String(newTemperature2));
+		Firmata.sendString("T2=T2");
 		_temperature2 = newTemperature2;
 	}
 	
 	double newTemperature3 = _thermometer3->currentTemp();
 	if (newTemperature3 != _temperature3) {
-		Serial.println("BF:T3=" + String(newTemperature3));
+		//Serial.println("BF:T3=" + String(newTemperature3));
+		Firmata.sendString("T3=T3");
 		_temperature3 = newTemperature3;
 	}
 
@@ -62,29 +67,29 @@ void LocalController::update() {
 }
 
 void LocalController::handleCommand() {
-	String command = "";
+	//String command = "";
 
-	while (Serial.available()) {
-		char inChar = (char)Serial.read();
+	//while (Serial.available()) {
+	//	char inChar = (char)Serial.read();
 
-		if (inChar != '\n') 
-			command += inChar;
-		else
-			continue;
-	}
+	//	if (inChar != '\n') 
+	//		command += inChar;
+	//	else
+	//		continue;
+	//}
 
-	if (command == "STATE") {
-		Serial.println("BF:STATE:T1:" + String(_temperature1) +
-			"|T2:" + String(_temperature2) +
-			"|T3:" + String(_temperature3) +
-			"|HLT:" + String(_hotLiquorTank->currentPercentage()) +
-			"|BK:" + String(_boilKettle->currentPercentage()));
-	} else if (command != "") {
-		Serial.println("UNKNOWN_COMAND: " + command);
-		//_lcd.setCursor(0, 3);
-		//_lcd.print(command + "   ");
-	}
-	//Serial.println("HEARD:" + reading);
+	//if (command == "STATE") {
+	//	Serial.println("BF:STATE:T1:" + String(_temperature1) +
+	//		"|T2:" + String(_temperature2) +
+	//		"|T3:" + String(_temperature3) +
+	//		"|HLT:" + String(_hotLiquorTank->currentPercentage()) +
+	//		"|BK:" + String(_boilKettle->currentPercentage()));
+	//} else if (command != "") {
+	//	Serial.println("UNKNOWN_COMAND: " + command);
+	//	//_lcd.setCursor(0, 3);
+	//	//_lcd.print(command + "   ");
+	//}
+	////Serial.println("HEARD:" + reading);
 }
 
 

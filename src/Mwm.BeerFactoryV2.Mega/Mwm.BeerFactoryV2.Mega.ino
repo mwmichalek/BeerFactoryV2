@@ -1,3 +1,8 @@
+#include <FirmataParser.h>
+#include <FirmataMarshaller.h>
+#include <FirmataDefines.h>
+#include <FirmataConstants.h>
+#include <SoftwareSerial.h>
 #include <DallasTemperature.h>
 #include <SerialCommand.h>
 #include <Firmata.h>
@@ -91,10 +96,6 @@ void setup() {
 
 	sensors.begin();
 
-	serialCommand.addCommand("test", test);
-	serialCommand.addCommand("ping", ping);
-	serialCommand.addDefaultHandler(unrecognizedCommand);
-
 	// -------------------- USING SAME PROBE!!!!! ---------------------------
 	thermometer1 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer2 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
@@ -113,6 +114,10 @@ void setup() {
 	digitalWrite(PUMP_PIN_2, HIGH);
 	digitalWrite(PUMP_PIN_3, LOW);
 
+	Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
+	Firmata.attach(STRING_DATA, receiveSettings);
+	Firmata.begin(115200);
+
 	delay(1000);
 }
 
@@ -120,39 +125,47 @@ void setup() {
 void loop() {
 	localController.update();
 
-	//serialCommand.readSerial();
+	if (Firmata.available())
+		Firmata.processInput();
 }
 
 void receiveSettings(char *msg) {
-	isConfigured = true;
-
-	//LastMessageReceived = millis();
-
+//	isConfigured = true;
+//
+//	//LastMessageReceived = millis();
+//
 	String msgString = String(msg);
-	int heater1Index = msgString.indexOf(':');
-	int heater2Index = msgString.indexOf(':', heater1Index + 1);
-	int pump1Index = msgString.indexOf(':', heater2Index + 1);
-	int pump2Index = msgString.indexOf(':', pump1Index + 1);
-
-	int heater1value = msgString.substring(0, heater1Index).toInt();
-	int heater2value = msgString.substring(heater1Index + 1, heater2Index).toInt();
-	int pump1value = msgString.substring(heater2Index + 1, pump1Index).toInt();
-	int pump2value = msgString.substring(pump1Index + 1).toInt();
-	String timestamp = msgString.substring(pump2Index + 1);
-
-	//heater1.setPercentage(heater1value);
-	//heater2.setPercentage(heater2value);
+//	int heater1Index = msgString.indexOf(':');
+//	int heater2Index = msgString.indexOf(':', heater1Index + 1);
+//	int pump1Index = msgString.indexOf(':', heater2Index + 1);
+//	int pump2Index = msgString.indexOf(':', pump1Index + 1);
+//
+//	int heater1value = msgString.substring(0, heater1Index).toInt();
+//	int heater2value = msgString.substring(heater1Index + 1, heater2Index).toInt();
+//	int pump1value = msgString.substring(heater2Index + 1, pump1Index).toInt();
+//	int pump2value = msgString.substring(pump1Index + 1).toInt();
+//	String timestamp = msgString.substring(pump2Index + 1);
+//
+//	//heater1.setPercentage(heater1value);
+//	//heater2.setPercentage(heater2value);
 }
 
-void test() {
-	Serial.println("Test complete");
-}
-
-void ping() {
-	Serial.println("Ping!");
+void sendSetting(String settingName, double settingValue) {
+	String settingStr = settingName + "=" + String(settingValue, 2);
+	Firmata.sendString(settingStr.c_str());
 }
 
 
-void unrecognizedCommand() {
-	Serial.println("UnrecognizedCommand");
-}
+//
+//void test() {
+//	Serial.println("Test complete");
+//}
+//
+//void ping() {
+//	Serial.println("Ping!");
+//}
+//
+//
+//void unrecognizedCommand() {
+//	Serial.println("UnrecognizedCommand");
+//}
