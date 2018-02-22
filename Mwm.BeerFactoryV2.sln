@@ -8,15 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mwm.BeerFactoryV2.ControlPanel.Lite", "src\Mwm.BeerFactoryV2.ControlPanel.Lite\Mwm.BeerFactoryV2.ControlPanel.Lite.csproj", "{75A001F8-47A6-481F-9E33-D9BF8C597A3C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED6F5423-217A-4244-9402-CD161443A16B}"
-	ProjectSection(SolutionItems) = preProject
-		libs\Microsoft.Maker.Firmata.dll = libs\Microsoft.Maker.Firmata.dll
-		libs\Microsoft.Maker.Firmata.winmd = libs\Microsoft.Maker.Firmata.winmd
-		libs\Microsoft.Maker.RemoteWiring.dll = libs\Microsoft.Maker.RemoteWiring.dll
-		libs\Microsoft.Maker.RemoteWiring.winmd = libs\Microsoft.Maker.RemoteWiring.winmd
-		libs\Microsoft.Maker.Serial.dll = libs\Microsoft.Maker.Serial.dll
-		libs\Microsoft.Maker.Serial.winmd = libs\Microsoft.Maker.Serial.winmd
-		libs\WinRTXamlToolkit.dll = libs\WinRTXamlToolkit.dll
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

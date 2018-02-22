@@ -41,20 +41,7 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
         private double temp2 = double.MinValue;
         private double temp3 = double.MinValue;
 
-        //STEP 2: Fill Hot Liquor Tank with water
-        //STEP 3: Heat strike water
-        //STEP 4: Transfer strike water to Mash/Lauter Tun
-        //STEP 5: Mash
-        //STEP 6: Mash-out
-        //STEP 7: Sparge
-        //STEP 8: Boil
-        //STEP 9: Chill
-
-        public ObservableCollection<TemperatureReading> TemperatureReadings = new ObservableCollection<TemperatureReading>();
-
-
-
-
+        //public ObservableCollection<TemperatureReading> TemperatureReadings = new ObservableCollection<TemperatureReading>();
 
         public MainPage() {
             this.InitializeComponent();
