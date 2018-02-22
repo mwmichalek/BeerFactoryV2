@@ -29,6 +29,8 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
     /// </summary>
     public sealed partial class MainPage : Page {
 
+        private enum ConnectionState { Disconnected, Connecting, Connected }; 
+
         private UwpFirmata firmata;
         private UsbSerial connection;
         private RemoteDevice arduino;
@@ -41,6 +43,8 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
         private double temp1 = double.MinValue;
         private double temp2 = double.MinValue;
         private double temp3 = double.MinValue;
+
+        private ConnectionState connectionState = ConnectionState.Disconnected;
 
         //public ObservableCollection<TemperatureReading> TemperatureReadings = new ObservableCollection<TemperatureReading>();
 
@@ -63,14 +67,37 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
             firmata.FirmataConnectionFailed += OnFirmataConnectionFailed;
             firmata.FirmataConnectionLost += OnFirmataConnecitonLost;
 
-            Connect();
+            Task.Run(() => MaintainConnection());
+        }
 
-            Task.Run(() => Ping());
+        private void MaintainConnection() {
+            while (true) {
+                if (connectionState == ConnectionState.Disconnected) {
+                    Debug.WriteLine("Disconnected:");
+                    Connect();
+                } else if (connectionState == ConnectionState.Connecting) {
+                    Debug.WriteLine("Connecting:");
+                    // if waiting to long, try to connect again
+                } else {
+                    var cmd = $"{DateTime.Now.ToString("HH:mm:ss")}";
+                    Debug.WriteLine("Connected: " + cmd);
+                    firmata.sendString(cmd);
+                    firmata.flush();
+                }
+
+                Task.Delay(1000).Wait();
+            }
         }
 
         private void Connect() {
-            connection.begin(115200, SerialConfig.SERIAL_8N1);
-            firmata.begin(connection);
+
+            if (connectionState != ConnectionState.Connected) {
+                Task.Run(() => {
+                    connection.begin(115200, SerialConfig.SERIAL_8N1);
+                    firmata.begin(connection);
+                    connectionState = ConnectionState.Connecting;
+                });
+            }            
         }
 
         private async void OnStringMessageReceived(UwpFirmata caller, StringCallbackEventArgs argv) {
@@ -82,18 +109,20 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
 
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => {
-                    //if (settingName == "T1") {
-                    //    temp1 = double.Parse(settingValue);
-                    //        //tempGauge1.MainScale.Pointers[0].Value = temp1;
-                    //        //tempDigital1.Value = temp1.ToString("00.00");
-                    //    } else if (settingName == "T2") {
-                    //    temp2 = double.Parse(settingValue);
-                    //        //tempGauge2.MainScale.Pointers[0].Value = temp2;
-                    //        //tempDigital2.Value = temp2.ToString("00.00");
-                    //    } else if (settingName == "T3") {
-                    //    temp3 = double.Parse(settingValue);
-                    //        //tempGauge3.MainScale.Pointers[0].Value = temp3;
-                    //        //tempDigital3.Value = temp3.ToString("00.00");
+                    if (settingName == "BF:T1") {
+                        temp1 = double.Parse(settingValue);
+                        //tempGauge1.MainScale.Pointers[0].Value = temp1;
+                        //tempDigital1.Value = temp1.ToString("00.00");
+                        Temperature1.Text = temp1.ToString("00.00");
+                    } else if (settingName == "BF:T2") {
+                        temp2 = double.Parse(settingValue);
+                        //tempGauge2.MainScale.Pointers[0].Value = temp2;
+                        //tempDigital2.Value = temp2.ToString("00.00");
+                    } else if (settingName == "BF:T3") {
+                        temp3 = double.Parse(settingValue);
+                    }
+                    //tempGauge3.MainScale.Pointers[0].Value = temp3;
+                    //tempDigital3.Value = temp3.ToString("00.00");
                     //    } else if (settingName == "CFG") {
                     //    Task.Run(PushSettings);
                     //}
@@ -104,14 +133,18 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
 
         private void OnFirmataConnecitonLost(string message) {
             Debug.WriteLine("OnFirmataConnecitonLost.");
+            connectionState = ConnectionState.Disconnected;
+
         }
 
         private void OnFirmataConnectionFailed(string message) {
             Debug.WriteLine("OnFirmataConnectionFailed.");
+            connectionState = ConnectionState.Disconnected;
         }
 
         private void OnFirmataConnectionReady() {
             Debug.WriteLine("OnFirmataConnectionReady.");
+            connectionState = ConnectionState.Connected;
         }
 
         private void OnConnectionEstablished() {
@@ -119,15 +152,7 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
         }
 
 
-        private void Ping() {
-            while (true) {
-                var cmd = $"{DateTime.Now.ToString("HH:mm:ss")}";
-                Debug.WriteLine("\t" + cmd);
-                firmata.sendString(cmd);
-                firmata.flush();
-                Task.Delay(1000).Wait();
-            }
-        }
+        
 
         private async Task PushSettings() {
             await Task.Run(() => {
@@ -137,5 +162,7 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
                 Debug.WriteLine($"Sent message to Arduino: '{msg}'.");
             });
         }
+
     }
+
 }
