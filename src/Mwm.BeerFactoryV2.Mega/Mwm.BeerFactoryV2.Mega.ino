@@ -88,15 +88,12 @@ LocalController localController;
 
 bool isConfigured = false;
 
-
-
 void setup() {
 	Serial.begin(9600);
 	Serial.println("Initializing BrewMachine v3.0 ...");
 
 	sensors.begin();
 
-	// -------------------- USING SAME PROBE!!!!! ---------------------------
 	thermometer1 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer2 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer3 = Thermometer(sensors, probe06, TEMP_READING_CYCLE_IN_MILLIS);
@@ -115,7 +112,7 @@ void setup() {
 	digitalWrite(PUMP_PIN_3, LOW);
 
 	Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
-	Firmata.attach(STRING_DATA, receiveSettings);
+	Firmata.attach(STRING_DATA, receivedCommand);
 	Firmata.begin(115200);
 
 	delay(1000);
@@ -125,13 +122,21 @@ void setup() {
 void loop() {
 	localController.update();
 
-	if (Firmata.available())
+	if (Firmata.available()) {
+		if (!isConfigured) {
+			localController.postStatus();
+			isConfigured = false;
+		}
+
 		Firmata.processInput();
+	} else {
+		isConfigured = false;
+	}
 }
 
-void receiveSettings(char *msg) {
+void receivedCommand(char *msg) {
 	String msgString = String(msg);
-	localController.receiveSettings(msgString);
+	localController.receivedCommand(msgString);
 }
 
 

@@ -118,8 +118,10 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
                         temp2 = double.Parse(settingValue);
                         //tempGauge2.MainScale.Pointers[0].Value = temp2;
                         //tempDigital2.Value = temp2.ToString("00.00");
+                        Temperature2.Text = temp2.ToString("00.00");
                     } else if (settingName == "BF:T3") {
                         temp3 = double.Parse(settingValue);
+                        Temperature3.Text = temp3.ToString("00.00");
                     }
                     //tempGauge3.MainScale.Pointers[0].Value = temp3;
                     //tempDigital3.Value = temp3.ToString("00.00");

@@ -8,6 +8,11 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Name="Temperature1" HorizontalAlignment="Left" Margin="188,258,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
+        <TextBlock x:Name="Temperature1" HorizontalAlignment="Left" Margin="360,79,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
+        <TextBlock x:Name="Temp1Label" HorizontalAlignment="Left" Margin="266,123,0,0" Text="TEMP #1" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="Temperature2" HorizontalAlignment="Left" Margin="359,240,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
+        <TextBlock x:Name="Temp2Label" HorizontalAlignment="Left" Margin="267,284,0,0" Text="TEMP #2" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="Temperature3" HorizontalAlignment="Left" Margin="358,402,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
+        <TextBlock x:Name="Temp3Label" HorizontalAlignment="Left" Margin="272,444,0,0" Text="TEMP #3" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </Page>

@@ -36,29 +36,20 @@ void LocalController::update() {
 
 	double newTemperature1 = _thermometer1->currentTemp();
 	if (newTemperature1 != _temperature1) {
-		String temp = "BF:T1=" + String(newTemperature1);
-		char msgCopy[20];
-		temp.toCharArray(msgCopy, 20);
-		Firmata.sendString(msgCopy);
 		_temperature1 = newTemperature1;
+		postTemperature(1, _temperature1);
 	}
 
 	double newTemperature2 = _thermometer2->currentTemp();
 	if (newTemperature2 != _temperature2) {
-		String temp = "BF:T2=" + String(newTemperature2);
-		char msgCopy[20];
-		temp.toCharArray(msgCopy, 20);
-		Firmata.sendString(msgCopy);
 		_temperature2 = newTemperature2;
+		postTemperature(2, _temperature2);
 	}
 	
 	double newTemperature3 = _thermometer3->currentTemp();
 	if (newTemperature3 != _temperature3) {
-		String temp = "BF:T3=" + String(newTemperature3);
-		char msgCopy[20];
-		temp.toCharArray(msgCopy, 20);
-		Firmata.sendString(msgCopy);
 		_temperature3 = newTemperature3;
+		postTemperature(3, _temperature3);
 	}
 
 	_hotLiquorTank->update();
@@ -69,11 +60,36 @@ void LocalController::update() {
 	displayStatus();
 }
 
-void LocalController::receiveSettings(String lastCommand) {
-	_lastCommand = lastCommand;
+void LocalController::postTemperature(int tempNumber, double temperature) {
+	String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
+	char msgCopy[20];
+	temp.toCharArray(msgCopy, 20);
+	Firmata.sendString(msgCopy);
+}
+
+void LocalController::postStatus() {
+	postTemperature(1, _temperature1);
+	postTemperature(2, _temperature2);
+	postTemperature(3, _temperature3);
+}
+
+void LocalController::receivedCommand(String command) {
+
+	int eqlIndex = command.indexOf("=");
+	if (eqlIndex != -1) {
+		_lastCmd = command.substring(0, eqlIndex - 1);
+		_lastVal = command.substring(eqlIndex + 1, command.length() - 1);
+	} else {
+		_lastCmd = command;
+		_lastVal = "";
+	}
+
 }
 
 void LocalController::handleCommand() {
+	
+
+
 	//String command = "";
 
 	//while (Serial.available()) {
@@ -108,7 +124,7 @@ void LocalController::displayStatus() {
 	_lcd.setCursor(0, 2);
 	_lcd.print("T3:" + String(_temperature3));
 	_lcd.setCursor(0, 3);
-	_lcd.print("CMD:" + _lastCommand);
+	_lcd.print("C:" + _lastCmd + " V:" + _lastVal);
 }
 
 
