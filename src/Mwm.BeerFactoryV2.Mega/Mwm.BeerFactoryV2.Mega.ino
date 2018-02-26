@@ -125,12 +125,13 @@ void loop() {
 	if (Firmata.available()) {
 		if (!isConfigured) {
 			localController.postStatus();
-			isConfigured = false;
+			isConfigured = true;
 		}
 
 		Firmata.processInput();
 	} else {
 		isConfigured = false;
+		localController.connectionStatus(false);
 	}
 }
 

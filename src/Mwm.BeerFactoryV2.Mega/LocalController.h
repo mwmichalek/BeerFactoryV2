@@ -25,6 +25,8 @@ public:
 	void displayStatus();
 	void receivedCommand(String command);
 	void postStatus();
+	void connectionStatus(bool isConnected);
+	
 
 private:
 	Thermometer* _thermometer1;
@@ -38,6 +40,7 @@ private:
 	int _nextDisplayUpdate;
 	String _lastCmd;
 	String _lastVal;
+	int _isConnected;
 	LiquidCrystal_I2C _lcd = LiquidCrystal_I2C(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 	void postTemperature(int tempNumber, double temperature);

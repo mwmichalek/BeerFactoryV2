@@ -68,9 +68,17 @@ void LocalController::postTemperature(int tempNumber, double temperature) {
 }
 
 void LocalController::postStatus() {
+	_isConnected = true;
 	postTemperature(1, _temperature1);
 	postTemperature(2, _temperature2);
 	postTemperature(3, _temperature3);
+}
+
+void LocalController::connectionStatus(bool isConnected) {
+	if (isConnected)
+		_isConnected = 1;
+	else
+		_isConnected = 0;
 }
 
 void LocalController::receivedCommand(String command) {
@@ -87,9 +95,6 @@ void LocalController::receivedCommand(String command) {
 }
 
 void LocalController::handleCommand() {
-	
-
-
 	//String command = "";
 
 	//while (Serial.available()) {
@@ -124,9 +129,5 @@ void LocalController::displayStatus() {
 	_lcd.setCursor(0, 2);
 	_lcd.print("T3:" + String(_temperature3));
 	_lcd.setCursor(0, 3);
-	_lcd.print("C:" + _lastCmd + " V:" + _lastVal);
+	_lcd.print(String(_isConnected) + " C:" + _lastCmd + " V:" + _lastVal);
 }
-
-
-
-
