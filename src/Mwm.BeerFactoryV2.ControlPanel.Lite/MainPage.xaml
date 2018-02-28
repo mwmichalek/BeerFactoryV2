@@ -8,11 +8,85 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Name="Temperature1" HorizontalAlignment="Left" Margin="360,79,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
-        <TextBlock x:Name="Temp1Label" HorizontalAlignment="Left" Margin="266,123,0,0" Text="TEMP #1" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock x:Name="Temperature2" HorizontalAlignment="Left" Margin="359,240,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
-        <TextBlock x:Name="Temp2Label" HorizontalAlignment="Left" Margin="267,284,0,0" Text="TEMP #2" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBlock x:Name="Temperature3" HorizontalAlignment="Left" Margin="358,402,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="72"/>
-        <TextBlock x:Name="Temp3Label" HorizontalAlignment="Left" Margin="272,444,0,0" Text="TEMP #3" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock x:Name="Temp1Label" 
+                   Grid.Row="0"    
+                   Grid.Column="0"  
+                   Text="TEMP #1" 
+                   TextWrapping="Wrap" 
+                   FontSize="72"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+        
+        <TextBlock x:Name="Temperature1" 
+                   Grid.Row="0"    
+                   Grid.Column="1"  
+                   Text="0.0" 
+                   TextWrapping="Wrap" 
+                   FontSize="72"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right" />
+
+        <TextBlock x:Name="Temp2Label" 
+                   Grid.Row="1"    
+                   Grid.Column="0" 
+                   Text="TEMP #2" 
+                   TextWrapping="Wrap" 
+                   FontSize="72"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+        
+        <TextBlock x:Name="Temperature2" 
+                   Grid.Row="1"    
+                   Grid.Column="1" 
+                   Text="0.0" 
+                   TextWrapping="Wrap" 
+                   FontSize="72"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right" />
+        
+        <TextBlock x:Name="Temp3Label" 
+                   Grid.Row="2"    
+                   Grid.Column="0" 
+                   Text="TEMP #3" 
+                   TextWrapping="Wrap"
+                   FontSize="72"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+        
+        <TextBlock x:Name="Temperature3" 
+                   Grid.Row="2"    
+                   Grid.Column="1" 
+                   Text="0.0" 
+                   TextWrapping="Wrap" 
+                   FontSize="72"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right" />
+        
+        <TextBox x:Name="ShitMessage" 
+                 Text="Type Shit Message"
+                 Grid.Row="3"   
+                 Grid.Column="0"  />
+        
+        <Button x:Name="SendShit"    
+                 Grid.Row="3"   
+                 Grid.Column="1"   
+                 Content="Send Shit" 
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Center" Click="SendShit_Click"
+                 />
+
     </Grid>
 </Page>

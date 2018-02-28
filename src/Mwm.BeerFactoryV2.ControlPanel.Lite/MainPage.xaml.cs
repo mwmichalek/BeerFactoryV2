@@ -20,6 +20,9 @@ using Microsoft.Maker.Firmata;
 using Microsoft.Maker.RemoteWiring;
 using Microsoft.Maker.Serial;
 using System.Collections.ObjectModel;
+using Windows.Devices.SerialCommunication;
+using Windows.Devices.Enumeration;
+using Windows.Storage.Streams;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,142 +32,196 @@ namespace Mwm.BeerFactoryV2.ControlPanel.Lite {
     /// </summary>
     public sealed partial class MainPage : Page {
 
-        private enum ConnectionState { Disconnected, Connecting, Connected }; 
-
-        private UwpFirmata firmata;
-        private UsbSerial connection;
-        private RemoteDevice arduino;
-
-        private int heater1 = 0;
-        private int heater2 = 0;
-        private int pump1 = 0;
-        private int pump2 = 0;
-
-        private double temp1 = double.MinValue;
-        private double temp2 = double.MinValue;
-        private double temp3 = double.MinValue;
-
-        private ConnectionState connectionState = ConnectionState.Disconnected;
-
-        //public ObservableCollection<TemperatureReading> TemperatureReadings = new ObservableCollection<TemperatureReading>();
+        private SerialDevice serialPort = null;
+        DataWriter dataWriteObject = null;
+        DataReader dataReaderObject = null;
+        private ObservableCollection<DeviceInformation> listOfDevices;
+        private CancellationTokenSource ReadCancellationTokenSource;
 
         public MainPage() {
-            this.InitializeComponent();
-        
-
-            //USB\VID_2341 & PID_0042 & REV_0001
-
-            connection = new UsbSerial("VID_2341", "PID_0042");   // COM3
-            //connection = new UsbSerial("VID_2341", "PID_0043");     // COM4
-
-            firmata = new UwpFirmata();
-            arduino = new RemoteDevice(firmata);
-
-            connection.ConnectionEstablished += OnConnectionEstablished;
-       
-            firmata.StringMessageReceived += OnStringMessageReceived;
-            firmata.FirmataConnectionReady += OnFirmataConnectionReady;
-            firmata.FirmataConnectionFailed += OnFirmataConnectionFailed;
-            firmata.FirmataConnectionLost += OnFirmataConnecitonLost;
-
-            Task.Run(() => MaintainConnection());
+            InitializeComponent();
+            listOfDevices = new ObservableCollection<DeviceInformation>();
+            ListAvailablePorts();
+            SerialPortConfiguration();
         }
 
-        private void MaintainConnection() {
-            while (true) {
-                if (connectionState == ConnectionState.Disconnected) {
-                    Debug.WriteLine("Disconnected:");
-                    Connect();
-                } else if (connectionState == ConnectionState.Connecting) {
-                    Debug.WriteLine("Connecting:");
-                    // if waiting to long, try to connect again
-                } else {
-                    var cmd = $"{DateTime.Now.ToString("HH:mm:ss")}";
-                    Debug.WriteLine("Connected: " + cmd);
-                    firmata.sendString(cmd);
-                    firmata.flush();
+        private async void ListAvailablePorts() {
+            try {
+                string deviceSelector = SerialDevice.GetDeviceSelector();
+                var deviceInfos = await DeviceInformation.FindAllAsync(deviceSelector);
+                //for (int i = 0; i < deviceInfos.Count; i++) {
+
+                //    listOfDevices.Add(deviceInfos[i]);
+                //    Debug.WriteLine(deviceInfos[i]);
+                //}
+
+                foreach (var deviceInfo in deviceInfos) {
+                    listOfDevices.Add(deviceInfo);
+                    Debug.WriteLine($"Id: {deviceInfo.Id} Name:{deviceInfo.Name} Other: {deviceInfo.Kind}");
                 }
 
-                Task.Delay(1000).Wait();
+                    
+                
+            } catch (Exception ex) {
+                Debug.WriteLine(ex);
             }
         }
 
-        private void Connect() {
+        //private async void ButtonClick(object sender, RoutedEventArgs e) {
+        //    var buttonClicked = sender as Button;
+        //    switch (buttonClicked.Name) {
+        //        case "btnSerialConnect":
+        //            SerialPortConfiguration();
+        //            break;
+        //        case "btnSerialDisconnect":
+        //            SerialPortDisconnect();
+        //            break;
+        //        case "btnAccendiled":
+        //            if (serialPort != null) {
+        //                dataWriteObject = new DataWriter(serialPort.OutputStream);
+        //                await ManageLed("2");
+        //            }
+        //            if (dataWriteObject != null) {
+        //                dataWriteObject.DetachStream();
+        //                dataWriteObject = null;
+        //            }
+        //            break;
+        //        case "btnSpegniled":
+        //            if (serialPort != null) {
+        //                dataWriteObject = new DataWriter(serialPort.OutputStream);
+        //                await ManageLed("1");
+        //            }
+        //            if (dataWriteObject != null) {
+        //                dataWriteObject.DetachStream();
+        //                dataWriteObject = null;
+        //            }
+        //            break;
+        //        case "btnPulse1000ms":
+        //            if (serialPort != null) {
+        //                dataWriteObject = new DataWriter(serialPort.OutputStream);
+        //                await ManageLed("3");
+        //            }
+        //            if (dataWriteObject != null) {
+        //                dataWriteObject.DetachStream();
+        //                dataWriteObject = null;
+        //            }
+        //            break;
+        //        case "btnPulse2000ms":
+        //            if (serialPort != null) {
+        //                dataWriteObject = new DataWriter(serialPort.OutputStream);
+        //                await ManageLed("4");
+        //            }
+        //            if (dataWriteObject != null) {
+        //                dataWriteObject.DetachStream();
+        //                dataWriteObject = null;
+        //            }
+        //            break;
+        //    }
+        //}
 
-            if (connectionState != ConnectionState.Connected) {
-                Task.Run(() => {
-                    connection.begin(115200, SerialConfig.SERIAL_8N1);
-                    firmata.begin(connection);
-                    connectionState = ConnectionState.Connecting;
-                });
-            }            
-        }
+        private async void SerialPortConfiguration() {
 
-        private async void OnStringMessageReceived(UwpFirmata caller, StringCallbackEventArgs argv) {
+            DeviceInformation entry = (DeviceInformation)listOfDevices[0];
             try {
-                var settingStr = argv.getString().Split('=');
-                var settingName = settingStr[0];
-                var settingValue = settingStr[1];
-                Debug.WriteLine($"Received: {settingName} = {settingValue}");
+                serialPort = await SerialDevice.FromIdAsync(entry.Id);
+                serialPort.WriteTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.ReadTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.BaudRate = 9600;
+                serialPort.Parity = SerialParity.None;
+                serialPort.StopBits = SerialStopBitCount.One;
+                serialPort.DataBits = 8;
+                serialPort.Handshake = SerialHandshake.None;
+                ReadCancellationTokenSource = new CancellationTokenSource();
+                Listen();
+            } catch (Exception ex) {
+                Debug.WriteLine(ex);
+            }
+        }
 
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => {
-                    if (settingName == "BF:T1") {
-                        temp1 = double.Parse(settingValue);
-                        //tempGauge1.MainScale.Pointers[0].Value = temp1;
-                        //tempDigital1.Value = temp1.ToString("00.00");
-                        Temperature1.Text = temp1.ToString("00.00");
-                    } else if (settingName == "BF:T2") {
-                        temp2 = double.Parse(settingValue);
-                        //tempGauge2.MainScale.Pointers[0].Value = temp2;
-                        //tempDigital2.Value = temp2.ToString("00.00");
-                        Temperature2.Text = temp2.ToString("00.00");
-                    } else if (settingName == "BF:T3") {
-                        temp3 = double.Parse(settingValue);
-                        Temperature3.Text = temp3.ToString("00.00");
+        private void SerialPortDisconnect() {
+            try {
+                CancelReadTask();
+                CloseDevice();
+                ListAvailablePorts();
+            } catch (Exception ex) {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private async Task SendCommand(string command) {
+
+            Task<UInt32> storeAsyncTask;
+            if (command.Length != 0) {
+                
+                dataWriteObject.WriteString(command);
+                storeAsyncTask = dataWriteObject.StoreAsync().AsTask();
+                UInt32 bytesWritten = await storeAsyncTask;
+                if (bytesWritten > 0) {
+                    Debug.WriteLine("Wrote message");
+                }
+            } 
+        }
+
+        private async void Listen() {
+            try {
+                if (serialPort != null) {
+                    dataReaderObject = new DataReader(serialPort.InputStream);
+                    dataWriteObject = new DataWriter(serialPort.OutputStream);
+                    while (true) {
+                        await ReadData(ReadCancellationTokenSource.Token);
                     }
-                    //tempGauge3.MainScale.Pointers[0].Value = temp3;
-                    //tempDigital3.Value = temp3.ToString("00.00");
-                    //    } else if (settingName == "CFG") {
-                    //    Task.Run(PushSettings);
-                    //}
-                });
+                }
+            } catch (Exception ex) {
 
-            } catch (Exception) { }
+                if (ex.GetType().Name == "TaskCanceledException") {
+                    CloseDevice();
+                } else {
+                    //tbkAllarmi.Text = "Task annullato";
+                }
+            } finally {
+                if (dataReaderObject != null) {
+                    dataReaderObject.DetachStream();
+                    dataReaderObject = null;
+                }
+                if (dataWriteObject != null) {
+                    dataWriteObject.DetachStream();
+                    dataWriteObject = null;
+                }
+            }
         }
 
-        private void OnFirmataConnecitonLost(string message) {
-            Debug.WriteLine("OnFirmataConnecitonLost.");
-            connectionState = ConnectionState.Disconnected;
-
+        private async Task ReadData(CancellationToken cancellationToken) {
+            Task<UInt32> loadAsyncTask;
+            uint ReadBufferLength = 1024;
+            cancellationToken.ThrowIfCancellationRequested();
+            dataReaderObject.InputStreamOptions = InputStreamOptions.Partial;
+            loadAsyncTask = dataReaderObject.LoadAsync(ReadBufferLength).AsTask(cancellationToken);
+            UInt32 bytesRead = await loadAsyncTask;
+            if (bytesRead > 0) {
+                Debug.WriteLine(dataReaderObject.ReadString(bytesRead));
+                //tbkStatusLed.Text = dataReaderObject.ReadString(bytesRead);
+            }
         }
 
-        private void OnFirmataConnectionFailed(string message) {
-            Debug.WriteLine("OnFirmataConnectionFailed.");
-            connectionState = ConnectionState.Disconnected;
+        private void CancelReadTask() {
+            if (ReadCancellationTokenSource != null) {
+                if (!ReadCancellationTokenSource.IsCancellationRequested) {
+                    ReadCancellationTokenSource.Cancel();
+                }
+            }
         }
 
-        private void OnFirmataConnectionReady() {
-            Debug.WriteLine("OnFirmataConnectionReady.");
-            connectionState = ConnectionState.Connected;
+        private void CloseDevice() {
+            if (serialPort != null) {
+                serialPort.Dispose();
+            }
+            serialPort = null;
+            listOfDevices.Clear();
         }
 
-        private void OnConnectionEstablished() {
-            Debug.WriteLine("OnConnectionEstablished.");
+        private async void SendShit_Click(object sender, RoutedEventArgs e) {
+            await SendCommand($"echo {ShitMessage.Text}");
         }
-
-
-        
-
-        private async Task PushSettings() {
-            await Task.Run(() => {
-                var msg = $"{heater1.ToString("D3")}:{heater2.ToString("D3")}:{pump1}:{pump2}:{DateTime.Now.ToString("h:mm:ss")}";
-                firmata.sendString(msg);
-                firmata.flush();
-                Debug.WriteLine($"Sent message to Arduino: '{msg}'.");
-            });
-        }
-
     }
 
 }

@@ -92,6 +92,8 @@ void setup() {
 	Serial.begin(9600);
 	Serial.println("Initializing BrewMachine v3.0 ...");
 
+	//serialCommand.addCommand("echo", Echo);
+
 	sensors.begin();
 
 	thermometer1 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
@@ -111,9 +113,9 @@ void setup() {
 	digitalWrite(PUMP_PIN_2, HIGH);
 	digitalWrite(PUMP_PIN_3, LOW);
 
-	Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
+	/*Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
 	Firmata.attach(STRING_DATA, receivedCommand);
-	Firmata.begin(115200);
+	Firmata.begin(115200);*/
 
 	delay(1000);
 }
@@ -122,7 +124,13 @@ void setup() {
 void loop() {
 	localController.update();
 
-	if (Firmata.available()) {
+	if (Serial.available()) {
+		localController.receivedCommand(Serial.readString());
+	}
+
+	//serialCommand.readSerial();
+
+	/*if (Firmata.available()) {
 		if (!isConfigured) {
 			localController.postStatus();
 			isConfigured = true;
@@ -132,7 +140,12 @@ void loop() {
 	} else {
 		isConfigured = false;
 		localController.connectionStatus(false);
-	}
+	}*/
+}
+
+void Echo() {
+	char *arg = serialCommand.next();
+	Serial.println(arg);
 }
 
 void receivedCommand(char *msg) {
@@ -140,6 +153,104 @@ void receivedCommand(char *msg) {
 	localController.receivedCommand(msgString);
 }
 
+
+
+
+
+
+
+
+
+
+
+//#include <SerialCommand.h>      // Steven Cogswell ArduinoSerialCommand library from https://github.com/scogswell/ArduinoSerialCommand
+//
+//#define DBGMSG(A)    if (dbg){ Serial.print("DBG: "); Serial.println(A);}
+//SerialCommand     serialCommand;
+//boolean           dbg = true;
+//
+////
+//// Initialize the serial command table, I/O pins, and the DHT sensor
+////
+//void setup() {
+//	Serial.begin(9600);
+//	serialCommand.addCommand("ledon", SetLedOn);
+//	serialCommand.addCommand("ledoff", SetLedOff);
+//	serialCommand.addCommand("echo", Echo);
+//	serialCommand.addDefaultHandler(UnrecognizedCommand);
+//}
+//
+////
+//// Read and respond to commands recieved over the serial port
+////
+//void loop() {
+//	serialCommand.readSerial();
+//}
+//
+//void Echo() {
+//	char *arg = serialCommand.next();
+//
+//	if (arg != NULL) {
+//		Serial.println("Echo " + String(arg));
+//	}
+//	else {
+//		DBGMSG(F("led not specified"));
+//	}
+//}
+//
+////
+//// Turn on the LED connected to the specified port
+////
+//void SetLedOn() {
+//	char *arg = serialCommand.next();
+//
+//	if (arg != NULL) {
+//		DBGMSG(F("SetLedOn"));
+//	}
+//	else {
+//		DBGMSG(F("led not specified"));
+//	}
+//}
+//
+////
+//// Turn off the led connected to the specified port
+////
+//void SetLedOff() {
+//	char *arg = serialCommand.next();
+//
+//	if (arg != NULL) {
+//
+//		DBGMSG(F("SetLedOff"));
+//
+//	}
+//	else {
+//		DBGMSG(F("led not specified"));
+//	}
+//}
+//
+////
+//// An unrecognized command was recieved
+////
+//void UnrecognizedCommand() {
+//	DBGMSG(F("Unrecognized command"));
+//	DBGMSG(F(" ledon 3  - turn on led connected to digital I/O 3"));
+//	DBGMSG(F(" ledon 4  - turn on led connected to digital I/O 4"));
+//	DBGMSG(F(" ledon 5  - turn on led connected to digital I/O 5"));
+//	DBGMSG(F(" ledon 6  - turn on led connected to digital I/O 6"));
+//	DBGMSG(F(" ledoff 3 - turn off led connected to digital I/O 3"));
+//	DBGMSG(F(" ledoff 4 - turn off led connected to digital I/O 4"));
+//	DBGMSG(F(" ledoff 5 - turn off led connected to digital I/O 5"));
+//	DBGMSG(F(" ledoff 6 - turn off led connected to digital I/O 6"));
+//	DBGMSG(F(" temp     - read temperature"));
+//	DBGMSG(F(" hum      - read humidity"));
+//	DBGMSG(F(" debug on - turn on debug messages"));
+//	DBGMSG(F(" debug off- turn off debug messages"));
+//}
+//
+//
+//
+//
+//
 
 
 
