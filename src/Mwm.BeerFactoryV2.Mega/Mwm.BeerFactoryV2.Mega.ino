@@ -36,10 +36,10 @@
 #define SSR_PIN_1 5
 #define SSR_PIN_2 6
 
-#define HEATINGELEMENT_PIN_1 1
-#define HEATINGELEMENT_PIN_2 2
-#define HEATINGELEMENT_PIN_3 3
-#define HEATINGELEMENT_PIN_4 4
+//#define HEATINGELEMENT_PIN_1 1
+//#define HEATINGELEMENT_PIN_2 2
+//#define HEATINGELEMENT_PIN_3 3
+//#define HEATINGELEMENT_PIN_4 4
 
 
 
@@ -89,12 +89,10 @@ LocalController localController;
 bool isConfigured = false;
 
 void setup() {
-	Serial.begin(9600);
-	Serial.println("Initializing BrewMachine v3.0 ...");
+	//Serial.begin(9600);
+	//Serial.println("Initializing BrewMachine v3.0 ...");
 
-	//serialCommand.addCommand("echo", Echo);
-
-	sensors.begin();
+	/*sensors.begin();
 
 	thermometer1 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer2 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
@@ -111,24 +109,27 @@ void setup() {
 
 	digitalWrite(PUMP_PIN_1, LOW);
 	digitalWrite(PUMP_PIN_2, HIGH);
-	digitalWrite(PUMP_PIN_3, LOW);
+	digitalWrite(PUMP_PIN_3, LOW);*/
 
-	/*Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
+	//Serial1.begin(57600);
+	// Firmata.begin(Serial1);
+
+	Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
 	Firmata.attach(STRING_DATA, receivedCommand);
-	Firmata.begin(115200);*/
+	Firmata.begin(57600);
 
-	delay(1000);
+	while (!Serial) {
+		; // wait for serial port to connect. Needed for ATmega32u4-based boards and Arduino 101
+	}
+	
 }
 
 
 void loop() {
-	localController.update();
+	//localController.update();
 
-	if (Serial.available()) {
-		localController.receivedCommand(Serial.readString());
-	}
-
-	//serialCommand.readSerial();
+	while (Firmata.available())
+		Firmata.processInput();
 
 	/*if (Firmata.available()) {
 		if (!isConfigured) {
@@ -143,14 +144,10 @@ void loop() {
 	}*/
 }
 
-void Echo() {
-	char *arg = serialCommand.next();
-	Serial.println(arg);
-}
-
 void receivedCommand(char *msg) {
 	String msgString = String(msg);
-	localController.receivedCommand(msgString);
+	Firmata.sendString(msg);
+	//localController.receivedCommand(msgString);
 }
 
 

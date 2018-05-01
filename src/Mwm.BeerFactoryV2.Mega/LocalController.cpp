@@ -62,11 +62,12 @@ void LocalController::update() {
 
 void LocalController::postTemperature(int tempNumber, double temperature) {
 	String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
-	//char msgCopy[20];
-	//temp.toCharArray(msgCopy, 20);
-	//Firmata.sendString(msgCopy);
 	Serial.println(temp);
 }
+
+//char msgCopy[20];
+//temp.toCharArray(msgCopy, 20);
+//Firmata.sendString(msgCopy);
 
 void LocalController::postStatus() {
 	_isConnected = true;
