@@ -88,6 +88,8 @@ enum {
 	kError, // Command to report errors
 	kEcho,
 	kEchoResult,
+	kStatus,
+	kStatusResult,
 	kTempChange,
 	kHeaterChange
 };

@@ -11,6 +11,8 @@ enum {
 	kError, // Command to report errors
 	kEcho,
 	kEchoResult,
+	kStatus,
+	kStatusResult,
 	kTempChange,
 	kHeaterChange
 };
@@ -72,11 +74,12 @@ void LocalController::update() {
 }
 
 void LocalController::postTemperature(int tempNumber, double temperature) {
-	String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
+	//String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
 	//Serial.println(temp);
 
 	_cmdMessenger->sendCmdStart(kTempChange);
-	_cmdMessenger->sendCmdArg(temp);
+	_cmdMessenger->sendCmdArg(tempNumber);
+	_cmdMessenger->sendCmdArg(temperature);
 	_cmdMessenger->sendCmdEnd();
 }
 
