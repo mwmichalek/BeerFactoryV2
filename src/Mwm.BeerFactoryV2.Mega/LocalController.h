@@ -25,6 +25,7 @@ public:
 	void displayStatus();
 	void receivedCommand(String command);
 	void postStatus();
+	void postMsg(String msg);
 	void connectionStatus(bool isConnected);
 	
 

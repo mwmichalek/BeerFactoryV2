@@ -1,7 +1,6 @@
 #include <LiquidCrystal_I2C.h>
 #include "LocalController.h"
 #include "Kettle.h"
-#include <Firmata.h>
 
 LocalController::LocalController() {
 }
@@ -62,12 +61,9 @@ void LocalController::update() {
 
 void LocalController::postTemperature(int tempNumber, double temperature) {
 	String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
-	Serial.println(temp);
+	//Serial.println(temp);
 }
 
-//char msgCopy[20];
-//temp.toCharArray(msgCopy, 20);
-//Firmata.sendString(msgCopy);
 
 void LocalController::postStatus() {
 	_isConnected = true;
@@ -93,8 +89,13 @@ void LocalController::receivedCommand(String command) {
 		_lastCmd = command;
 		_lastVal = "";
 	}
-
 }
+
+void LocalController::postMsg(String msg) {
+	_lcd.setCursor(0, 3);
+	_lcd.print(String(msg));
+}
+
 
 void LocalController::handleCommand() {
 	//String command = "";
@@ -130,6 +131,5 @@ void LocalController::displayStatus() {
 	_lcd.print("T2:" + String(_temperature2));
 	_lcd.setCursor(0, 2);
 	_lcd.print("T3:" + String(_temperature3));
-	_lcd.setCursor(0, 3);
-	_lcd.print(String(_isConnected) + " C:" + _lastCmd + " V:" + _lastVal);
+	
 }

@@ -1,17 +1,10 @@
-#include <FirmataParser.h>
-#include <FirmataMarshaller.h>
-#include <FirmataDefines.h>
-#include <FirmataConstants.h>
-#include <SoftwareSerial.h>
+#include <CmdMessenger.h>
+#include <OneWire.h>
 #include <DallasTemperature.h>
-#include <SerialCommand.h>
-#include <Firmata.h>
-#include <Boards.h>
-#include <PID_v1.h>
-#include "RotaryEncoder.h"
-#include <Button.h>
-#include <TimerOne.h>
-#include <ClickEncoder.h>
+//#include <Boards.h>
+//#include <PID_v1.h>
+//#include "RotaryEncoder.h"
+//#include <TimerOne.h>
 #include <LiquidCrystal_I2C.h>
 #include <utility.h>
 #include <unwind-cxx.h>
@@ -36,10 +29,10 @@
 #define SSR_PIN_1 5
 #define SSR_PIN_2 6
 
-//#define HEATINGELEMENT_PIN_1 1
-//#define HEATINGELEMENT_PIN_2 2
-//#define HEATINGELEMENT_PIN_3 3
-//#define HEATINGELEMENT_PIN_4 4
+#define HEATINGELEMENT_PIN_1 1
+#define HEATINGELEMENT_PIN_2 2
+#define HEATINGELEMENT_PIN_3 3
+#define HEATINGELEMENT_PIN_4 4
 
 
 
@@ -72,8 +65,6 @@ Thermometer thermometer1;
 Thermometer thermometer2;
 Thermometer thermometer3;
 
-SerialCommand serialCommand;
-
 //LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 Kettle hotLiquorTank;
@@ -88,11 +79,39 @@ LocalController localController;
 
 bool isConfigured = false;
 
-void setup() {
-	//Serial.begin(9600);
-	//Serial.println("Initializing BrewMachine v3.0 ...");
+CmdMessenger cmdMessenger = CmdMessenger(Serial);
 
-	/*sensors.begin();
+// This is the list of recognized commands. These can be commands that can either be sent or received. 
+// In order to receive, attach a callback function to these events
+enum {
+	// Commands
+	kAcknowledge, // Command to acknowledge that cmd was received
+	kError, // Command to report errors
+	//kFloatAddition, // Command to request add two floats
+	//kFloatAdditionResult, // Command to report addition result
+	kEcho,
+	kEchoResult,
+	kTempChange
+};
+
+
+void setup() {
+	Serial.begin(57600);
+		//9600
+		//57600
+
+	// Adds newline to every command
+	cmdMessenger.printLfCr();
+
+	// Attach my application's user-defined callback methods
+	attachCommandCallbacks();
+
+	// Send the status to the PC that says the Arduino has booted
+	cmdMessenger.sendCmd(kAcknowledge, "Arduino has started!");
+
+
+
+	sensors.begin();
 
 	thermometer1 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer2 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
@@ -107,230 +126,43 @@ void setup() {
 	pinMode(PUMP_PIN_2, OUTPUT);
 	pinMode(PUMP_PIN_3, OUTPUT);
 
-	digitalWrite(PUMP_PIN_1, LOW);
-	digitalWrite(PUMP_PIN_2, HIGH);
-	digitalWrite(PUMP_PIN_3, LOW);*/
-
-	//Serial1.begin(57600);
-	// Firmata.begin(Serial1);
-
-	Firmata.setFirmwareVersion(FIRMATA_FIRMWARE_MAJOR_VERSION, FIRMATA_FIRMWARE_MINOR_VERSION);
-	Firmata.attach(STRING_DATA, receivedCommand);
-	Firmata.begin(57600);
-
-	while (!Serial) {
-		; // wait for serial port to connect. Needed for ATmega32u4-based boards and Arduino 101
-	}
+	digitalWrite(PUMP_PIN_1, HIGH);
+	digitalWrite(PUMP_PIN_2, LOW);
+	digitalWrite(PUMP_PIN_3, HIGH);
 	
 }
 
 
 void loop() {
-	//localController.update();
-
-	while (Firmata.available())
-		Firmata.processInput();
-
-	/*if (Firmata.available()) {
-		if (!isConfigured) {
-			localController.postStatus();
-			isConfigured = true;
-		}
-
-		Firmata.processInput();
-	} else {
-		isConfigured = false;
-		localController.connectionStatus(false);
-	}*/
+	localController.update();
+	cmdMessenger.feedinSerialData();
 }
 
-void receivedCommand(char *msg) {
-	String msgString = String(msg);
-	Firmata.sendString(msg);
-	//localController.receivedCommand(msgString);
+void attachCommandCallbacks() {
+	// Attach callback methods
+	cmdMessenger.attach(OnUnknownCommand);
+	cmdMessenger.attach(kEcho, OnEcho);
 }
 
+// ------------------  C A L L B A C K S -----------------------
 
+// Called when a received command has no attached function
+void OnUnknownCommand() {
+	cmdMessenger.sendCmd(kError, "Command without attached callback");
+}
 
+// Callback function that responds that Arduino is ready (has booted up)
+void OnArduinoReady() {
+	cmdMessenger.sendCmd(kAcknowledge, "Arduino ready");
+}
 
+void OnEcho() {
+	String s = cmdMessenger.readStringArg();
 
+	localController.postMsg(s);
 
+	cmdMessenger.sendCmdStart(kEchoResult);
+	cmdMessenger.sendCmdArg(s);
+	cmdMessenger.sendCmdEnd();
+}
 
-
-
-
-
-//#include <SerialCommand.h>      // Steven Cogswell ArduinoSerialCommand library from https://github.com/scogswell/ArduinoSerialCommand
-//
-//#define DBGMSG(A)    if (dbg){ Serial.print("DBG: "); Serial.println(A);}
-//SerialCommand     serialCommand;
-//boolean           dbg = true;
-//
-////
-//// Initialize the serial command table, I/O pins, and the DHT sensor
-////
-//void setup() {
-//	Serial.begin(9600);
-//	serialCommand.addCommand("ledon", SetLedOn);
-//	serialCommand.addCommand("ledoff", SetLedOff);
-//	serialCommand.addCommand("echo", Echo);
-//	serialCommand.addDefaultHandler(UnrecognizedCommand);
-//}
-//
-////
-//// Read and respond to commands recieved over the serial port
-////
-//void loop() {
-//	serialCommand.readSerial();
-//}
-//
-//void Echo() {
-//	char *arg = serialCommand.next();
-//
-//	if (arg != NULL) {
-//		Serial.println("Echo " + String(arg));
-//	}
-//	else {
-//		DBGMSG(F("led not specified"));
-//	}
-//}
-//
-////
-//// Turn on the LED connected to the specified port
-////
-//void SetLedOn() {
-//	char *arg = serialCommand.next();
-//
-//	if (arg != NULL) {
-//		DBGMSG(F("SetLedOn"));
-//	}
-//	else {
-//		DBGMSG(F("led not specified"));
-//	}
-//}
-//
-////
-//// Turn off the led connected to the specified port
-////
-//void SetLedOff() {
-//	char *arg = serialCommand.next();
-//
-//	if (arg != NULL) {
-//
-//		DBGMSG(F("SetLedOff"));
-//
-//	}
-//	else {
-//		DBGMSG(F("led not specified"));
-//	}
-//}
-//
-////
-//// An unrecognized command was recieved
-////
-//void UnrecognizedCommand() {
-//	DBGMSG(F("Unrecognized command"));
-//	DBGMSG(F(" ledon 3  - turn on led connected to digital I/O 3"));
-//	DBGMSG(F(" ledon 4  - turn on led connected to digital I/O 4"));
-//	DBGMSG(F(" ledon 5  - turn on led connected to digital I/O 5"));
-//	DBGMSG(F(" ledon 6  - turn on led connected to digital I/O 6"));
-//	DBGMSG(F(" ledoff 3 - turn off led connected to digital I/O 3"));
-//	DBGMSG(F(" ledoff 4 - turn off led connected to digital I/O 4"));
-//	DBGMSG(F(" ledoff 5 - turn off led connected to digital I/O 5"));
-//	DBGMSG(F(" ledoff 6 - turn off led connected to digital I/O 6"));
-//	DBGMSG(F(" temp     - read temperature"));
-//	DBGMSG(F(" hum      - read humidity"));
-//	DBGMSG(F(" debug on - turn on debug messages"));
-//	DBGMSG(F(" debug off- turn off debug messages"));
-//}
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//	isConfigured = true;
-//
-//	//LastMessageReceived = millis();
-//
-//	String msgString = String(msg);
-//	int heater1Index = msgString.indexOf(':');
-//	int heater2Index = msgString.indexOf(':', heater1Index + 1);
-//	int pump1Index = msgString.indexOf(':', heater2Index + 1);
-//	int pump2Index = msgString.indexOf(':', pump1Index + 1);
-//
-//	int heater1value = msgString.substring(0, heater1Index).toInt();
-//	int heater2value = msgString.substring(heater1Index + 1, heater2Index).toInt();
-//	int pump1value = msgString.substring(heater2Index + 1, pump1Index).toInt();
-//	int pump2value = msgString.substring(pump1Index + 1).toInt();
-//	String timestamp = msgString.substring(pump2Index + 1);
-//
-//	//heater1.setPercentage(heater1value);
-//	//heater2.setPercentage(heater2value);
-//}
-
-//void sendSetting(String settingName, double settingValue) {
-//	String settingStr = settingName + "=" + String(settingValue, 2);
-//	Firmata.sendString(settingStr.c_str());
-//}
-
-
-//
-//void test() {
-//	Serial.println("Test complete");
-//}
-//
-//void ping() {
-//	Serial.println("Ping!");
-//}
-//
-//
-//void unrecognizedCommand() {
-//	Serial.println("UnrecognizedCommand");
-//}
