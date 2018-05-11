@@ -1,3 +1,4 @@
+#include <CmdMessenger.h>
 #include <LiquidCrystal_I2C.h>
 #include "LocalController.h"
 #include "Kettle.h"
@@ -5,13 +6,24 @@
 LocalController::LocalController() {
 }
 
+enum {
+	kAcknowledge, // Command to acknowledge that cmd was received
+	kError, // Command to report errors
+	kEcho,
+	kEchoResult,
+	kTempChange,
+	kHeaterChange
+};
+
 LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
-							     Kettle* hotLiquorTank, Kettle* boilKettle) {
+							     Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
 	_thermometer1 = thermometer1;
 	_thermometer2 = thermometer2;
 	_thermometer3 = thermometer3;
 	_hotLiquorTank = hotLiquorTank;
 	_boilKettle = boilKettle;
+
+	_cmdMessenger = cmdMessenger;
 
 	_lcd.begin(20, 4);
 	_lcd.setBacklight(HIGH);
@@ -62,6 +74,10 @@ void LocalController::update() {
 void LocalController::postTemperature(int tempNumber, double temperature) {
 	String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
 	//Serial.println(temp);
+
+	_cmdMessenger->sendCmdStart(kTempChange);
+	_cmdMessenger->sendCmdArg(temp);
+	_cmdMessenger->sendCmdEnd();
 }
 
 

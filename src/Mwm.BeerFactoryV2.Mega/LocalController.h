@@ -19,7 +19,7 @@ class LocalController {
 public:
 	LocalController();
 	LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
-		            Kettle* hotLiquorTank, Kettle* boilKettle);
+		            Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger);
 	void update();
 	void handleCommand();
 	void displayStatus();
@@ -35,6 +35,7 @@ private:
 	Thermometer* _thermometer3;
 	Kettle* _hotLiquorTank;
 	Kettle* _boilKettle;
+	CmdMessenger* _cmdMessenger;
 	double _temperature1;
 	double _temperature2;
 	double _temperature3;

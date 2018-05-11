@@ -84,14 +84,12 @@ CmdMessenger cmdMessenger = CmdMessenger(Serial);
 // This is the list of recognized commands. These can be commands that can either be sent or received. 
 // In order to receive, attach a callback function to these events
 enum {
-	// Commands
 	kAcknowledge, // Command to acknowledge that cmd was received
 	kError, // Command to report errors
-	//kFloatAddition, // Command to request add two floats
-	//kFloatAdditionResult, // Command to report addition result
 	kEcho,
 	kEchoResult,
-	kTempChange
+	kTempChange,
+	kHeaterChange
 };
 
 
@@ -120,7 +118,7 @@ void setup() {
 	hotLiquorTank = Kettle(SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2);
 	boilKettle = Kettle(SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4);
 
-	localController = LocalController(&thermometer1, &thermometer2, &thermometer3, &hotLiquorTank, &boilKettle);
+	localController = LocalController(&thermometer1, &thermometer2, &thermometer3, &hotLiquorTank, &boilKettle, &cmdMessenger);
 
 	pinMode(PUMP_PIN_1, OUTPUT);
 	pinMode(PUMP_PIN_2, OUTPUT);
