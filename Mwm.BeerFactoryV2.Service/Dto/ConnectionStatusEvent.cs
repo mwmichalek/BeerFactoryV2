@@ -10,7 +10,8 @@ namespace Mwm.BeerFactoryV2.Service.Dto {
         public enum EventType {
             Disconnected,
             Connected,
-            NotConnected
+            NotConnected,
+            Ready
         }
 
         public EventType Type { get; set; }

@@ -77,15 +77,12 @@ void LocalController::update() {
 }
 
 void LocalController::postTemperature(int tempNumber, double temperature) {
-	//String temp = "BF:T" + String(tempNumber) + "=" + String(temperature);
-	//Serial.println(temp);
-
-	_cmdMessenger->sendCmdStart(kTempChange);
-	_cmdMessenger->sendCmdArg(tempNumber);
-	_cmdMessenger->sendCmdArg(temperature);
-	//_cmdMessenger->sendCmdSciArg(temperature);
-
-	_cmdMessenger->sendCmdEnd();
+	if (temperature != 185) {
+		_cmdMessenger->sendCmdStart(kTempChange);
+		_cmdMessenger->sendCmdArg(tempNumber);
+		_cmdMessenger->sendCmdArg(temperature);
+		_cmdMessenger->sendCmdEnd();
+	}
 }
 
 

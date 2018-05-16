@@ -31,14 +31,11 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private static ArduinoController _controllerInstance;
 
-        //public event TemperatureChangeHandler TemperatureChange { get; set; }
-
-
-
         public EventHandler<ConnectionStatusEvent> ConnectionStatusEventHandler { get; set; }
         public EventHandler<TemperatureResult> TemperatureResultEventHandler { get; set; }
 
-        
+        public EventHandler<HeaterResult> HeaterResultEventHandler { get; set; }
+
 
         private ArduinoController() {
 
@@ -98,7 +95,6 @@ namespace Mwm.BeerFactoryV2.Service {
         }
 
 
-
         public void Ping() {
             var pingCommand = new SendCommand((int)Command.PingRequest, (int)Command.PingResult, 2000);
             var pingResultCommand = _cmdMessenger.SendCommand(pingCommand);
@@ -118,7 +114,10 @@ namespace Mwm.BeerFactoryV2.Service {
         // ------------------  C A L L B A C K S ---------------------
 
         private void OnHeaterChange(ReceivedCommand receivedCommand) {
-            Console.WriteLine(@"Received HeaterChange > " + receivedCommand.CommandString());
+            int.TryParse(receivedCommand.ReadStringArg(), out int heaterNumber);
+            int.TryParse(receivedCommand.ReadStringArg(), out int heaterValue);
+
+            HeaterResultEventHandler.Invoke(this, new HeaterResult { Number = heaterNumber, IsOn = heaterNumber == 1 });
         }
 
         private void OnTempChange(ReceivedCommand receivedCommand) {
@@ -126,18 +125,15 @@ namespace Mwm.BeerFactoryV2.Service {
             decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
 
             TemperatureResultEventHandler.Invoke(this, new TemperatureResult { Number = probeNumber, Value = temp });
-
-            //Console.WriteLine($"Received TempChange > num[{probeNumber}] temp[{temp}]");
         }
 
-        // Called when a received command has no attached function.
         void OnUnknownCommand(ReceivedCommand arguments) {
             Console.WriteLine("Command without attached callback received");
         }
 
-        // Callback function that prints that the Arduino has acknowledged
+
         void OnAcknowledge(ReceivedCommand arguments) {
-            Console.WriteLine(" Arduino is ready");
+            ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Ready });
         }
 
         // Callback function that prints that the Arduino has experienced an error

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ArduinoController.cs" />
     <Compile Include="Dto\ConnectionStatusEvent.cs" />
+    <Compile Include="Dto\HeaterResult.cs" />
     <Compile Include="Dto\KettleCommand.cs" />
     <Compile Include="Dto\KettleResult.cs" />
     <Compile Include="Dto\PumpResult.cs" />
