@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommandMessenger;
 using CommandMessenger.Transport.Serial;
+using System.Threading;
 
 namespace Mwm.BeerFactoryV2.Service {
     public class ArduinoController {
@@ -13,17 +14,60 @@ namespace Mwm.BeerFactoryV2.Service {
         enum Command {
             Acknowledge,
             Error,
-            Echo,
-            EchoResult,
-            Status,
+            PingRequest,
+            PingResult,
+            StatusRequest,
             StatusResult,
+            KettleRequest,
+            KettleResult,
             TempChange,
-            HeaterChange
+            HeaterChange,
+            PumpChange
         };
 
         private SerialTransport _serialTransport;
         private CmdMessenger _cmdMessenger;
-        public bool RunLoop { get; set; }
+        public bool IsConnected { get; set; }
+
+        private static ArduinoController _controllerInstance;
+
+        //public event TemperatureChangeHandler TemperatureChange { get; set; }
+
+
+
+        public EventHandler<ConnectionStatusEvent> ConnectionStatusEventHandler { get; set; }
+        public EventHandler<TemperatureResult> TemperatureResultEventHandler { get; set; }
+
+        
+
+        private ArduinoController() {
+
+        }
+
+        public static ArduinoController Current {
+            get {
+                if (_controllerInstance == null)
+                    _controllerInstance = new ArduinoController();
+                return _controllerInstance;
+            }
+        }
+
+        public void Run() {
+            while (true) {
+                if (Setup()) {
+                    while (IsConnected) {
+                        Ping();
+                        Thread.Sleep(1000);
+                    }
+                    Exit();
+                    ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Disconnected });
+                } else {
+                    ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.NotConnected });
+                }
+
+                Thread.Sleep(1000);
+            }
+        }
 
 
         public bool Setup() {
@@ -40,46 +84,30 @@ namespace Mwm.BeerFactoryV2.Service {
             _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
 
             _cmdMessenger.NewLineReceived += NewLineReceived;
-
             _cmdMessenger.NewLineSent += NewLineSent;
 
-            // Start listening
-            return _cmdMessenger.Connect();
+            IsConnected = _cmdMessenger.Connect();
+
+            if (IsConnected) {
+                ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
+                
+                //TODO: Request Status
+            }
+
+            return IsConnected;
         }
 
-        public void Loop() {
-            // Create command FloatAddition, which will wait for a return command FloatAdditionResult
-            var command = new SendCommand((int)Command.Echo, (int)Command.EchoResult, 1000);
 
 
-            command.AddArgument(DateTime.Now.ToString("mm:ss"));
-
-            // Send command
-            var echoResultCommand = _cmdMessenger.SendCommand(command);
-
-            // Check if received a (valid) response
-            if (echoResultCommand.Ok) {
-                // Read returned argument
-                var msg = echoResultCommand.ReadStringArg();
-                //Console.WriteLine($"Received {msg}");
-                RunLoop = true;
-
-            } else {
-                Console.WriteLine("No response!");
-
-                // Stop running loop
-                RunLoop = false;
-            }
+        public void Ping() {
+            var pingCommand = new SendCommand((int)Command.PingRequest, (int)Command.PingResult, 2000);
+            var pingResultCommand = _cmdMessenger.SendCommand(pingCommand);
+            IsConnected = pingResultCommand.Ok;
         }
 
         public void Exit() {
-            // Stop listening
             _cmdMessenger.Disconnect();
-
-            // Dispose Command Messenger
             _cmdMessenger.Dispose();
-
-            // Dispose Serial Port object
             _serialTransport.Dispose();
         }
 
@@ -94,11 +122,12 @@ namespace Mwm.BeerFactoryV2.Service {
         }
 
         private void OnTempChange(ReceivedCommand receivedCommand) {
-            var msg = receivedCommand.ReadStringArg();
-            int tempNumber = receivedCommand.ReadBinInt32Arg();
-            double temp = receivedCommand.ReadDoubleArg();
+            int.TryParse(receivedCommand.ReadStringArg(), out int probeNumber);
+            decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
 
-            Console.WriteLine($"Received TempChange > {msg} {tempNumber} {temp}");
+            TemperatureResultEventHandler.Invoke(this, new TemperatureResult { Number = probeNumber, Value = temp });
+
+            //Console.WriteLine($"Received TempChange > num[{probeNumber}] temp[{temp}]");
         }
 
         // Called when a received command has no attached function.
@@ -118,12 +147,15 @@ namespace Mwm.BeerFactoryV2.Service {
 
         // Log received line to console
         private void NewLineReceived(object sender, CommandEventArgs e) {
-            Console.WriteLine(@"Received > " + e.Command.CommandString());
+            //Console.WriteLine(@"Received > " + e.Command.CommandString());
+            //foreach (var arg in e.Command.Arguments) {
+            //    Console.WriteLine($"Arg: {arg}");
+            //}
         }
 
         // Log sent line to console
         private void NewLineSent(object sender, CommandEventArgs e) {
-            Console.WriteLine(@"Sent > " + e.Command.CommandString());
+            //Console.WriteLine(@"Sent > " + e.Command.CommandString());
         }
 
     }

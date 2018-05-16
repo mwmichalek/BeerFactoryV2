@@ -9,6 +9,6 @@ namespace Mwm.BeerFactoryV2.Service.Dto {
 
         public int Number { get; set; }
 
-        public float Value { get; set; }
+        public decimal Value { get; set; }
     }
 }

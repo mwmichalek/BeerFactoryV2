@@ -7,14 +7,17 @@ LocalController::LocalController() {
 }
 
 enum {
-	kAcknowledge, // Command to acknowledge that cmd was received
-	kError, // Command to report errors
-	kEcho,
-	kEchoResult,
-	kStatus,
+	kAcknowledge,
+	kError,
+	kPingRequest,
+	kPingResult,
+	kStatusRequest,
 	kStatusResult,
+	kKettleRequest,
+	kKettleResult,
 	kTempChange,
-	kHeaterChange
+	kHeaterChange,
+	kPumpChange
 };
 
 LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
@@ -80,6 +83,8 @@ void LocalController::postTemperature(int tempNumber, double temperature) {
 	_cmdMessenger->sendCmdStart(kTempChange);
 	_cmdMessenger->sendCmdArg(tempNumber);
 	_cmdMessenger->sendCmdArg(temperature);
+	//_cmdMessenger->sendCmdSciArg(temperature);
+
 	_cmdMessenger->sendCmdEnd();
 }
 

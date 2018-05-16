@@ -81,35 +81,23 @@ bool isConfigured = false;
 
 CmdMessenger cmdMessenger = CmdMessenger(Serial);
 
-// This is the list of recognized commands. These can be commands that can either be sent or received. 
-// In order to receive, attach a callback function to these events
 enum {
-	kAcknowledge, // Command to acknowledge that cmd was received
-	kError, // Command to report errors
-	kEcho,
-	kEchoResult,
-	kStatus,
+	kAcknowledge, 
+	kError, 
+	kPingRequest,
+	kPingResult,
+	kStatusRequest,
 	kStatusResult,
+	kKettleRequest,
+	kKettleResult,
 	kTempChange,
-	kHeaterChange
+	kHeaterChange,
+	kPumpChange
 };
 
 
 void setup() {
 	Serial.begin(57600);
-		//9600
-		//57600
-
-	// Adds newline to every command
-	cmdMessenger.printLfCr();
-
-	// Attach my application's user-defined callback methods
-	attachCommandCallbacks();
-
-	// Send the status to the PC that says the Arduino has booted
-	cmdMessenger.sendCmd(kAcknowledge, "Arduino has started!");
-
-
 
 	sensors.begin();
 
@@ -129,6 +117,8 @@ void setup() {
 	digitalWrite(PUMP_PIN_1, HIGH);
 	digitalWrite(PUMP_PIN_2, LOW);
 	digitalWrite(PUMP_PIN_3, HIGH);
+
+	configureCmdMessenger();
 	
 }
 
@@ -138,31 +128,27 @@ void loop() {
 	cmdMessenger.feedinSerialData();
 }
 
-void attachCommandCallbacks() {
-	// Attach callback methods
-	cmdMessenger.attach(OnUnknownCommand);
-	cmdMessenger.attach(kEcho, OnEcho);
+void configureCmdMessenger() {
+	cmdMessenger.printLfCr();
+	cmdMessenger.attach(onUnknownCommand);
+	cmdMessenger.attach(kPingRequest, onPing);
+	onArduinoReady();
 }
 
 // ------------------  C A L L B A C K S -----------------------
 
 // Called when a received command has no attached function
-void OnUnknownCommand() {
+void onUnknownCommand() {
 	cmdMessenger.sendCmd(kError, "Command without attached callback");
 }
 
 // Callback function that responds that Arduino is ready (has booted up)
-void OnArduinoReady() {
+void onArduinoReady() {
 	cmdMessenger.sendCmd(kAcknowledge, "Arduino ready");
 }
 
-void OnEcho() {
-	String s = cmdMessenger.readStringArg();
-
-	localController.postMsg(s);
-
-	cmdMessenger.sendCmdStart(kEchoResult);
-	cmdMessenger.sendCmdArg(s);
+void onPing() {
+	cmdMessenger.sendCmdStart(kPingResult);
 	cmdMessenger.sendCmdEnd();
 }
 
