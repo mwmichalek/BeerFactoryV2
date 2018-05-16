@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandMessenger">
+      <HintPath>..\libs\CommandMessenger.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandMessenger.Transport.Serial">
+      <HintPath>..\libs\CommandMessenger.Transport.Serial.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
