@@ -2,23 +2,24 @@
 #include <LiquidCrystal_I2C.h>
 #include "LocalController.h"
 #include "Kettle.h"
+#include "Events.h"
 
 LocalController::LocalController() {
 }
 
-enum {
-	kAcknowledge,
-	kError,
-	kPingRequest,
-	kPingResult,
-	kStatusRequest,
-	kStatusResult,
-	kKettleRequest,
-	kKettleResult,
-	kTempChange,
-	kHeaterChange,
-	kPumpChange
-};
+//enum {
+//	kAcknowledge,
+//	kError,
+//	kPingRequest,
+//	kPingResult,
+//	kStatusRequest,
+//	kStatusResult,
+//	kKettleRequest,
+//	kKettleResult,
+//	kTempChange,
+//	kHeaterChange,
+//	kPumpChange
+//};
 
 LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
 							     Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
@@ -78,7 +79,7 @@ void LocalController::update() {
 
 void LocalController::postTemperature(int tempNumber, double temperature) {
 	if (temperature != 185) {
-		_cmdMessenger->sendCmdStart(kTempChange);
+		_cmdMessenger->sendCmdStart(Events::kTempChange);
 		_cmdMessenger->sendCmdArg(tempNumber);
 		_cmdMessenger->sendCmdArg(temperature);
 		_cmdMessenger->sendCmdEnd();

@@ -1,3 +1,4 @@
+#include "Events.h"
 #include <CmdMessenger.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -81,19 +82,19 @@ bool isConfigured = false;
 
 CmdMessenger cmdMessenger = CmdMessenger(Serial);
 
-enum {
-	kAcknowledge, 
-	kError, 
-	kPingRequest,
-	kPingResult,
-	kStatusRequest,
-	kStatusResult,
-	kKettleRequest,
-	kKettleResult,
-	kTempChange,
-	kHeaterChange,
-	kPumpChange
-};
+//enum {
+//	kAcknowledge, 
+//	kError, 
+//	kPingRequest,
+//	kPingResult,
+//	kStatusRequest,
+//	kStatusResult,
+//	kKettleRequest,
+//	kKettleResult,
+//	kTempChange,
+//	kHeaterChange,
+//	kPumpChange
+//};
 
 
 void setup() {
@@ -105,8 +106,8 @@ void setup() {
 	thermometer2 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer3 = Thermometer(sensors, probe06, TEMP_READING_CYCLE_IN_MILLIS);
 
-	hotLiquorTank = Kettle(SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2);
-	boilKettle = Kettle(SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4);
+	hotLiquorTank = Kettle(SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2, &cmdMessenger);
+	boilKettle = Kettle(SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4, &cmdMessenger);
 
 	localController = LocalController(&thermometer1, &thermometer2, &thermometer3, &hotLiquorTank, &boilKettle, &cmdMessenger);
 
@@ -131,7 +132,7 @@ void loop() {
 void configureCmdMessenger() {
 	cmdMessenger.printLfCr();
 	cmdMessenger.attach(onUnknownCommand);
-	cmdMessenger.attach(kPingRequest, onPing);
+	cmdMessenger.attach(Events::kPingRequest, onPing);
 	onArduinoReady();
 }
 
@@ -139,16 +140,16 @@ void configureCmdMessenger() {
 
 // Called when a received command has no attached function
 void onUnknownCommand() {
-	cmdMessenger.sendCmd(kError, "Command without attached callback");
+	cmdMessenger.sendCmd(Events::kError, "Command without attached callback");
 }
 
 // Callback function that responds that Arduino is ready (has booted up)
 void onArduinoReady() {
-	cmdMessenger.sendCmd(kAcknowledge, "Arduino ready");
+	cmdMessenger.sendCmd(Events::kAcknowledge, "Arduino ready");
 }
 
 void onPing() {
-	cmdMessenger.sendCmdStart(kPingResult);
+	cmdMessenger.sendCmdStart(Events::kPingResult);
 	cmdMessenger.sendCmdEnd();
 }
 

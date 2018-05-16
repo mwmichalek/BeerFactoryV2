@@ -1,6 +1,4 @@
-// 
-// 
-// 
+#include <CmdMessenger.h>
 #include "Arduino.h"
 #include "HeatingElement.h"
 #include "Kettle.h"
@@ -8,8 +6,9 @@
 Kettle::Kettle() {
 }
 
-Kettle::Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2) {
+Kettle::Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2, CmdMessenger* cmdMessenger) {
 	pinMode(ssrPin, OUTPUT);
+	_cmdMessenger = cmdMessenger;
 	_name = name;
 	_ssrPin = ssrPin;
 	_cycleLengthInMillis = cycleLengthInMillis;
@@ -42,6 +41,13 @@ void Kettle::update() {
 			_timeToOff = _timeToOn + _millisOfOn;
 			//Serial.println(_name + ": Off Lagtime: " + millisOff);
 			digitalWrite(_ssrPin, LOW);
+
+			/*_cmdMessenger->sendCmdStart(kTempChange);
+			_cmdMessenger->sendCmdArg(tempNumber);
+			_cmdMessenger->sendCmdArg(temperature);
+			_cmdMessenger->sendCmdEnd();
+*/
+
 		} else if (currentMillis >= _timeToOn) {
 			millisOff = currentMillis - _timeToOn;
 
