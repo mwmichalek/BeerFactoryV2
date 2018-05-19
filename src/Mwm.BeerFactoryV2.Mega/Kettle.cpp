@@ -2,6 +2,7 @@
 #include "Arduino.h"
 #include "HeatingElement.h"
 #include "Kettle.h"
+#include "Events.h"
 
 Kettle::Kettle() {
 }
@@ -13,23 +14,21 @@ Kettle::Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElem
 	_ssrPin = ssrPin;
 	_cycleLengthInMillis = cycleLengthInMillis;
 
-	_heatingElement1 = HeatingElement(heatingElementPin1, name + "1");
-	_heatingElement2 = HeatingElement(heatingElementPin2, name + "2");
+	_heatingElement1 = HeatingElement(heatingElementPin1, name + "1", cmdMessenger);
+	_heatingElement2 = HeatingElement(heatingElementPin2, name + "2", cmdMessenger);
 
 
 	_timeToOn = 0;
 	_timeToOff = 0;
 
-	engage(false);
+	enable(false);
 	setPercentage(0);
 }
 
 void Kettle::update() {
-	//Serial.println("Kettle[" + _name + "]: update " + _percentage);
 	unsigned long currentMillis = millis();
 
 	if (_percentage > 0) {
-		
 
 		// Indicates the lag time between when an event should have happened and when it did.
 		unsigned long millisOff;
@@ -39,22 +38,16 @@ void Kettle::update() {
 
 			_timeToOn = currentMillis + _millisOfOff;
 			_timeToOff = _timeToOn + _millisOfOn;
-			//Serial.println(_name + ": Off Lagtime: " + millisOff);
-			digitalWrite(_ssrPin, LOW);
 
-			/*_cmdMessenger->sendCmdStart(kTempChange);
-			_cmdMessenger->sendCmdArg(tempNumber);
-			_cmdMessenger->sendCmdArg(temperature);
-			_cmdMessenger->sendCmdEnd();
-*/
-
+			engage(true);
+	
 		} else if (currentMillis >= _timeToOn) {
 			millisOff = currentMillis - _timeToOn;
 
 			_timeToOff = currentMillis + _millisOfOn;
 			_timeToOn = _timeToOff + _millisOfOff;
-			//Serial.println(_name + ": On Lagtime :" + millisOff);
-			digitalWrite(_ssrPin, HIGH);
+
+			engage(false);
 		}
 	} else {
 		digitalWrite(_ssrPin, LOW);
@@ -63,23 +56,62 @@ void Kettle::update() {
 	}
 }
 
+bool Kettle::isEnabled() {
+	return _enabled;
+}
+
+void Kettle::enable(bool isEnabled) {
+	_enabled = isEnabled;
+
+	_heatingElement1.enable(_enabled);
+	_heatingElement2.enable(_enabled);
+
+	update();
+}
+
 bool Kettle::isEngaged() {
 	return _engaged;
 }
 
 void Kettle::engage(bool isEngaged) {
-	_engaged = isEngaged;
+	//TODO: Clean this up!
+
+	//bool valueChanged = false;
+	//bool trueEngage = _enabled && isEngaged;
+
+	//if (_isEngaged != trueEngage) {
+	//	_isEngaged = trueEngage;
+	//	valueChanged = true;
+	//}
+	//
+
+	if (isEngaged && (isEngaged != _engaged)) {
+		digitalWrite(_ssrPin, LOW);
+		postStatus(_ssrPin, true);
+	} else if (isEngaged != _engaged) {
+
+		digitalWrite(_ssrPin, HIGH);
+		postStatus(_ssrPin, false);
+	}
 
 	_heatingElement1.engage(isEngaged);
 	_heatingElement2.engage(isEngaged);
 
-	//Serial.println("Kettle[" + _name + "]: engaged: " + String(_engaged));
-	update();
+	_engaged = isEngaged;
+
 }
 
 int Kettle::currentPercentage() {
 	return _percentage;
 }
+
+void Kettle::postStatus(int index, int onOrOff) {
+	_cmdMessenger->sendCmdStart(Events::kSsrChange);
+	_cmdMessenger->sendCmdArg(index);
+	_cmdMessenger->sendCmdArg(onOrOff);
+	_cmdMessenger->sendCmdEnd();
+}
+
 
 void Kettle::setPercentage(int percentage) {
 	// TODO: Validate percentage
@@ -93,7 +125,6 @@ void Kettle::setPercentage(int percentage) {
 		_millisOfOn = 0;
 		_millisOfOff = _cycleLengthInMillis;
 	}
-	//Serial.println("Kettle[" + _name + "]: setPercentage: " + String(_percentage));
 	update();
 }
 

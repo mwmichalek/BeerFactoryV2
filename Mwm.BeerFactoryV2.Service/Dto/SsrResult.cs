@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Dto {
-    public class HeaterResult {
-
+    public class SsrResult {
         public int Index { get; set; }
 
         public bool IsEngaged { get; set; }
+
     }
 }

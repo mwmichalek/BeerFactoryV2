@@ -52,6 +52,7 @@
     <Compile Include="Dto\KettleCommand.cs" />
     <Compile Include="Dto\KettleResult.cs" />
     <Compile Include="Dto\PumpResult.cs" />
+    <Compile Include="Dto\SsrResult.cs" />
     <Compile Include="Dto\StatusCommand.cs" />
     <Compile Include="Dto\StatusResult.cs" />
     <Compile Include="Dto\TemperatureResult.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Mwm.BeerFactoryV2.Service.Dto {
     public class TemperatureResult {
 
-        public int Number { get; set; }
+        public int Index { get; set; }
 
         public decimal Value { get; set; }
     }

@@ -66,8 +66,6 @@ Thermometer thermometer1;
 Thermometer thermometer2;
 Thermometer thermometer3;
 
-//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
-
 Kettle hotLiquorTank;
 Kettle boilKettle;
 
@@ -81,21 +79,6 @@ LocalController localController;
 bool isConfigured = false;
 
 CmdMessenger cmdMessenger = CmdMessenger(Serial);
-
-//enum {
-//	kAcknowledge, 
-//	kError, 
-//	kPingRequest,
-//	kPingResult,
-//	kStatusRequest,
-//	kStatusResult,
-//	kKettleRequest,
-//	kKettleResult,
-//	kTempChange,
-//	kHeaterChange,
-//	kPumpChange
-//};
-
 
 void setup() {
 	Serial.begin(57600);

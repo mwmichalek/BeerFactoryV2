@@ -81,7 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Events.h" />
-    <ClInclude Include="Heater.h" />
     <ClInclude Include="HeatingElement.h" />
     <ClInclude Include="Kettle.h" />
     <ClInclude Include="LocalController.h" />
@@ -94,7 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Events.cpp" />
-    <ClCompile Include="Heater.cpp" />
     <ClCompile Include="HeatingElement.cpp" />
     <ClCompile Include="Kettle.cpp" />
     <ClCompile Include="LocalController.cpp" />

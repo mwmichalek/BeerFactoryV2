@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Mwm.BeerFactoryV2.Service.Dto {
     public class KettleCommand {
 
-        public int Number { get; set; }
+        public int Index { get; set; }
 
         public int Percentage { get; set; }
     }

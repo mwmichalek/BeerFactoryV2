@@ -28,16 +28,26 @@ namespace Mwm.BeerFactoryV2.Console {
 
             controller.ConnectionStatusEventHandler += HandleConnectionStatusEvent;
             controller.TemperatureResultEventHandler += HandleTemperatureResultEvent;
+            controller.SsrResultEventHandler += HandleSsrResultEvent;
+            controller.HeaterResultEventHandler += HandleHeaterResultEvent;
 
             Task.Run(() => controller.Run());
         }
 
         public void HandleTemperatureResultEvent(object sender, TemperatureResult tempertureResult) {
-            System.Console.WriteLine($"TemperatureResult: Number[{tempertureResult.Number}] Value[{tempertureResult.Value}]");
+            System.Console.WriteLine($"TemperatureResult: Index[{tempertureResult.Index}] Value[{tempertureResult.Value}]");
         }
 
         public void HandleConnectionStatusEvent(object sender, ConnectionStatusEvent connectionStatusEvent) {
             System.Console.WriteLine($"ConnectionStatus: {connectionStatusEvent.Type}");
+        }
+
+        public void HandleSsrResultEvent(object sender, SsrResult ssrResult) {
+            System.Console.WriteLine($"SsrResult: Index[{ssrResult.Index}] IsEnaged[{ssrResult.IsEngaged}]");
+        }
+
+        public void HandleHeaterResultEvent(object sender, HeaterResult heaterResult) {
+            System.Console.WriteLine($"HeaterResult: Index[{heaterResult.Index}] IsEnaged[{heaterResult.IsEngaged}]");
         }
 
     }

@@ -23,6 +23,7 @@ public:
 		kKettleRequest,
 		kKettleResult,
 		kTempChange,
+		kSsrChange,
 		kHeaterChange,
 		kPumpChange
 	};

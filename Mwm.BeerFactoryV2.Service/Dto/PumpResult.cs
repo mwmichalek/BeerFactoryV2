@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Mwm.BeerFactoryV2.Service.Dto {
     public class PumpResult {
 
-        public int Number { get; set;}
+        public int Index { get; set;}
 
         public bool IsEngaged { get; set; }
     }

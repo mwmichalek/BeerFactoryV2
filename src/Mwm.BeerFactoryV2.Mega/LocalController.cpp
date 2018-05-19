@@ -39,10 +39,10 @@ LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermom
 
 	//TODO: (Michalek) HARDCODED!!!!
 	_hotLiquorTank->setPercentage(10);
-	_hotLiquorTank->engage(true);
+	_hotLiquorTank->enable(true);
 
 	_boilKettle->setPercentage(90);
-	_boilKettle->engage(true);
+	_boilKettle->enable(true);
 }
 
 void LocalController::update() {

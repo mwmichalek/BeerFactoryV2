@@ -21,6 +21,7 @@ namespace Mwm.BeerFactoryV2.Service {
             KettleRequest,
             KettleResult,
             TempChange,
+            SsrChange,
             HeaterChange,
             PumpChange
         };
@@ -34,8 +35,10 @@ namespace Mwm.BeerFactoryV2.Service {
         public EventHandler<ConnectionStatusEvent> ConnectionStatusEventHandler { get; set; }
         public EventHandler<TemperatureResult> TemperatureResultEventHandler { get; set; }
 
+        public EventHandler<SsrResult> SsrResultEventHandler { get; set; }
         public EventHandler<HeaterResult> HeaterResultEventHandler { get; set; }
 
+        
 
         private ArduinoController() {
 
@@ -57,9 +60,9 @@ namespace Mwm.BeerFactoryV2.Service {
                         Thread.Sleep(1000);
                     }
                     Exit();
-                    ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Disconnected });
+                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Disconnected });
                 } else {
-                    ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.NotConnected });
+                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.NotConnected });
                 }
 
                 Thread.Sleep(1000);
@@ -78,6 +81,7 @@ namespace Mwm.BeerFactoryV2.Service {
             _cmdMessenger.Attach((int)Command.Acknowledge, OnAcknowledge);
             _cmdMessenger.Attach((int)Command.Error, OnError);
             _cmdMessenger.Attach((int)Command.TempChange, OnTempChange);
+            _cmdMessenger.Attach((int)Command.SsrChange, OnSsrChange);
             _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
 
             _cmdMessenger.NewLineReceived += NewLineReceived;
@@ -86,7 +90,7 @@ namespace Mwm.BeerFactoryV2.Service {
             IsConnected = _cmdMessenger.Connect();
 
             if (IsConnected) {
-                ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
+                ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
                 
                 //TODO: Request Status
             }
@@ -113,18 +117,25 @@ namespace Mwm.BeerFactoryV2.Service {
 
         // ------------------  C A L L B A C K S ---------------------
 
+        private void OnSsrChange(ReceivedCommand receivedCommand) {
+            int.TryParse(receivedCommand.ReadStringArg(), out int ssrIndex);
+            int.TryParse(receivedCommand.ReadStringArg(), out int ssrValue);
+
+            SsrResultEventHandler?.Invoke(this, new SsrResult { Index = ssrIndex, IsEngaged = ssrValue == 1 });
+        }
+
         private void OnHeaterChange(ReceivedCommand receivedCommand) {
-            int.TryParse(receivedCommand.ReadStringArg(), out int heaterNumber);
+            int.TryParse(receivedCommand.ReadStringArg(), out int heaterIndex);
             int.TryParse(receivedCommand.ReadStringArg(), out int heaterValue);
 
-            HeaterResultEventHandler.Invoke(this, new HeaterResult { Number = heaterNumber, IsOn = heaterNumber == 1 });
+            HeaterResultEventHandler?.Invoke(this, new HeaterResult { Index = heaterIndex, IsEngaged = heaterIndex == 1 });
         }
 
         private void OnTempChange(ReceivedCommand receivedCommand) {
-            int.TryParse(receivedCommand.ReadStringArg(), out int probeNumber);
+            int.TryParse(receivedCommand.ReadStringArg(), out int probeIndex);
             decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
 
-            TemperatureResultEventHandler.Invoke(this, new TemperatureResult { Number = probeNumber, Value = temp });
+            TemperatureResultEventHandler?.Invoke(this, new TemperatureResult { Index = probeIndex, Value = temp });
         }
 
         void OnUnknownCommand(ReceivedCommand arguments) {
@@ -133,7 +144,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
 
         void OnAcknowledge(ReceivedCommand arguments) {
-            ConnectionStatusEventHandler.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Ready });
+            ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Ready });
         }
 
         // Callback function that prints that the Arduino has experienced an error
