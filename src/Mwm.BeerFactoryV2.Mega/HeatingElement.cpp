@@ -15,8 +15,6 @@ HeatingElement::HeatingElement(int relayPin, const int index, CmdMessenger* cmdM
 	_cmdMessenger = cmdMessenger;
 	_relayPin = relayPin;
 	_index = index;
-	//Serial.println("HeatingElement[" + String(_index) + "]: created.");
-	//engage(false);
 }
 
 HeatingElement::HeatingElement(int relayPin, const String name, CmdMessenger* cmdMessenger) {
@@ -24,26 +22,25 @@ HeatingElement::HeatingElement(int relayPin, const String name, CmdMessenger* cm
 	_cmdMessenger = cmdMessenger;
 	_relayPin = relayPin;
 	_name = name;
-	//engage(false);
 }
 
 void HeatingElement::enable(bool isEnabled) {
-	_isEnabled = isEnabled;
+	_enabled = isEnabled;
 }
 
 void HeatingElement::engage(bool isEngaged) {
 	//TODO: This is still notifying when the value doesn't change.
 	bool valueChanged = false;
-	bool trueEngage = _isEnabled && isEngaged;
+	bool trueEngaged = _enabled && isEngaged;
 
-	if (_isEngaged != trueEngage) {
-		_isEngaged = trueEngage;
+	if (_engaged != trueEngaged) {
+		_engaged = trueEngaged;
 		valueChanged = true;
 	}
 
 	// This doesn't do much but launch events when the parent SSR is engaged.
 	if (valueChanged) {
-		if (trueEngage) 
+		if (_engaged)
 			postStatus(_relayPin, 1);
 		
 		else 	

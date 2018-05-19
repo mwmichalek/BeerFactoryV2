@@ -17,6 +17,8 @@ Kettle::Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElem
 	_heatingElement1 = HeatingElement(heatingElementPin1, name + "1", cmdMessenger);
 	_heatingElement2 = HeatingElement(heatingElementPin2, name + "2", cmdMessenger);
 
+	_heatingElement1.enable(true);
+	_heatingElement2.enable(false);
 
 	_timeToOn = 0;
 	_timeToOff = 0;
@@ -75,30 +77,27 @@ bool Kettle::isEngaged() {
 
 void Kettle::engage(bool isEngaged) {
 	//TODO: Clean this up!
+	bool valueChanged = false;
+	bool trueEngaged = _enabled && isEngaged;
 
-	//bool valueChanged = false;
-	//bool trueEngage = _enabled && isEngaged;
-
-	//if (_isEngaged != trueEngage) {
-	//	_isEngaged = trueEngage;
-	//	valueChanged = true;
-	//}
-	//
-
-	if (isEngaged && (isEngaged != _engaged)) {
-		digitalWrite(_ssrPin, LOW);
-		postStatus(_ssrPin, true);
-	} else if (isEngaged != _engaged) {
-
-		digitalWrite(_ssrPin, HIGH);
-		postStatus(_ssrPin, false);
+	if (_engaged != trueEngaged) {
+		_engaged = trueEngaged;
+		valueChanged = true;
 	}
 
-	_heatingElement1.engage(isEngaged);
-	_heatingElement2.engage(isEngaged);
+	// This doesn't do much but launch events when the parent SSR is engaged.
+	if (valueChanged) {
+		if (trueEngaged) {
+			digitalWrite(_ssrPin, LOW);
+			postStatus(_ssrPin, true);
+		} else {
+			digitalWrite(_ssrPin, HIGH);
+			postStatus(_ssrPin, false);
+		}
 
-	_engaged = isEngaged;
-
+		_heatingElement1.engage(trueEngaged);
+		_heatingElement2.engage(trueEngaged);
+	}
 }
 
 int Kettle::currentPercentage() {

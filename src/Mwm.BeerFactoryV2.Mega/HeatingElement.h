@@ -22,8 +22,8 @@ class HeatingElement {
 	private:
 		CmdMessenger * _cmdMessenger;
 		int _relayPin;
-		bool _isEnabled;
-		bool _isEngaged;
+		bool _enabled;
+		bool _engaged;
 		String _name;
 		int _index;
 };
