@@ -15,13 +15,10 @@ namespace Mwm.BeerFactoryV2.Console {
             System.Console.ReadLine();
 
         }
-
-        
+ 
     }
 
     public class ProgramRunner {
-
- 
 
         public void Run() {
             var controller = ArduinoController.Current;
@@ -29,7 +26,7 @@ namespace Mwm.BeerFactoryV2.Console {
             controller.ConnectionStatusEventHandler += HandleConnectionStatusEvent;
             controller.TemperatureResultEventHandler += HandleTemperatureResultEvent;
             controller.SsrResultEventHandler += HandleSsrResultEvent;
-            //controller.HeaterResultEventHandler += HandleHeaterResultEvent;
+            controller.HeaterResultEventHandler += HandleHeaterResultEvent;
 
             Task.Run(() => controller.Run());
         }

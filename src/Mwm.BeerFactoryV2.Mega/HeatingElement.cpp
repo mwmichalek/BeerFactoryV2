@@ -49,10 +49,10 @@ void HeatingElement::engage(bool isEngaged) {
 }
 
 void HeatingElement::postStatus(int index, int onOrOff) {
-	_cmdMessenger->sendCmdStart(Events::kHeaterChange);
+	/*_cmdMessenger->sendCmdStart(Events::kHeaterChange);
 	_cmdMessenger->sendCmdArg(index);
 	_cmdMessenger->sendCmdArg(onOrOff);
-	_cmdMessenger->sendCmdEnd();
+	_cmdMessenger->sendCmdEnd();*/
 }
 
 
