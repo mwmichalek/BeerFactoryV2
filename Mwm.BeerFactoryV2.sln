@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mwm.BeerFactoryV2.Uwp.Cinch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mwm.BeerFactoryV2.ConsoleCore", "Mwm.BeerFactoryV2.ConsoleCore\Mwm.BeerFactoryV2.ConsoleCore.csproj", "{F1281ECD-3F87-47CD-A171-25E6F291EB6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mwm.BeerFactoryV2.Service", "Mwm.BeerFactoryV2.Service\Mwm.BeerFactoryV2.Service.csproj", "{DDF5A396-3760-4394-93B7-E1754E6F4DD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,22 @@ Global
 		{F1281ECD-3F87-47CD-A171-25E6F291EB6E}.Release|x64.Build.0 = Release|Any CPU
 		{F1281ECD-3F87-47CD-A171-25E6F291EB6E}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1281ECD-3F87-47CD-A171-25E6F291EB6E}.Release|x86.Build.0 = Release|Any CPU
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|ARM.Build.0 = Debug|ARM
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|x64.ActiveCfg = Debug|x64
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|x64.Build.0 = Debug|x64
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|x86.ActiveCfg = Debug|x86
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Debug|x86.Build.0 = Debug|x86
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|ARM.ActiveCfg = Release|ARM
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|ARM.Build.0 = Release|ARM
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|x64.ActiveCfg = Release|x64
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|x64.Build.0 = Release|x64
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|x86.ActiveCfg = Release|x86
+		{DDF5A396-3760-4394-93B7-E1754E6F4DD5}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

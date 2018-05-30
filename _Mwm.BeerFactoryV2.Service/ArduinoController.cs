@@ -89,7 +89,6 @@ namespace Mwm.BeerFactoryV2.Service {
 
             IsConnected = _cmdMessenger.Connect();
 
-
             if (IsConnected) {
                 ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
                 

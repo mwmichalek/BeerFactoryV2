@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -214,9 +214,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mwm.BeerFactoryV2.Svc\Mwm.BeerFactoryV2.Svc.csproj">
-      <Project>{b9b616de-7277-4adb-aa77-156476d16a71}</Project>
-      <Name>Mwm.BeerFactoryV2.Svc</Name>
+    <ProjectReference Include="..\Mwm.BeerFactoryV2.Service\Mwm.BeerFactoryV2.Service.csproj">
+      <Project>{ddf5a396-3760-4394-93b7-e1754e6f4dd5}</Project>
+      <Name>Mwm.BeerFactoryV2.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
