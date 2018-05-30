@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mwm.BeerFactoryV2.Svc\Mwm.BeerFactoryV2.Svc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CommandMessengerStandard">
+      <HintPath>..\libs\CommandMessengerStandard.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandMessengerTransportSerialStandard">
+      <HintPath>..\libs\CommandMessengerTransportSerialStandard.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

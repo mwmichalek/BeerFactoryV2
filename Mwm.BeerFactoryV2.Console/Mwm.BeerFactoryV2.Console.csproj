@@ -49,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mwm.BeerFactoryV2.Service\Mwm.BeerFactoryV2.Service.csproj">
-      <Project>{5DCA1CEF-D77E-4253-B6D0-8B31DB870B0C}</Project>
-      <Name>Mwm.BeerFactoryV2.Service</Name>
+    <ProjectReference Include="..\Mwm.BeerFactoryV2.Svc\Mwm.BeerFactoryV2.Svc.csproj">
+      <Project>{b9b616de-7277-4adb-aa77-156476d16a71}</Project>
+      <Name>Mwm.BeerFactoryV2.Svc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
