@@ -5,6 +5,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using System.Diagnostics;
+using Windows.UI.Xaml;
+using Windows.UI.Core;
 
 namespace Mwm.BeerFactoryV2.Uwp.Cinch.Views {
     public sealed partial class MainPage : Page, INotifyPropertyChanged {
@@ -23,19 +26,27 @@ namespace Mwm.BeerFactoryV2.Uwp.Cinch.Views {
         }
 
         public void HandleTemperatureResultEvent(object sender, TemperatureResult tempertureResult) {
-            System.Console.WriteLine($"TemperatureResult: Index[{tempertureResult.Index}] Value[{tempertureResult.Value}]");
+            Debug.WriteLine($"TemperatureResult: Index[{tempertureResult.Index}] Value[{tempertureResult.Value}]");
+
+            if (tempertureResult.Index == 1) {
+                Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() => {
+                    TemperatureValueText1.Text = $"{tempertureResult.Value}";
+                });
+
+            }
+ 
         }
 
         public void HandleConnectionStatusEvent(object sender, ConnectionStatusEvent connectionStatusEvent) {
-            System.Console.WriteLine($"ConnectionStatus: {connectionStatusEvent.Type}");
+            Debug.WriteLine($"ConnectionStatus: {connectionStatusEvent.Type}");
         }
 
         public void HandleSsrResultEvent(object sender, SsrResult ssrResult) {
-            System.Console.WriteLine($"SsrResult: Index[{ssrResult.Index}] IsEnaged[{ssrResult.IsEngaged}]");
+            Debug.WriteLine($"SsrResult: Index[{ssrResult.Index}] IsEnaged[{ssrResult.IsEngaged}]");
         }
 
         public void HandleHeaterResultEvent(object sender, HeaterResult heaterResult) {
-            System.Console.WriteLine($"HeaterResult: Index[{heaterResult.Index}] IsEnaged[{heaterResult.IsEngaged}]");
+            Debug.WriteLine($"HeaterResult: Index[{heaterResult.Index}] IsEnaged[{heaterResult.IsEngaged}]");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

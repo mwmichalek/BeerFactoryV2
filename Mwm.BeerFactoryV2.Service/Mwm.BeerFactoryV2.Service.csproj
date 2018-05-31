@@ -125,11 +125,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CommandMessengerTransportSerialUwp">
-      <HintPath>..\..\CmdMessenger\CmdMessengerTest\CommandMessengerTransportSerialUwp\bin\Debug\CommandMessengerTransportSerialUwp.dll</HintPath>
+    <Reference Include="CommandMessengerStandard">
+      <HintPath>..\..\CmdMessenger\CmdMessengerTest\CommandMessengerTransportSerialStandard\bin\Debug\netstandard2.0\CommandMessengerStandard.dll</HintPath>
     </Reference>
-    <Reference Include="CommandMessengerUWP">
-      <HintPath>..\..\CmdMessenger\CmdMessengerTest\CommandMessengerTransportSerialUwp\bin\Debug\CommandMessengerUWP.dll</HintPath>
+    <Reference Include="CommandMessengerTransportSerialStandard">
+      <HintPath>..\..\CmdMessenger\CmdMessengerTest\CommandMessengerTransportSerialStandard\bin\Debug\netstandard2.0\CommandMessengerTransportSerialStandard.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

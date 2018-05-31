@@ -11,7 +11,7 @@
         Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <TextBlock x:Name="TemperatureValueText0" HorizontalAlignment="Left" Margin="83,73,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="48"/>
+            <TextBlock x:Name="TemperatureValueText1" HorizontalAlignment="Left" Margin="83,73,0,0" Text="0.0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="48"/>
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->
         </Grid>
