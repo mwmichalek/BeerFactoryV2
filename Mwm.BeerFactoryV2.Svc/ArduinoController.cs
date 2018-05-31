@@ -92,8 +92,8 @@ namespace Mwm.BeerFactoryV2.Service {
 
             if (IsConnected) {
                 ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
-                
-                //TODO: Request Status
+
+                RequestStatus();
             }
 
             return IsConnected;
@@ -112,8 +112,10 @@ namespace Mwm.BeerFactoryV2.Service {
             _serialTransport.Dispose();
         }
 
-        public StatusResult RequestStatus() {
-            return new StatusResult();
+        public void RequestStatus() {
+            var statusCommand = new SendCommand((int)Command.StatusRequest, (int)Command.StatusResult, 2000);
+            var statusResultCommand = _cmdMessenger.SendCommand(statusCommand);
+            var success = statusResultCommand.Ok;
         }
 
         // ------------------  C A L L B A C K S ---------------------

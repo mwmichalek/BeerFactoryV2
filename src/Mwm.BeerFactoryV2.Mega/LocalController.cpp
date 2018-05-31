@@ -77,14 +77,22 @@ void LocalController::update() {
 	displayStatus();
 }
 
-void LocalController::postTemperature(int tempNumber, double temperature) {
+void LocalController::postTemperature(int index, double temperature) {
 	if (temperature != 185) {
 		_cmdMessenger->sendCmdStart(Events::kTempChange);
-		_cmdMessenger->sendCmdArg(tempNumber);
+		_cmdMessenger->sendCmdArg(index);
 		_cmdMessenger->sendCmdArg(temperature);
 		_cmdMessenger->sendCmdEnd();
 	}
 }
+
+void LocalController::postKettle(int index, double percentage) {
+	_cmdMessenger->sendCmdStart(Events::kKettleResult);
+	_cmdMessenger->sendCmdArg(index);
+	_cmdMessenger->sendCmdArg(percentage);
+	_cmdMessenger->sendCmdEnd();
+}
+
 
 
 void LocalController::postStatus() {
@@ -92,6 +100,9 @@ void LocalController::postStatus() {
 	postTemperature(1, _temperature1);
 	postTemperature(2, _temperature2);
 	postTemperature(3, _temperature3);
+
+	//postKettle(1, _hotLiquorTank->currentPercentage);
+	//postKettle(2, _boilKettle->currentPercentage);
 }
 
 void LocalController::connectionStatus(bool isConnected) {

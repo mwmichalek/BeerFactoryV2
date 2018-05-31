@@ -103,7 +103,6 @@ void setup() {
 	digitalWrite(PUMP_PIN_3, HIGH);
 
 	configureCmdMessenger();
-	
 }
 
 
@@ -115,6 +114,7 @@ void loop() {
 void configureCmdMessenger() {
 	cmdMessenger.printLfCr();
 	cmdMessenger.attach(onUnknownCommand);
+	cmdMessenger.attach(Events::kStatusRequest, onStatusRequest);
 	cmdMessenger.attach(Events::kPingRequest, onPing);
 	onArduinoReady();
 }
@@ -124,6 +124,10 @@ void configureCmdMessenger() {
 // Called when a received command has no attached function
 void onUnknownCommand() {
 	cmdMessenger.sendCmd(Events::kError, "Command without attached callback");
+}
+
+void onStatusRequest() {
+	localController.postStatus();
 }
 
 // Callback function that responds that Arduino is ready (has booted up)
