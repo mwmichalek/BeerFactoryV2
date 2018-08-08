@@ -72,7 +72,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         public bool Setup() {
             _serialTransport = new SerialTransport {
-                CurrentSerialSettings = { PortName = "COM4", BaudRate = 57600, DtrEnable = false } // object initializer
+                CurrentSerialSettings = { PortName = "COM3", BaudRate = 57600, DtrEnable = false } // object initializer
             };
 
             _cmdMessenger = new CmdMessenger(_serialTransport, BoardType.Bit32);
