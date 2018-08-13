@@ -3,37 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Mwm.BeerFactoryV2.Uwp.Cinch.Activation;
-using Mwm.BeerFactoryV2.Uwp.Cinch.BackgroundTasks;
-using Mwm.BeerFactoryV2.Uwp.Cinch.Helpers;
+using Mwm.BeerFactoryV2.Uwp.Burger.Activation;
+using Mwm.BeerFactoryV2.Uwp.Burger.BackgroundTasks;
+using Mwm.BeerFactoryV2.Uwp.Burger.Helpers;
 
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 
-namespace Mwm.BeerFactoryV2.Uwp.Cinch.Services {
-    internal class BackgroundTaskService : ActivationHandler<BackgroundActivatedEventArgs> {
+namespace Mwm.BeerFactoryV2.Uwp.Burger.Services
+{
+    internal class BackgroundTaskService : ActivationHandler<BackgroundActivatedEventArgs>
+    {
         public static IEnumerable<BackgroundTask> BackgroundTasks => BackgroundTaskInstances.Value;
 
         private static readonly Lazy<IEnumerable<BackgroundTask>> BackgroundTaskInstances =
             new Lazy<IEnumerable<BackgroundTask>>(() => CreateInstances());
 
-        public async Task RegisterBackgroundTasksAsync() {
+        public async Task RegisterBackgroundTasksAsync()
+        {
             BackgroundExecutionManager.RemoveAccess();
             var result = await BackgroundExecutionManager.RequestAccessAsync();
 
             if (result == BackgroundAccessStatus.DeniedBySystemPolicy
-                || result == BackgroundAccessStatus.DeniedByUser) {
+                || result == BackgroundAccessStatus.DeniedByUser)
+            {
                 return;
             }
 
-            foreach (var task in BackgroundTasks) {
+            foreach (var task in BackgroundTasks)
+            {
                 task.Register();
             }
         }
 
         public static BackgroundTaskRegistration GetBackgroundTasksRegistration<T>()
-            where T : BackgroundTask {
-            if (!BackgroundTaskRegistration.AllTasks.Any(t => t.Value.Name == typeof(T).Name)) {
+            where T : BackgroundTask
+        {
+            if (!BackgroundTaskRegistration.AllTasks.Any(t => t.Value.Name == typeof(T).Name))
+            {
                 // This condition should not be met. If it is it means the background task was not registered correctly.
                 // Please check CreateInstances to see if the background task was properly added to the BackgroundTasks property.
                 return null;
@@ -42,10 +49,12 @@ namespace Mwm.BeerFactoryV2.Uwp.Cinch.Services {
             return (BackgroundTaskRegistration)BackgroundTaskRegistration.AllTasks.FirstOrDefault(t => t.Value.Name == typeof(T).Name).Value;
         }
 
-        public void Start(IBackgroundTaskInstance taskInstance) {
+        public void Start(IBackgroundTaskInstance taskInstance)
+        {
             var task = BackgroundTasks.FirstOrDefault(b => b.Match(taskInstance?.Task?.Name));
 
-            if (task == null) {
+            if (task == null)
+            {
                 // This condition should not be met. It is it it means the background task to start was not found in the background tasks managed by this service.
                 // Please check CreateInstances to see if the background task was properly added to the BackgroundTasks property.
                 return;
@@ -54,16 +63,18 @@ namespace Mwm.BeerFactoryV2.Uwp.Cinch.Services {
             task.RunAsync(taskInstance).FireAndForget();
         }
 
-        protected override async Task HandleInternalAsync(BackgroundActivatedEventArgs args) {
+        protected override async Task HandleInternalAsync(BackgroundActivatedEventArgs args)
+        {
             Start(args.TaskInstance);
 
             await Task.CompletedTask;
         }
 
-        private static IEnumerable<BackgroundTask> CreateInstances() {
+        private static IEnumerable<BackgroundTask> CreateInstances()
+        {
             var backgroundTasks = new List<BackgroundTask>();
 
-            backgroundTasks.Add(new ArduinoControllerTask());
+            backgroundTasks.Add(new ArduinoBackgroundTask());
             return backgroundTasks;
         }
     }

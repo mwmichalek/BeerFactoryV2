@@ -14,67 +14,67 @@ namespace Mwm.BeerFactoryV2.Uwp.Cinch.Views {
         public MainPage() {
             InitializeComponent();
 
-            var controller = ArduinoController.Current;
+            //var controller = ArduinoController.Current;
 
-            controller.ConnectionStatusEventHandler += HandleConnectionStatusEvent;
-            controller.TemperatureResultEventHandler += HandleTemperatureResultEvent;
-            controller.SsrResultEventHandler += HandleSsrResultEvent;
-            controller.HeaterResultEventHandler += HandleHeaterResultEvent;
+            //controller.ConnectionStatusEventHandler += HandleConnectionStatusEvent;
+            //controller.TemperatureResultEventHandler += HandleTemperatureResultEvent;
+            //controller.SsrResultEventHandler += HandleSsrResultEvent;
+            //controller.HeaterResultEventHandler += HandleHeaterResultEvent;
 
-            Task.Run(() => controller.Run());
+            //Task.Run(() => controller.Run());
 
         }
 
-        public void HandleTemperatureResultEvent(object sender, TemperatureResult tempertureResult) {
-            Debug.WriteLine($"TemperatureResult: Index[{tempertureResult.Index}] Value[{tempertureResult.Value}]");
+        //public void HandleTemperatureResultEvent(object sender, TemperatureResult tempertureResult) {
+        //    Debug.WriteLine($"TemperatureResult: Index[{tempertureResult.Index}] Value[{tempertureResult.Value}]");
 
-            switch (tempertureResult.Index) {
-                case 1:
-                    Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        TemperatureValueText1.Text = $"{tempertureResult.Value}";
-                    });
-                    break;
+        //    switch (tempertureResult.Index) {
+        //        case 1:
+        //            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //                TemperatureValueText1.Text = $"{tempertureResult.Value}";
+        //            });
+        //            break;
 
-                case 2:
-                    Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        TemperatureValueText2.Text = $"{tempertureResult.Value}";
-                    });
-                    break;
+        //        case 2:
+        //            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //                TemperatureValueText2.Text = $"{tempertureResult.Value}";
+        //            });
+        //            break;
 
-                case 3:
-                    Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        TemperatureValueText3.Text = $"{tempertureResult.Value}";
-                    });
-                    break;
-            }
+        //        case 3:
+        //            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //                TemperatureValueText3.Text = $"{tempertureResult.Value}";
+        //            });
+        //            break;
+        //    }
  
-        }
+        //}
 
-        public void HandleConnectionStatusEvent(object sender, ConnectionStatusEvent connectionStatusEvent) {
-            Debug.WriteLine($"ConnectionStatus: {connectionStatusEvent.Type}");
-        }
+        //public void HandleConnectionStatusEvent(object sender, ConnectionStatusEvent connectionStatusEvent) {
+        //    Debug.WriteLine($"ConnectionStatus: {connectionStatusEvent.Type}");
+        //}
 
-        public void HandleSsrResultEvent(object sender, SsrResult ssrResult) {
-            Debug.WriteLine($"SsrResult: Index[{ssrResult.Index}] IsEnaged[{ssrResult.IsEngaged}]");
+        //public void HandleSsrResultEvent(object sender, SsrResult ssrResult) {
+        //    Debug.WriteLine($"SsrResult: Index[{ssrResult.Index}] IsEnaged[{ssrResult.IsEngaged}]");
 
-            switch (ssrResult.Index) {
-                case 5:
-                    Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        SsrValueText1.Text = $"{ssrResult.IsEngaged}";
-                    });
-                    break;
+        //    switch (ssrResult.Index) {
+        //        case 5:
+        //            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //                SsrValueText1.Text = $"{ssrResult.IsEngaged}";
+        //            });
+        //            break;
 
-                case 6:
-                    Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        SsrValueText2.Text = $"{ssrResult.IsEngaged}";
-                    });
-                    break;
-            }
-        }
+        //        case 6:
+        //            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //                SsrValueText2.Text = $"{ssrResult.IsEngaged}";
+        //            });
+        //            break;
+        //    }
+        //}
 
-        public void HandleHeaterResultEvent(object sender, HeaterResult heaterResult) {
-            Debug.WriteLine($"HeaterResult: Index[{heaterResult.Index}] IsEnaged[{heaterResult.IsEngaged}]");
-        }
+        //public void HandleHeaterResultEvent(object sender, HeaterResult heaterResult) {
+        //    Debug.WriteLine($"HeaterResult: Index[{heaterResult.Index}] IsEnaged[{heaterResult.IsEngaged}]");
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
 

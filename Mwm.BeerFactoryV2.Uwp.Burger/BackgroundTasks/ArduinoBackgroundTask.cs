@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.System.Threading;
 
-namespace Mwm.BeerFactoryV2.Uwp.Cinch.BackgroundTasks
+namespace Mwm.BeerFactoryV2.Uwp.Burger.BackgroundTasks
 {
-    public sealed class BackgroundTask1 : BackgroundTask
+    public sealed class ArduinoBackgroundTask : BackgroundTask
     {
         public static string Message { get; set; }
 
@@ -65,6 +65,8 @@ namespace Mwm.BeerFactoryV2.Uwp.Cinch.BackgroundTasks
 
         public override void OnCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
+            _cancelRequested = true;
+
            // TODO WTS: Insert code to handle the cancelation request here.
            // Documentation: https://docs.microsoft.com/windows/uwp/launch-resume/handle-a-cancelled-background-task
         }

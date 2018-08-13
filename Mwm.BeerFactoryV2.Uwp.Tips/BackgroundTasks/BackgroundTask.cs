@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Practices.Unity;
+using System;
 using System.Threading.Tasks;
 
 using Windows.ApplicationModel.Background;
 
-namespace Mwm.BeerFactoryV2.Uwp.Cinch.BackgroundTasks {
-    public abstract class BackgroundTask {
+namespace Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks {
+    public abstract class BackgroundTask : IBackgroundTask {
         public abstract void Register();
 
         public abstract Task RunAsyncInternal(IBackgroundTaskInstance taskInstance);
@@ -25,4 +26,6 @@ namespace Mwm.BeerFactoryV2.Uwp.Cinch.BackgroundTasks {
             taskInstance.Canceled += new BackgroundTaskCanceledEventHandler(OnCanceled);
         }
     }
+
+    
 }
