@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 
 using Microsoft.Practices.Unity;
-using Mwm.BeerFactoryV2.Svc;
+using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks;
 using Mwm.BeerFactoryV2.Uwp.Tips.Services;
 using Mwm.BeerFactoryV2.Uwp.Tips.Views;
@@ -28,16 +28,18 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
         protected override void ConfigureContainer() {
             // register a singleton using Container.RegisterType<IInterface, Type>(new ContainerControlledLifetimeManager());
             base.ConfigureContainer();
-            Container.RegisterType<IBackgroundTask, ArduinoBackgroundTask>("ArduinoBackgroundTask");
+
+            Container.RegisterType<ArduinoControllerService>(new ContainerControlledLifetimeManager());
+
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
             //var arduinoControllerService = new ArduinoControllerService();
             //Container.RegisterInstance<ArduinoControllerService>(arduinoControllerService);
 
-            //Task.Run(() => {
-            //    arduinoControllerService.Run();
-            //});
+            Task.Run(() => {
+                Container.Resolve<ArduinoControllerService>().Run();
+            });
         }
 
         protected override async Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args) {

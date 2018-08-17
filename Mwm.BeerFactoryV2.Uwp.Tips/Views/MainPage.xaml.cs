@@ -1,11 +1,12 @@
 ﻿using System;
 
 using Mwm.BeerFactoryV2.Uwp.Tips.ViewModels;
+using Prism.Windows.Mvvm;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Mwm.BeerFactoryV2.Uwp.Tips.Views {
-    public sealed partial class MainPage : Page {
+    public sealed partial class MainPage : SessionStateAwarePage {
         private MainViewModel ViewModel => DataContext as MainViewModel;
 
         public MainPage() {

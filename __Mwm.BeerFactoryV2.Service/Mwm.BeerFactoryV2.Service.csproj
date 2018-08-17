@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{91E576D3-F775-41D0-986A-845B5C7E991D}</ProjectGuid>
+    <ProjectGuid>{DDF5A396-3760-4394-93B7-E1754E6F4DD5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mwm.BeerFactoryV2.Service</RootNamespace>
@@ -107,39 +107,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ArduinoController.cs" />
-    <Compile Include="ArduinoControllerService.cs" />
-    <Compile Include="Events\ConnectionStatus.cs" />
-    <Compile Include="Events\HeaterResult.cs" />
-    <Compile Include="Events\KettleCommand.cs" />
-    <Compile Include="Events\KettleResult.cs" />
-    <Compile Include="Events\PumpResult.cs" />
-    <Compile Include="Events\IEventPayload.cs" />
-    <Compile Include="Events\SsrResult.cs" />
-    <Compile Include="Events\StatusCommand.cs" />
-    <Compile Include="Events\StatusResult.cs" />
-    <Compile Include="Events\TemperatureResult.cs" />
+    <Compile Include="Dto\ConnectionStatusEvent.cs" />
+    <Compile Include="Dto\HeaterResult.cs" />
+    <Compile Include="Dto\KettleCommand.cs" />
+    <Compile Include="Dto\KettleResult.cs" />
+    <Compile Include="Dto\PumpResult.cs" />
+    <Compile Include="Dto\SsrResult.cs" />
+    <Compile Include="Dto\StatusCommand.cs" />
+    <Compile Include="Dto\StatusResult.cs" />
+    <Compile Include="Dto\TemperatureResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Mwm.BeerFactoryV2.Service.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.7</Version>
-    </PackageReference>
-    <PackageReference Include="Prism.Unity">
-      <Version>6.3.0</Version>
+      <Version>6.1.4</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommandMessengerStandard\CommandMessengerStandard.csproj">
-      <Project>{b296d6d3-604d-4016-ba8e-bd09d596d32d}</Project>
-      <Name>CommandMessengerStandard</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CommandMessengerTransportSerialStandard\CommandMessengerTransportSerialStandard.csproj">
-      <Project>{6d71068a-3b22-4c42-ba93-1f027bd153f2}</Project>
-      <Name>CommandMessengerTransportSerialStandard</Name>
-    </ProjectReference>
+    <Reference Include="CommandMessengerStandard">
+      <HintPath>..\..\CmdMessenger\CmdMessengerTest\CommandMessengerTransportSerialStandard\bin\Debug\netstandard2.0\CommandMessengerStandard.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandMessengerTransportSerialStandard">
+      <HintPath>..\..\CmdMessenger\CmdMessengerTest\CommandMessengerTransportSerialStandard\bin\Debug\netstandard2.0\CommandMessengerTransportSerialStandard.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

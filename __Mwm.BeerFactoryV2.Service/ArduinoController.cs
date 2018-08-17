@@ -1,4 +1,4 @@
-﻿using Mwm.BeerFactoryV2.Service.Events;
+﻿using Mwm.BeerFactoryV2.Service.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private static ArduinoController _controllerInstance;
 
-        public EventHandler<ConnectionStatus> ConnectionStatusEventHandler { get; set; }
+        public EventHandler<ConnectionStatusEvent> ConnectionStatusEventHandler { get; set; }
         public EventHandler<TemperatureResult> TemperatureResultEventHandler { get; set; }
 
         public EventHandler<SsrResult> SsrResultEventHandler { get; set; }
@@ -60,9 +60,9 @@ namespace Mwm.BeerFactoryV2.Service {
                         Thread.Sleep(1000);
                     }
                     Exit();
-                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatus { Type = ConnectionStatus.EventType.Disconnected });
+                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Disconnected });
                 } else {
-                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
+                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.NotConnected });
                 }
 
                 Thread.Sleep(1000);
@@ -72,7 +72,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         public bool Setup() {
             _serialTransport = new SerialTransport {
-                CurrentSerialSettings = { PortName = "COM3", BaudRate = 57600, DtrEnable = false } // object initializer
+                CurrentSerialSettings = { PortName = "COM4", BaudRate = 57600, DtrEnable = false } // object initializer
             };
 
             _cmdMessenger = new CmdMessenger(_serialTransport, BoardType.Bit32);
@@ -91,9 +91,9 @@ namespace Mwm.BeerFactoryV2.Service {
 
 
             if (IsConnected) {
-                ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatus { Type = ConnectionStatus.EventType.Connected });
-
-                RequestStatus();
+                ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
+                
+                //TODO: Request Status
             }
 
             return IsConnected;
@@ -112,10 +112,8 @@ namespace Mwm.BeerFactoryV2.Service {
             _serialTransport.Dispose();
         }
 
-        public void RequestStatus() {
-            var statusCommand = new SendCommand((int)Command.StatusRequest, (int)Command.StatusResult, 2000);
-            var statusResultCommand = _cmdMessenger.SendCommand(statusCommand);
-            var success = statusResultCommand.Ok;
+        public StatusResult RequestStatus() {
+            return new StatusResult();
         }
 
         // ------------------  C A L L B A C K S ---------------------
@@ -147,7 +145,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
 
         void OnAcknowledge(ReceivedCommand arguments) {
-            ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatus { Type = ConnectionStatus.EventType.Ready });
+            ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Ready });
         }
 
         // Callback function that prints that the Arduino has experienced an error

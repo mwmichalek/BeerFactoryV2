@@ -1,5 +1,4 @@
 ﻿using Microsoft.Practices.Unity;
-using Mwm.BeerFactoryV2.Svc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

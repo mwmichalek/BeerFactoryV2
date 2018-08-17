@@ -5,8 +5,4 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Mwm.BeerFactoryV2.Svc\Mwm.BeerFactoryV2.Svc.csproj" />
-  </ItemGroup>
-
 </Project>

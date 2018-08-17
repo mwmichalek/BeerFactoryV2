@@ -52,5 +52,15 @@
     <Compile Include="Dto\TemperatureResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommandMessengerStandard\CommandMessengerStandard.csproj">
+      <Project>{b296d6d3-604d-4016-ba8e-bd09d596d32d}</Project>
+      <Name>CommandMessengerStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommandMessengerTransportSerialStandard\CommandMessengerTransportSerialStandard.csproj">
+      <Project>{6d71068a-3b22-4c42-ba93-1f027bd153f2}</Project>
+      <Name>CommandMessengerTransportSerialStandard</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

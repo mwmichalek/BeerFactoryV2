@@ -1,12 +1,15 @@
 ﻿using CommandMessenger;
 using CommandMessenger.Transport.Serial;
-using Mwm.BeerFactoryV2.Service.Dto;
+using Mwm.BeerFactoryV2.Service.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 
-namespace Mwm.BeerFactoryV2.Svc {
+namespace Mwm.BeerFactoryV2.Service {
     public class ArduinoControllerService {
         enum Command {
             Acknowledge,
@@ -27,67 +30,36 @@ namespace Mwm.BeerFactoryV2.Svc {
         private CmdMessenger _cmdMessenger;
         public bool IsConnected { get; set; }
 
-        //private IEventAggregator _eventAggregator;
+        private IEventAggregator _eventAggregator;
 
-        public EventHandler<ConnectionStatusEvent> ConnectionStatusEventHandler { get; set; }
-        public EventHandler<TemperatureResult> TemperatureResultEventHandler { get; set; }
-
-        public EventHandler<SsrResult> SsrResultEventHandler { get; set; }
-        public EventHandler<HeaterResult> HeaterResultEventHandler { get; set; }
-
-        public ArduinoControllerService() {
-
+        public ArduinoControllerService(IEventAggregator eventAggregator) {
+            _eventAggregator = eventAggregator;
         }
 
-        
-
-        //private decimal _temperature = 0.0m;
-
-        //public ArduinoService(IEventAggregator eventAggregator) {
-        //    _eventAggregator = eventAggregator;
-
-        //    _eventAggregator.GetEvent<SimpleEvent>().Subscribe((temperatureStr) => {
-        //        Debug.WriteLine($"Event Received: {temperatureStr}");
-
-        //        _temperature = decimal.Parse(temperatureStr);
-
-        //        Task.Run(() => {
-        //            DoShit();
-        //        });
-
-        //    });
-        //}
-
-        //public async void DoShit() {
-        //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-        //        _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(_temperature);
-        //    });
-        //}
-
-
-
-
-
-
-        public void Run() {
+        public async void Run() {
             while (true) {
-                if (Setup()) {
+                var setupResult = await Setup();
+                if (setupResult) {
                     while (IsConnected) {
                         Ping();
                         Thread.Sleep(1000);
                     }
                     Exit();
-                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Disconnected });
-                } else {
-                    ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.NotConnected });
-                }
 
+                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Disconnected });
+                    });
+                } else {
+                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
+                    });
+                }
                 Thread.Sleep(1000);
             }
         }
 
 
-        public bool Setup() {
+        public async Task<bool> Setup() {
             _serialTransport = new SerialTransport {
                 CurrentSerialSettings = { PortName = "COM3", BaudRate = 57600, DtrEnable = false } // object initializer
             };
@@ -108,8 +80,10 @@ namespace Mwm.BeerFactoryV2.Svc {
 
 
             if (IsConnected) {
-                ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Connected });
-
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Connected });
+                });
+                
                 RequestStatus();
             }
 
@@ -136,37 +110,45 @@ namespace Mwm.BeerFactoryV2.Svc {
 
         // ------------------  C A L L B A C K S ---------------------
 
-        private void OnSsrChange(ReceivedCommand receivedCommand) {
+        private async void OnSsrChange(ReceivedCommand receivedCommand) {
             int.TryParse(receivedCommand.ReadStringArg(), out int ssrIndex);
             int.TryParse(receivedCommand.ReadStringArg(), out int ssrValue);
 
-            SsrResultEventHandler?.Invoke(this, new SsrResult { Index = ssrIndex, IsEngaged = ssrValue == 1 });
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<SsrResultEvent>().Publish(new SsrResult { Index = ssrIndex, IsEngaged = ssrValue == 1 });
+            });
         }
 
-        private void OnHeaterChange(ReceivedCommand receivedCommand) {
+        private async void OnHeaterChange(ReceivedCommand receivedCommand) {
             int.TryParse(receivedCommand.ReadStringArg(), out int heaterIndex);
             int.TryParse(receivedCommand.ReadStringArg(), out int heaterValue);
 
-            HeaterResultEventHandler?.Invoke(this, new HeaterResult { Index = heaterIndex, IsEngaged = heaterIndex == 1 });
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<HeaterResultEvent>().Publish(new HeaterResult { Index = heaterIndex, IsEngaged = heaterIndex == 1 });
+            });
         }
 
-        private void OnTempChange(ReceivedCommand receivedCommand) {
+        private async void OnTempChange(ReceivedCommand receivedCommand) {
             int.TryParse(receivedCommand.ReadStringArg(), out int probeIndex);
             decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
 
-            TemperatureResultEventHandler?.Invoke(this, new TemperatureResult { Index = probeIndex, Value = temp });
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<TemperatureResultEvent>().Publish(new TemperatureResult { Index = probeIndex, Value = temp });
+            });
         }
 
-        void OnUnknownCommand(ReceivedCommand arguments) {
+        private void OnUnknownCommand(ReceivedCommand arguments) {
             Console.WriteLine("Command without attached callback received");
         }
 
-        void OnAcknowledge(ReceivedCommand arguments) {
-            ConnectionStatusEventHandler?.Invoke(this, new ConnectionStatusEvent { Type = ConnectionStatusEvent.EventType.Ready });
+        private async void OnAcknowledge(ReceivedCommand arguments) {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Ready });
+            });
         }
 
         // Callback function that prints that the Arduino has experienced an error
-        void OnError(ReceivedCommand arguments) {
+        private void OnError(ReceivedCommand arguments) {
             Console.WriteLine(" Arduino has experienced an error");
         }
 

@@ -213,12 +213,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mwm.BeerFactoryV2.Svc\Mwm.BeerFactoryV2.Svc.csproj">
-      <Project>{b4cab3ca-80f7-424b-8d90-36ad3b400b29}</Project>
-      <Name>Mwm.BeerFactoryV2.Svc</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
