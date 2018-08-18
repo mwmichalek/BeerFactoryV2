@@ -106,8 +106,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ArduinoController.cs" />
-    <Compile Include="ArduinoControllerService.cs" />
+    <Compile Include="IArduinoControllerService.cs" />
+    <Compile Include="UsbArduinoControllerService.cs" />
     <Compile Include="Events\ConnectionStatus.cs" />
     <Compile Include="Events\HeaterResult.cs" />
     <Compile Include="Events\KettleCommand.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Events\StatusResult.cs" />
     <Compile Include="Events\TemperatureResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebArduinoControllerService.cs" />
     <EmbeddedResource Include="Properties\Mwm.BeerFactoryV2.Service.rd.xml" />
   </ItemGroup>
   <ItemGroup>

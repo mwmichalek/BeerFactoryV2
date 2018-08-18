@@ -54,5 +54,27 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             set { SetProperty(ref temperature3, value); }
         }
 
+        private int hltPercentageSetting = 0;
+        public int HltPercentageSetting {
+            get { return hltPercentageSetting; }
+            set {
+                SetProperty(ref hltPercentageSetting, value);
+                //Debug.WriteLine($"HltPercentageSetting: {value}");
+                _eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 1, Percentage = value });
+            }
+        }
+
+        private int bkPercentageSetting = 0;
+        public int BkPercentageSetting {
+            get { return bkPercentageSetting; }
+            set {
+                SetProperty(ref bkPercentageSetting, value);
+                //Debug.WriteLine($"BkPercentageSetting: {value}");
+                _eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = value });
+            }
+        }
+
+
+
     }
 }

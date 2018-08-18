@@ -13,15 +13,12 @@
         Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <TextBlock x:Name="Temperature1TextBlock" HorizontalAlignment="Left" Margin="302,49,0,0" Text="{x:Bind ViewModel.Temperature1, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="568" FontSize="72" FontWeight="Normal"/>
-            <TextBlock x:Name="Temperature2TextBlock" HorizontalAlignment="Left" Margin="302,221,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature2}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="568" FontSize="72" FontWeight="Normal"/>
-            <TextBlock x:Name="Temperature3TextBlock" HorizontalAlignment="Left" Margin="302,399,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature3}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="568" FontSize="72" FontWeight="Normal"/>
-
-            <TextBlock x:Name="Temperature1Label" HorizontalAlignment="Left" Margin="114,87,0,0" Text="Temperature #1" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="121" SelectionChanged="TextBlock_SelectionChanged"/>
-            <TextBlock x:Name="Temperature2Label" HorizontalAlignment="Left" Margin="114,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="121" SelectionChanged="TextBlock_SelectionChanged"><Run Text="Temperature #2"/><LineBreak/><Run/></TextBlock>
-            <TextBlock x:Name="Temperature3Label" HorizontalAlignment="Left" Margin="114,437,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="121" SelectionChanged="TextBlock_SelectionChanged" Text="Temperature #3"/>
-            <TextBlock x:Name="ConnectionStatusLabel" HorizontalAlignment="Left" Margin="114,683,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="150" SelectionChanged="TextBlock_SelectionChanged" Text="Connection Status:"/>
-            <TextBlock x:Name="ConnectionStatusTextBlock" HorizontalAlignment="Left" Margin="302,645,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.ConnectionStatus}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="568" FontSize="20" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature1TextBlock" HorizontalAlignment="Left" Margin="0,2,0,0" Text="{x:Bind ViewModel.Temperature1, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="205" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature2TextBlock" HorizontalAlignment="Left" Margin="0,107,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature2}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="204" FontSize="72" FontWeight="Normal" SelectionChanged="Temperature2TextBlock_SelectionChanged"/>
+            <TextBlock x:Name="Temperature3TextBlock" HorizontalAlignment="Left" Margin="10,213,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature3}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="ConnectionStatusTextBlock" HorizontalAlignment="Left" Margin="1126,917,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.ConnectionStatus}" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="359" FontSize="20" FontWeight="Normal"/>
+            <Slider x:Name="HltSlider" Value="{x:Bind ViewModel.HltPercentageSetting, Mode=TwoWay}" HorizontalAlignment="Left" Margin="633,133,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
+            <Slider x:Name="BkSlider" Value="{x:Bind ViewModel.BkPercentageSetting, Mode=TwoWay}" HorizontalAlignment="Left" Margin="633,261,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
 
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->

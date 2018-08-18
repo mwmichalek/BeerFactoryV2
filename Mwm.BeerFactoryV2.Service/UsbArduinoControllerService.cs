@@ -4,13 +4,14 @@ using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
 namespace Mwm.BeerFactoryV2.Service {
-    public class ArduinoControllerService {
+    public class UsbArduinoControllerService : ArduinoControllerService {
         enum Command {
             Acknowledge,
             Error,
@@ -32,8 +33,12 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private IEventAggregator _eventAggregator;
 
-        public ArduinoControllerService(IEventAggregator eventAggregator) {
+        public UsbArduinoControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
+
+            _eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
+                ExecuteKettleCommand(kettleCommand);
+            });
         }
 
         public async void Run() {
@@ -106,6 +111,19 @@ namespace Mwm.BeerFactoryV2.Service {
             var statusCommand = new SendCommand((int)Command.StatusRequest, (int)Command.StatusResult, 2000);
             var statusResultCommand = _cmdMessenger.SendCommand(statusCommand);
             var success = statusResultCommand.Ok;
+        }
+
+        public void ExecuteKettleCommand(KettleCommand kettleCommand) {
+            Debug.WriteLine($"ExecuteKettleCommand: {kettleCommand.Index} {kettleCommand.Percentage}");
+
+            Task.Run(() => {
+                var kettleRequest = new SendCommand((int)Command.KettleRequest, (int)Command.KettleResult, 2000);
+                kettleRequest.AddArgument(kettleCommand.Index);
+                kettleRequest.AddArgument(kettleCommand.Percentage);
+                var kettleResultCommand = _cmdMessenger.SendCommand(kettleRequest);
+                var success = kettleRequest.Ok;
+            });
+            
         }
 
         // ------------------  C A L L B A C K S ---------------------

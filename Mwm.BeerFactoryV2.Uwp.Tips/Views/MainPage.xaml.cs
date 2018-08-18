@@ -17,5 +17,8 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.Views {
             throw new NotImplementedException();
         }
 
+        private void Temperature2TextBlock_SelectionChanged(object sender, RoutedEventArgs e) {
+
+        }
     }
 }

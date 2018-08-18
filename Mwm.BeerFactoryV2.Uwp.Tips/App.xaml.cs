@@ -29,7 +29,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             // register a singleton using Container.RegisterType<IInterface, Type>(new ContainerControlledLifetimeManager());
             base.ConfigureContainer();
 
-            Container.RegisterType<ArduinoControllerService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<UsbArduinoControllerService>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
@@ -38,7 +38,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             //Container.RegisterInstance<ArduinoControllerService>(arduinoControllerService);
 
             Task.Run(() => {
-                Container.Resolve<ArduinoControllerService>().Run();
+                Container.Resolve<UsbArduinoControllerService>().Run();
             });
         }
 
