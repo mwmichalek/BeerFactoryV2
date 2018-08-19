@@ -128,6 +128,7 @@ void configureCmdMessenger() {
 	cmdMessenger.attach(onUnknownCommand);
 	cmdMessenger.attach(Events::kStatusRequest, onStatusRequest);
 	cmdMessenger.attach(Events::kPingRequest, onPing);
+	cmdMessenger.attach(Events::kKettleRequest, onKettleRequest);
 	onArduinoReady();
 }
 
@@ -150,5 +151,11 @@ void onArduinoReady() {
 void onPing() {
 	cmdMessenger.sendCmdStart(Events::kPingResult);
 	cmdMessenger.sendCmdEnd();
+}
+
+void onKettleRequest() {
+	int index = cmdMessenger.readInt16Arg();
+	double percentage = cmdMessenger.readDoubleArg();
+
 }
 

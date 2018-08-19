@@ -7,20 +7,6 @@
 LocalController::LocalController() {
 }
 
-//enum {
-//	kAcknowledge,
-//	kError,
-//	kPingRequest,
-//	kPingResult,
-//	kStatusRequest,
-//	kStatusResult,
-//	kKettleRequest,
-//	kKettleResult,
-//	kTempChange,
-//	kHeaterChange,
-//	kPumpChange
-//};
-
 LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
 							     Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
 	_thermometer1 = thermometer1;
@@ -44,6 +30,8 @@ LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermom
 	_boilKettle->setPercentage(90);
 	_boilKettle->enable(true);
 }
+
+
 
 void LocalController::update() {
 
@@ -72,9 +60,14 @@ void LocalController::update() {
 	_hotLiquorTank->update();
 	_boilKettle->update();
 
-	handleCommand();
+	//handleCommand();
 
 	displayStatus();
+}
+
+void LocalController::configureCommunications() {
+
+
 }
 
 void LocalController::postTemperature(int index, double temperature) {
@@ -112,17 +105,17 @@ void LocalController::connectionStatus(bool isConnected) {
 		_isConnected = 0;
 }
 
-void LocalController::receivedCommand(String command) {
-
-	int eqlIndex = command.indexOf("=");
-	if (eqlIndex != -1) {
-		_lastCmd = command.substring(0, eqlIndex - 1);
-		_lastVal = command.substring(eqlIndex + 1, command.length() - 1);
-	} else {
-		_lastCmd = command;
-		_lastVal = "";
-	}
-}
+//void LocalController::receivedCommand(String command) {
+//
+//	int eqlIndex = command.indexOf("=");
+//	if (eqlIndex != -1) {
+//		_lastCmd = command.substring(0, eqlIndex - 1);
+//		_lastVal = command.substring(eqlIndex + 1, command.length() - 1);
+//	} else {
+//		_lastCmd = command;
+//		_lastVal = "";
+//	}
+//}
 
 void LocalController::postMsg(String msg) {
 	_lcd.setCursor(0, 3);
@@ -130,7 +123,7 @@ void LocalController::postMsg(String msg) {
 }
 
 
-void LocalController::handleCommand() {
+//readInt16Argvoid LocalController::handleCommand() {
 	//String command = "";
 
 	//while (Serial.available()) {
@@ -154,7 +147,7 @@ void LocalController::handleCommand() {
 	//	//_lcd.print(command + "   ");
 	//}
 	////Serial.println("HEARD:" + reading);
-}
+//}
 
 
 void LocalController::displayStatus() {

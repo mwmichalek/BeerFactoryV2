@@ -21,13 +21,16 @@ public:
 	LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
 		            Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger);
 	void update();
-	void handleCommand();
+	
 	void displayStatus();
-	void receivedCommand(String command);
+	
 	void postStatus();
 	void postMsg(String msg);
 	void connectionStatus(bool isConnected);
-	
+	//void handleCommand();
+	//void receivedCommand(String command);
+	void configureCommunications();
+
 
 private:
 	Thermometer* _thermometer1;
