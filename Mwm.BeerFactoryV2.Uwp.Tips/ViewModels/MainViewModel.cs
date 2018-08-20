@@ -60,7 +60,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             set {
                 SetProperty(ref hltPercentageSetting, value);
                 //Debug.WriteLine($"HltPercentageSetting: {value}");
-                _eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 1, Percentage = value });
+                //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 1, Percentage = value });
             }
         }
 
@@ -70,11 +70,17 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             set {
                 SetProperty(ref bkPercentageSetting, value);
                 //Debug.WriteLine($"BkPercentageSetting: {value}");
-                _eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = value });
+                //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = value });
             }
         }
 
+        public void HltPublishChangeEvent() {
+            _eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 1, Percentage = hltPercentageSetting });
+        }
 
+        public void BkPublishChangeEvent() {
+            _eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = bkPercentageSetting });
+        }
 
     }
 }

@@ -65,9 +65,18 @@ void LocalController::update() {
 	displayStatus();
 }
 
-void LocalController::configureCommunications() {
-
-
+void LocalController::handleKettleRequest() {
+	int index = _cmdMessenger->readInt16Arg();
+	double percentage = _cmdMessenger->readDoubleArg();
+	if (index == 1) {
+		_hotLiquorTank->setPercentage(percentage);
+		_hotLiquorTank->enable(true);
+		postMsg("HLT:" + String(percentage));
+	} else if (index == 2) {
+		_boilKettle->setPercentage(percentage);
+		_boilKettle->enable(true);
+		postMsg("BK:" + String(percentage));
+	}
 }
 
 void LocalController::postTemperature(int index, double temperature) {
@@ -105,23 +114,20 @@ void LocalController::connectionStatus(bool isConnected) {
 		_isConnected = 0;
 }
 
-//void LocalController::receivedCommand(String command) {
-//
-//	int eqlIndex = command.indexOf("=");
-//	if (eqlIndex != -1) {
-//		_lastCmd = command.substring(0, eqlIndex - 1);
-//		_lastVal = command.substring(eqlIndex + 1, command.length() - 1);
-//	} else {
-//		_lastCmd = command;
-//		_lastVal = "";
-//	}
-//}
-
 void LocalController::postMsg(String msg) {
 	_lcd.setCursor(0, 3);
 	_lcd.print(String(msg));
 }
 
+void LocalController::displayStatus() {
+	_lcd.setCursor(0, 0);
+	_lcd.print("T1:" + String(_temperature1));
+	_lcd.setCursor(0, 1);
+	_lcd.print("T2:" + String(_temperature2));
+	_lcd.setCursor(0, 2);
+	_lcd.print("T3:" + String(_temperature3));
+	
+}
 
 //readInt16Argvoid LocalController::handleCommand() {
 	//String command = "";
@@ -149,13 +155,14 @@ void LocalController::postMsg(String msg) {
 	////Serial.println("HEARD:" + reading);
 //}
 
-
-void LocalController::displayStatus() {
-	_lcd.setCursor(0, 0);
-	_lcd.print("T1:" + String(_temperature1));
-	_lcd.setCursor(0, 1);
-	_lcd.print("T2:" + String(_temperature2));
-	_lcd.setCursor(0, 2);
-	_lcd.print("T3:" + String(_temperature3));
-	
-}
+//void LocalController::receivedCommand(String command) {
+//
+//	int eqlIndex = command.indexOf("=");
+//	if (eqlIndex != -1) {
+//		_lastCmd = command.substring(0, eqlIndex - 1);
+//		_lastVal = command.substring(eqlIndex + 1, command.length() - 1);
+//	} else {
+//		_lastCmd = command;
+//		_lastVal = "";
+//	}
+//}

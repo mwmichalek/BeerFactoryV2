@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Mwm.BeerFactoryV2.Uwp.Tips.ViewModels;
 using Prism.Windows.Mvvm;
 using Windows.UI.Xaml;
@@ -13,12 +13,14 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.Views {
             InitializeComponent();
         }
 
-        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e) {
-            throw new NotImplementedException();
+        private void HltSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
+            Debug.WriteLine("Htl stop");
+            ViewModel.HltPublishChangeEvent();
         }
 
-        private void Temperature2TextBlock_SelectionChanged(object sender, RoutedEventArgs e) {
-
+        private void BkSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
+            Debug.WriteLine("Bk stop");
+            ViewModel.BkPublishChangeEvent();
         }
     }
 }

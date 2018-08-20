@@ -154,8 +154,6 @@ void onPing() {
 }
 
 void onKettleRequest() {
-	int index = cmdMessenger.readInt16Arg();
-	double percentage = cmdMessenger.readDoubleArg();
-
+	localController.handleKettleRequest();
 }
 

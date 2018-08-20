@@ -29,7 +29,7 @@ public:
 	void connectionStatus(bool isConnected);
 	//void handleCommand();
 	//void receivedCommand(String command);
-	void configureCommunications();
+	void handleKettleRequest();
 
 
 private:
