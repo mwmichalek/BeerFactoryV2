@@ -42,7 +42,6 @@ void Kettle::update() {
 			_timeToOff = _timeToOn + _millisOfOn;
 
 			engage(true);
-	
 		} else if (currentMillis >= _timeToOn) {
 			millisOff = currentMillis - _timeToOn;
 
@@ -116,7 +115,10 @@ void Kettle::setPercentage(int percentage) {
 	// TODO: Validate percentage
 	_percentage = percentage;
 	
-	if (_percentage > 0) {
+	if (_percentage == 100) {
+		_millisOfOn = _cycleLengthInMillis;
+		_millisOfOff = 0;
+	} else if (_percentage > 0) {
 		double ratio = (double)_percentage / (double)100;
 		_millisOfOn = _cycleLengthInMillis * ratio;
 		_millisOfOff = _cycleLengthInMillis - _millisOfOn;
