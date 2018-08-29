@@ -1,7 +1,3 @@
-// 
-// 
-// 
-
 #include "Thermometer.h"
 #include <DallasTemperature.h>
 #include <OneWire.h>
@@ -9,14 +5,11 @@
 Thermometer::Thermometer() {}
 
 Thermometer::Thermometer(const DallasTemperature &sensor, const DeviceAddress &probe, int cycleLengthInMillis) {
-	//Serial.println("Initialzing Thermometer ...");
 	_cycleLengthInMillis = cycleLengthInMillis;
 	_timeToUpdate = 0;
 	_temperature = 0;
 	_probe = probe;
 	_sensor = sensor;
-	//Serial.println(" ... thermometer initialized.");
-
 }
 
 void Thermometer::update() {

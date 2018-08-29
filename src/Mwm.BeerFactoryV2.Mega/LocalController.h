@@ -57,6 +57,8 @@ private:
 	double _temperature1;
 	double _temperature2;
 	double _temperature3;
+	//double _temperatures[9];
+
 	//double _temperature4;
 	//double _temperature5;
 	//double _temperature6;

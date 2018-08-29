@@ -33,15 +33,6 @@
     <ClInclude Include="Pump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RemoteController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RotaryEncoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TempSensors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Thermometer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,15 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pump.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RemoteController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RotaryEncoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TempSensors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Thermometer.cpp">
