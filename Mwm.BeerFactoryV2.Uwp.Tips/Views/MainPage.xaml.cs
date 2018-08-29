@@ -14,12 +14,10 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.Views {
         }
 
         private void HltSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
-            Debug.WriteLine("Htl stop");
             ViewModel.HltPublishChangeEvent();
         }
 
         private void BkSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
-            Debug.WriteLine("Bk stop");
             ViewModel.BkPublishChangeEvent();
         }
     }

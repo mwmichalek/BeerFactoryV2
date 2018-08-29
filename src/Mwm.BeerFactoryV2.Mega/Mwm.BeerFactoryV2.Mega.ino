@@ -65,18 +65,28 @@
 OneWire oneWire1(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire1);
 
-//DeviceAddress probe01 = { 0x28, 0xFF, 0x5E, 0xC0, 0x4E, 0x04, 0x00, 0xB8 };
-//DeviceAddress probe02 = { 0x28, 0xFF, 0x14, 0xDB, 0x3C, 0x04, 0x00, 0xE0 };
-//DeviceAddress probe03 = { 0x28, 0xFF, 0xAF, 0x3B, 0x4A, 0x04, 0x00, 0xA8 };
+DeviceAddress probe01 = { 0x28, 0xFF, 0x5E, 0xC0, 0x4E, 0x04, 0x00, 0xB8 };
+
 
 DeviceAddress probe04 = { 0x28, 0xFF, 0x43, 0x0E, 0x16, 0x15, 0x03, 0x90 };
 DeviceAddress probe05 = { 0x28, 0xFF, 0xD2, 0x37, 0x16, 0x15, 0x03, 0x31 };
 DeviceAddress probe06 = { 0x28, 0xFF, 0x4A, 0x3A, 0x16, 0x15, 0x03, 0x25 };
-//DeviceAddress probe07 = { 0x28, 0xFF, 0xA1, 0x1E, 0x16, 0x15, 0x03, 0xF1 };
+
+DeviceAddress probe09 = { 0x28, 0xFF, 0x81, 0x22, 0x41, 0x18, 0x02, 0x85 };
+DeviceAddress probe10 = { 0x28, 0xFF, 0x66, 0x27, 0x41, 0x18, 0x02, 0x8F };
+DeviceAddress probe11 = { 0x28, 0xFF, 0xF3, 0x23, 0x41, 0x18, 0x02, 0xE4 };
+DeviceAddress probe12 = { 0x28, 0xFF, 0x0C, 0x22, 0x41, 0x18, 0x02, 0xA2 };
+DeviceAddress probe13 = { 0x28, 0xFF, 0x85, 0x20, 0x41, 0x18, 0x02, 0x9D };
 
 Thermometer thermometer1;
 Thermometer thermometer2;
 Thermometer thermometer3;
+Thermometer thermometer4;
+Thermometer thermometer5;
+Thermometer thermometer6;
+Thermometer thermometer7;
+Thermometer thermometer8;
+Thermometer thermometer9;
 
 Kettle hotLiquorTank;
 Kettle boilKettle;
@@ -97,14 +107,24 @@ void setup() {
 
 	sensors.begin();
 
-	thermometer1 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer2 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer3 = Thermometer(sensors, probe06, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer1 = Thermometer(sensors, probe01, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer2 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer3 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer4 = Thermometer(sensors, probe06, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer5 = Thermometer(sensors, probe09, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer6 = Thermometer(sensors, probe10, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer7 = Thermometer(sensors, probe11, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer8 = Thermometer(sensors, probe12, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer9 = Thermometer(sensors, probe13, TEMP_READING_CYCLE_IN_MILLIS);
 
 	hotLiquorTank = Kettle(SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2, &cmdMessenger);
 	boilKettle = Kettle(SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4, &cmdMessenger);
 
-	localController = LocalController(&thermometer1, &thermometer2, &thermometer3, &hotLiquorTank, &boilKettle, &cmdMessenger);
+	Thermometer* thermometers[] = { &thermometer1, &thermometer2, &thermometer3, 
+								    &thermometer4, &thermometer5, &thermometer6, 
+		                            &thermometer7, &thermometer8, &thermometer9 };
+
+	localController = LocalController(thermometers, &hotLiquorTank, &boilKettle, &cmdMessenger);
 
 	pinMode(PUMP_PIN_1, OUTPUT);
 	pinMode(PUMP_PIN_2, OUTPUT);
@@ -157,3 +177,23 @@ void onKettleRequest() {
 	localController.handleKettleRequest();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//DeviceAddress probe07 = { 0x28, 0xFF, 0xA1, 0x1E, 0x16, 0x15, 0x03, 0xF1 };
+//DeviceAddress probe08 = { 0x28, 0xFF, 0x51, 0x24, 0x16, 0x15, 0x03, 0x04 };
+//DeviceAddress probe02 = { 0x28, 0xFF, 0x14, 0xDB, 0x3C, 0x04, 0x00, 0xE0 };
+//DeviceAddress probe03 = { 0x28, 0xFF, 0xAF, 0x3B, 0x4A, 0x04, 0x00, 0xA8 };
