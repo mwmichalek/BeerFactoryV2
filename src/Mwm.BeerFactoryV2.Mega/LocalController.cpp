@@ -39,29 +39,29 @@ LocalController::LocalController(Thermometer* thermometers[],
 }
 
 
-LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
-							     Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
-	_thermometer1 = thermometer1;
-	_thermometer2 = thermometer2;
-	_thermometer3 = thermometer3;
-	_hotLiquorTank = hotLiquorTank;
-	_boilKettle = boilKettle;
-
-	_cmdMessenger = cmdMessenger;
-
-	_lcd.begin(20, 4);
-	_lcd.setBacklight(HIGH);
-
-	_lcd.setCursor(0, 0);            // go to the top left corner
-	_lcd.print("BF v3.0");
-
-	//TODO: (Michalek) HARDCODED!!!!
-	_hotLiquorTank->setPercentage(10);
-	_hotLiquorTank->enable(true);
-
-	_boilKettle->setPercentage(90);
-	_boilKettle->enable(true);
-}
+//LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
+//							     Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
+//	_thermometer1 = thermometer1;
+//	_thermometer2 = thermometer2;
+//	_thermometer3 = thermometer3;
+//	_hotLiquorTank = hotLiquorTank;
+//	_boilKettle = boilKettle;
+//
+//	_cmdMessenger = cmdMessenger;
+//
+//	_lcd.begin(20, 4);
+//	_lcd.setBacklight(HIGH);
+//
+//	_lcd.setCursor(0, 0);            // go to the top left corner
+//	_lcd.print("BF v3.0");
+//
+//	//TODO: (Michalek) HARDCODED!!!!
+//	_hotLiquorTank->setPercentage(10);
+//	_hotLiquorTank->enable(true);
+//
+//	_boilKettle->setPercentage(90);
+//	_boilKettle->enable(true);
+//}
 
 
 
@@ -95,13 +95,13 @@ void LocalController::update() {
 		postTemperature(3, _temperature3);
 	}
 
-	/*double newTemperature4 = _thermometer4->currentTemp();
-	if (newTemperature4 != _temperature4) {
-		_temperature4 = newTemperature4;
-		postTemperature(4, _temperature4);
-	}
+	//double newTemperature4 = _thermometer4->currentTemp();
+	//if (newTemperature4 != _temperature4) {
+	//	_temperature4 = newTemperature4;
+	//	postTemperature(4, _temperature4);
+	//}
 
-	double newTemperature5 = _thermometer5->currentTemp();
+	/*double newTemperature5 = _thermometer5->currentTemp();
 	if (newTemperature5 != _temperature5) {
 		_temperature5 = newTemperature5;
 		postTemperature(5, _temperature5);
@@ -195,11 +195,13 @@ void LocalController::postMsg(String msg) {
 
 void LocalController::displayStatus() {
 	_lcd.setCursor(0, 0);
-	_lcd.print(String(_temperature1) + "       ");
+	_lcd.print(String(_temperature1) + "  ");
 	_lcd.setCursor(0, 1);
-	_lcd.print(String(_temperature2) + "       ");
+	_lcd.print(String(_temperature2) + "  ");
 	_lcd.setCursor(0, 2);
-	_lcd.print(String(_temperature3) + "       ");
+	_lcd.print(String(_temperature3) + "  ");
+	//_lcd.setCursor(0, 3);
+	//_lcd.print(String(_temperature4) + "  ");
 
 	//_lcd.setCursor(0, 0);
 	//_lcd.print(String(_temperature1) + " " + String(_temperature2) + " " + String(_temperature3));
