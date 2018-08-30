@@ -5,6 +5,7 @@
 #include "Events.h"
 
 LocalController::LocalController() {
+	_lcd.print("BF v3.0");
 }
 
 LocalController::LocalController(Thermometer* thermometers[], 
