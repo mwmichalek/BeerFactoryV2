@@ -42,12 +42,12 @@ private:
 	Thermometer* _thermometer1;
 	Thermometer* _thermometer2;
 	Thermometer* _thermometer3;
-	//Thermometer* _thermometer4;
-	//Thermometer* _thermometer5;
-	//Thermometer* _thermometer6;
-	//Thermometer* _thermometer7;
-	//Thermometer* _thermometer8;
-	//Thermometer* _thermometer9;
+	Thermometer* _thermometer4;
+	Thermometer* _thermometer5;
+	Thermometer* _thermometer6;
+	Thermometer* _thermometer7;
+	Thermometer* _thermometer8;
+	Thermometer* _thermometer9;
 
 
 	
@@ -59,12 +59,12 @@ private:
 	double _temperature3;
 	//double _temperatures[9];
 
-	//double _temperature4;
-	//double _temperature5;
-	//double _temperature6;
-	//double _temperature7;
-	//double _temperature8;
-	//double _temperature9;
+	double _temperature4;
+	double _temperature5;
+	double _temperature6;
+	double _temperature7;
+	double _temperature8;
+	double _temperature9;
 
 	int _nextDisplayUpdate;
 	String _lastCmd;

@@ -13,9 +13,17 @@
         Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <TextBlock x:Name="Temperature1TextBlock" HorizontalAlignment="Left" Margin="0,2,0,0" Text="{x:Bind ViewModel.Temperature1, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="205" FontSize="72" FontWeight="Normal"/>
-            <TextBlock x:Name="Temperature2TextBlock" HorizontalAlignment="Left" Margin="0,107,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature2}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="204" FontSize="72" FontWeight="Normal" />
-            <TextBlock x:Name="Temperature3TextBlock" HorizontalAlignment="Left" Margin="10,213,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature3}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature1TextBlock" HorizontalAlignment="Left" Margin="0,0,0,0" Text="{x:Bind ViewModel.Temperature1, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature2TextBlock" HorizontalAlignment="Left" Margin="0,110,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature2}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal" />
+            <TextBlock x:Name="Temperature3TextBlock" HorizontalAlignment="Left" Margin="0,220,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature3}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature4TextBlock" HorizontalAlignment="Left" Margin="0,330,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature4}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature5TextBlock" HorizontalAlignment="Left" Margin="0,440,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature5}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature6TextBlock" HorizontalAlignment="Left" Margin="0,550,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature6}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature7TextBlock" HorizontalAlignment="Left" Margin="0,660,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature7}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature8TextBlock" HorizontalAlignment="Left" Margin="0,770,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature8}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+            <TextBlock x:Name="Temperature9TextBlock" HorizontalAlignment="Left" Margin="0,880,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature9}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+
+
             <TextBlock x:Name="ConnectionStatusTextBlock" HorizontalAlignment="Left" Margin="1126,917,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.ConnectionStatus}" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="359" FontSize="20" FontWeight="Normal"/>
             <Slider x:Name="HltSlider" Value="{x:Bind ViewModel.HltPercentageSetting, Mode=TwoWay}"  HorizontalAlignment="Left" PointerCaptureLost="HltSlider_PointerCaptureLost" Margin="633,133,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
             <Slider x:Name="BkSlider" Value="{x:Bind ViewModel.BkPercentageSetting, Mode=TwoWay}" HorizontalAlignment="Left" PointerCaptureLost="BkSlider_PointerCaptureLost" Margin="633,261,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>

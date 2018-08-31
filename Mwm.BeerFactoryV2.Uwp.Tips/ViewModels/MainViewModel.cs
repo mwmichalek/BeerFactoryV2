@@ -22,6 +22,18 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
                     Temperature2 = temperatureResult.Value;
                 if (temperatureResult.Index == 3)
                     Temperature3 = temperatureResult.Value;
+                if (temperatureResult.Index == 4)
+                    Temperature4 = temperatureResult.Value;
+                if (temperatureResult.Index == 5)
+                    Temperature5 = temperatureResult.Value;
+                if (temperatureResult.Index == 6)
+                    Temperature6 = temperatureResult.Value;
+                if (temperatureResult.Index == 7)
+                    Temperature7 = temperatureResult.Value;
+                if (temperatureResult.Index == 8)
+                    Temperature8 = temperatureResult.Value;
+                if (temperatureResult.Index == 9)
+                    Temperature9 = temperatureResult.Value;
             });
 
             _eventAggregator.GetEvent<ConnectionStatusEvent>().Subscribe((connectionStatus) => {
@@ -52,6 +64,42 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
         public decimal Temperature3 {
             get { return temperature3; }
             set { SetProperty(ref temperature3, value); }
+        }
+
+        private decimal temperature4 = 0.0m;
+        public decimal Temperature4 {
+            get { return temperature4; }
+            set { SetProperty(ref temperature4, value); }
+        }
+
+        private decimal temperature5 = 0.0m;
+        public decimal Temperature5 {
+            get { return temperature5; }
+            set { SetProperty(ref temperature5, value); }
+        }
+
+        private decimal temperature6 = 0.0m;
+        public decimal Temperature6 {
+            get { return temperature6; }
+            set { SetProperty(ref temperature6, value); }
+        }
+
+        private decimal temperature7 = 0.0m;
+        public decimal Temperature7 {
+            get { return temperature7; }
+            set { SetProperty(ref temperature7, value); }
+        }
+
+        private decimal temperature8 = 0.0m;
+        public decimal Temperature8 {
+            get { return temperature8; }
+            set { SetProperty(ref temperature8, value); }
+        }
+
+        private decimal temperature9 = 0.0m;
+        public decimal Temperature9 {
+            get { return temperature9; }
+            set { SetProperty(ref temperature9, value); }
         }
 
         private int hltPercentageSetting = 0;
