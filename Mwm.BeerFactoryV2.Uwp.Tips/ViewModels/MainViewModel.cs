@@ -40,12 +40,34 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
                 Debug.WriteLine($"Connection Status: {connectionStatus.Type}");
                 ConnectionStatus = $"{connectionStatus.Type}";
             });
+
+            _eventAggregator.GetEvent<KettleResultEvent>().Subscribe((kettleResult) => {
+                if (kettleResult.Index == 1) {
+                    Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
+                    HltPercentage = kettleResult.Percentage;
+                } else if (kettleResult.Index == 2) {
+                    Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
+                    BkPercentage = kettleResult.Percentage;
+                }
+            });
         }
 
         public string connectionStatus = "";
         public string ConnectionStatus {
             get { return connectionStatus; }
             set { SetProperty(ref connectionStatus, value); }
+        }
+
+        public int hltPercentage = 0;
+        public int HltPercentage {
+            get { return hltPercentage; }
+            set { SetProperty(ref hltPercentage, value); }
+        }
+
+        public int bkPercentage = 0;
+        public int BkPercentage {
+            get { return bkPercentage; }
+            set { SetProperty(ref bkPercentage, value); }
         }
 
         private decimal temperature1 = 0.0m;

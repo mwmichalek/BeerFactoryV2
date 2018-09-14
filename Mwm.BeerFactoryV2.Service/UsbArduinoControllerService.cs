@@ -77,6 +77,7 @@ namespace Mwm.BeerFactoryV2.Service {
             _cmdMessenger.Attach((int)Command.TempChange, OnTempChange);
             _cmdMessenger.Attach((int)Command.SsrChange, OnSsrChange);
             _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
+            _cmdMessenger.Attach((int)Command.KettleResult, OnKettleResult);
 
             _cmdMessenger.NewLineReceived += NewLineReceived;
             _cmdMessenger.NewLineSent += NewLineSent;
@@ -155,6 +156,15 @@ namespace Mwm.BeerFactoryV2.Service {
             });
         }
 
+        private async void OnKettleResult(ReceivedCommand receivedCommand) {
+            int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
+            int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<KettleResultEvent>().Publish(new KettleResult { Index = kettleIndex, Percentage = percentage });
+            });
+        }
+
         private void OnUnknownCommand(ReceivedCommand arguments) {
             Console.WriteLine("Command without attached callback received");
         }
@@ -169,7 +179,7 @@ namespace Mwm.BeerFactoryV2.Service {
         private void OnError(ReceivedCommand arguments) {
             Console.WriteLine(" Arduino has experienced an error");
         }
-
+         
         // Log received line to console
         private void NewLineReceived(object sender, CommandEventArgs e) {
             //Console.WriteLine(@"Received > " + e.Command.CommandString());

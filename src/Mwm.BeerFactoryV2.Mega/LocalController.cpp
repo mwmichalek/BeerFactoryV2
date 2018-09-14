@@ -31,39 +31,12 @@ LocalController::LocalController(Thermometer* thermometers[],
 	_lcd.print("BF v3.0");
 
 	//TODO: (Michalek) HARDCODED!!!!
-	_hotLiquorTank->setPercentage(10);
-	_hotLiquorTank->enable(true);
+	_hotLiquorTank->setPercentage(0);
+	_hotLiquorTank->enable(false);
 
-	_boilKettle->setPercentage(90);
-	_boilKettle->enable(true);
+	_boilKettle->setPercentage(0);
+	_boilKettle->enable(false);
 }
-
-
-//LocalController::LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
-//							     Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
-//	_thermometer1 = thermometer1;
-//	_thermometer2 = thermometer2;
-//	_thermometer3 = thermometer3;
-//	_hotLiquorTank = hotLiquorTank;
-//	_boilKettle = boilKettle;
-//
-//	_cmdMessenger = cmdMessenger;
-//
-//	_lcd.begin(20, 4);
-//	_lcd.setBacklight(HIGH);
-//
-//	_lcd.setCursor(0, 0);            // go to the top left corner
-//	_lcd.print("BF v3.0");
-//
-//	//TODO: (Michalek) HARDCODED!!!!
-//	_hotLiquorTank->setPercentage(10);
-//	_hotLiquorTank->enable(true);
-//
-//	_boilKettle->setPercentage(90);
-//	_boilKettle->enable(true);
-//}
-
-
 
 void LocalController::update() {
 
@@ -141,15 +114,15 @@ void LocalController::update() {
 
 void LocalController::handleKettleRequest() {
 	int index = _cmdMessenger->readInt16Arg();
-	double percentage = _cmdMessenger->readDoubleArg();
+	int percentage = _cmdMessenger->readInt16Arg();
 	if (index == 1) {
 		_hotLiquorTank->setPercentage(percentage);
-		_hotLiquorTank->enable(true);
-		postMsg("HLT:" + String(percentage));
+		_hotLiquorTank->enable(percentage > 0);
+		postKettle(1, _hotLiquorTank->currentPercentage());
 	} else if (index == 2) {
 		_boilKettle->setPercentage(percentage);
-		_boilKettle->enable(true);
-		postMsg("BK:" + String(percentage));
+		_boilKettle->enable(percentage > 0);
+		postKettle(2, _boilKettle->currentPercentage());
 	}
 }
 
@@ -162,14 +135,14 @@ void LocalController::postTemperature(int index, double temperature) {
 	}
 }
 
-void LocalController::postKettle(int index, double percentage) {
+void LocalController::postKettle(int index, int percentage) {
 	_cmdMessenger->sendCmdStart(Events::kKettleResult);
 	_cmdMessenger->sendCmdArg(index);
 	_cmdMessenger->sendCmdArg(percentage);
 	_cmdMessenger->sendCmdEnd();
+	_lcd.setCursor(0, 3);
+	_lcd.print(String(index) + " " + String(percentage));
 }
-
-
 
 void LocalController::postStatus() {
 	_isConnected = true;
@@ -183,8 +156,8 @@ void LocalController::postStatus() {
 	postTemperature(8, _temperature8);
 	postTemperature(9, _temperature9);
 
-	//postKettle(1, _hotLiquorTank->currentPercentage);
-	//postKettle(2, _boilKettle->currentPercentage);
+	postKettle(1, _hotLiquorTank->currentPercentage());
+	postKettle(2, _boilKettle->currentPercentage());
 }
 
 void LocalController::connectionStatus(bool isConnected) {
@@ -200,58 +173,12 @@ void LocalController::postMsg(String msg) {
 }
 
 void LocalController::displayStatus() {
-	//_lcd.setCursor(0, 0);
-	//_lcd.print(String(_temperature1) + "  ");
-	//_lcd.setCursor(0, 1);
-	//_lcd.print(String(_temperature2) + "  ");
-	//_lcd.setCursor(0, 2);
-	//_lcd.print(String(_temperature3) + "  ");
-	//_lcd.setCursor(0, 3);
-	//_lcd.print(String(_temperature4) + "  ");
-
 	_lcd.setCursor(0, 0);
 	_lcd.print(String(_temperature1) + " " + String(_temperature2) + " " + String(_temperature3));
 	_lcd.setCursor(0, 1);
 	_lcd.print(String(_temperature4) + " " + String(_temperature5) + " " + String(_temperature6));
 	_lcd.setCursor(0, 2);
 	_lcd.print(String(_temperature7) + " " + String(_temperature8) + " " + String(_temperature9));
-	
+	//_lcd.setCursor(0, 3);
+	//_lcd.print("HLT:" + String(_hotLiquorTank->currentPercentage()) + " BK:" + String(_boilKettle->currentPercentage()) );
 }
-
-//readInt16Argvoid LocalController::handleCommand() {
-	//String command = "";
-
-	//while (Serial.available()) {
-	//	char inChar = (char)Serial.read();
-
-	//	if (inChar != '\n') 
-	//		command += inChar;
-	//	else
-	//		continue;
-	//}
-
-	//if (command == "STATE") {
-	//	Serial.println("BF:STATE:T1:" + String(_temperature1) +
-	//		"|T2:" + String(_temperature2) +
-	//		"|T3:" + String(_temperature3) +
-	//		"|HLT:" + String(_hotLiquorTank->currentPercentage()) +
-	//		"|BK:" + String(_boilKettle->currentPercentage()));
-	//} else if (command != "") {
-	//	Serial.println("UNKNOWN_COMAND: " + command);
-	//	//_lcd.setCursor(0, 3);
-	//	//_lcd.print(command + "   ");
-	//}
-	////Serial.println("HEARD:" + reading);
-//}
-
-//void LocalController::receivedCommand(String command) {
-//
-//	int eqlIndex = command.indexOf("=");
-//	if (eqlIndex != -1) {
-//		_lastCmd = command.substring(0, eqlIndex - 1);
-//		_lastVal = command.substring(eqlIndex + 1, command.length() - 1);
-//	} else {
-//		_lastCmd = command;
-//		_lastVal = "";
-//	}
-//}

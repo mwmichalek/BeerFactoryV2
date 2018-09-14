@@ -73,7 +73,7 @@ private:
 	LiquidCrystal_I2C _lcd = LiquidCrystal_I2C(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 	void postTemperature(int index, double temperature);
-	void postKettle(int index, double percentage);
+	void postKettle(int index, int percentage);
 
 	//String inputString = "";         // a string to hold incoming data
 	//boolean stringComplete = false;  // whether the string is complete
