@@ -18,10 +18,11 @@ public:
 	
 
 	void update();
-	bool isEnabled();
-	bool isEngaged();
-	void enable(bool isEnabled);
+	//bool isEnabled();
+	//bool isEngaged();
+	//void enable(bool isEnabled);
 	void engage(bool isEngaged);
+	void disengage();
 	int currentPercentage();
 	void setPercentage(int percentage);
 	void postStatus(int index, int onOrOff);
@@ -36,9 +37,8 @@ private:
 	int _percentage;
 	int _millisOfOn;
 	int _millisOfOff;
-	unsigned long _timeToOn;
-	unsigned long _timeToOff;
-	bool _enabled;
+	unsigned long _timeToToggle;
+	//bool _enabled;
 	bool _engaged;
 };
 

@@ -31,11 +31,11 @@ LocalController::LocalController(Thermometer* thermometers[],
 	_lcd.print("BF v3.0");
 
 	//TODO: (Michalek) HARDCODED!!!!
-	_hotLiquorTank->setPercentage(0);
-	_hotLiquorTank->enable(false);
+	//_hotLiquorTank->setPercentage(0);
+	//_hotLiquorTank->enable(false);
 
-	_boilKettle->setPercentage(0);
-	_boilKettle->enable(false);
+	//_boilKettle->setPercentage(0);
+	//_boilKettle->enable(false);
 }
 
 void LocalController::update() {
@@ -117,11 +117,11 @@ void LocalController::handleKettleRequest() {
 	int percentage = _cmdMessenger->readInt16Arg();
 	if (index == 1) {
 		_hotLiquorTank->setPercentage(percentage);
-		_hotLiquorTank->enable(percentage > 0);
+		//_hotLiquorTank->enable(percentage > 0);
 		postKettle(1, _hotLiquorTank->currentPercentage());
 	} else if (index == 2) {
 		_boilKettle->setPercentage(percentage);
-		_boilKettle->enable(percentage > 0);
+		//_boilKettle->enable(percentage > 0);
 		postKettle(2, _boilKettle->currentPercentage());
 	}
 }

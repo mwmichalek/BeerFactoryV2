@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mwm.BeerFactoryV2.Service",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9) Arduino", "9) Arduino", "{C49DF8B7-0DB9-42CC-AAF8-CC115A29D652}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Timer-2.1", "..\..\..\..\Users\mwmic\OneDrive\Personal\OneNote\Documents\Arduino\libraries\Timer-2.1\Timer-2.1.vcxitems", "{BBCC7DB8-BA49-41B2-AC04-84BEE6275F44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

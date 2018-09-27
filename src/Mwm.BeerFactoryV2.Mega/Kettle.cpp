@@ -17,13 +17,6 @@ Kettle::Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElem
 	_heatingElement1 = HeatingElement(heatingElementPin1, name + "1", cmdMessenger);
 	_heatingElement2 = HeatingElement(heatingElementPin2, name + "2", cmdMessenger);
 
-	_heatingElement1.enable(true);
-	_heatingElement2.enable(false);
-
-	_timeToOn = 0;
-	_timeToOff = 0;
-
-	enable(false);
 	setPercentage(0);
 }
 
@@ -35,49 +28,46 @@ void Kettle::update() {
 		// Indicates the lag time between when an event should have happened and when it did.
 		unsigned long millisOff;
 
-		if (currentMillis >= _timeToOff) {
-			millisOff = currentMillis - _timeToOff;
+		if (currentMillis >= _timeToToggle) {
+			millisOff = currentMillis - _timeToToggle;
 
-			_timeToOn = currentMillis + _millisOfOff;
-			_timeToOff = _timeToOn + _millisOfOn;
+			if ((_millisOfOn > 0) && !_engaged) {
+				// Turn on
+				engage(true);
+				_timeToToggle = currentMillis + _millisOfOn;
 
-			engage(true);
-		} else if (currentMillis >= _timeToOn) {
-			millisOff = currentMillis - _timeToOn;
-
-			_timeToOff = currentMillis + _millisOfOn;
-			_timeToOn = _timeToOff + _millisOfOff;
-
-			engage(false);
-		}
-	} else {
-		digitalWrite(_ssrPin, LOW);
-		_timeToOn = currentMillis;
-		_timeToOff = currentMillis;
-	}
+			}
+			else {
+				// Turn off
+				engage(false);
+				_timeToToggle = currentMillis + _millisOfOff;
+			}
+		} 
+	} 
 }
 
-bool Kettle::isEnabled() {
-	return _enabled;
-}
+//bool Kettle::isEnabled() {
+//	return _enabled;
+//}
 
-void Kettle::enable(bool isEnabled) {
-	_enabled = isEnabled;
+//void Kettle::enable(bool isEnabled) {
+//	_enabled = isEnabled;
+//
+//	_heatingElement1.enable(_enabled);
+//	_heatingElement2.enable(_enabled);
+//
+//	update();
+//}
 
-	_heatingElement1.enable(_enabled);
-	_heatingElement2.enable(_enabled);
-
-	update();
-}
-
-bool Kettle::isEngaged() {
-	return _engaged;
-}
+//bool Kettle::isEngaged() {
+//	return _engaged;
+//}
 
 void Kettle::engage(bool isEngaged) {
 	//TODO: Clean this up!
 	bool valueChanged = false;
-	bool trueEngaged = _enabled && isEngaged;
+	//bool trueEngaged = _enabled && isEngaged;
+	bool trueEngaged = isEngaged;
 
 	if (_engaged != trueEngaged) {
 		_engaged = trueEngaged;
@@ -87,16 +77,22 @@ void Kettle::engage(bool isEngaged) {
 	// This doesn't do much but launch events when the parent SSR is engaged.
 	if (valueChanged) {
 		if (trueEngaged) {
-			digitalWrite(_ssrPin, LOW);
+			digitalWrite(_ssrPin, HIGH);
 			postStatus(_ssrPin, true);
 		} else {
-			digitalWrite(_ssrPin, HIGH);
+			digitalWrite(_ssrPin, LOW);
 			postStatus(_ssrPin, false);
 		}
 
 		_heatingElement1.engage(trueEngaged);
 		_heatingElement2.engage(trueEngaged);
 	}
+}
+
+void Kettle::disengage() {
+	_timeToToggle = millis();
+	_engaged = false;
+	digitalWrite(_ssrPin, LOW);
 }
 
 int Kettle::currentPercentage() {
@@ -116,7 +112,7 @@ void Kettle::setPercentage(int percentage) {
 	_percentage = percentage;
 	
 	if (_percentage == 100) {
-		_millisOfOn = _cycleLengthInMillis;
+		_millisOfOn = _cycleLengthInMillis * 100000;
 		_millisOfOff = 0;
 	} else if (_percentage > 0) {
 		double ratio = (double)_percentage / (double)100;
@@ -124,8 +120,10 @@ void Kettle::setPercentage(int percentage) {
 		_millisOfOff = _cycleLengthInMillis - _millisOfOn;
 	} else {
 		_millisOfOn = 0;
-		_millisOfOff = _cycleLengthInMillis;
+		_millisOfOff = _cycleLengthInMillis * 100000;
 	}
+	
+	disengage();
 	update();
 }
 
