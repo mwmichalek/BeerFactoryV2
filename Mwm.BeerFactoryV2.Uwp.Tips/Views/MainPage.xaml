@@ -13,7 +13,8 @@
         Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <TextBlock x:Name="Temperature1TextBlock" HorizontalAlignment="Left" Margin="0,0,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature1}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
+
+            <TextBlock x:Name="Temperature1TextBlock"    HorizontalAlignment="Left" Margin="0,0,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature1}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
             <TextBlock x:Name="Temperature2TextBlock" HorizontalAlignment="Left" Margin="0,110,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature2}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal" />
             <TextBlock x:Name="Temperature3TextBlock" HorizontalAlignment="Left" Margin="0,220,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature3}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
             <TextBlock x:Name="Temperature4TextBlock" HorizontalAlignment="Left" Margin="0,330,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature4}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
@@ -24,7 +25,7 @@
             <TextBlock x:Name="Temperature9TextBlock" HorizontalAlignment="Left" Margin="0,880,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.Temperature9}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
 
 
-            <TextBlock x:Name="ConnectionStatusTextBlock" HorizontalAlignment="Left" Margin="1126,917,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.ConnectionStatus}" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="359" FontSize="20" FontWeight="Normal"/>
+            <TextBlock x:Name="ConnectionStatusTextBlock" HorizontalAlignment="Left" Margin="1169,917,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.ConnectionStatus}" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="316" FontSize="20" FontWeight="Normal"/>
 
             <Slider x:Name="HltSlider" Value="{x:Bind ViewModel.HltPercentageSetting, Mode=TwoWay}"  HorizontalAlignment="Left" PointerCaptureLost="HltSlider_PointerCaptureLost" Margin="633,133,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
             <Slider x:Name="BkSlider" Value="{x:Bind ViewModel.BkPercentageSetting, Mode=TwoWay}" HorizontalAlignment="Left" PointerCaptureLost="BkSlider_PointerCaptureLost" Margin="633,261,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
@@ -32,7 +33,8 @@
             <TextBlock x:Name="HltPercentageTextBlock" HorizontalAlignment="Left" Margin="951,107,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.HltPercentage}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
             <TextBlock x:Name="BkPercentageTextBlock" HorizontalAlignment="Left" Margin="951,237,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.BkPercentage}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
 
-
+            <Ellipse x:Name="HltElementEngagedEllipse" HorizontalAlignment="Left" Height="100" Margin="638,440,0,0" VerticalAlignment="Top" Fill="{x:Bind Mode=OneWay, Path=ViewModel.HltElementEngagedBrush}" Width="100"/>
+            <Ellipse x:Name="BkElementEngagedEllipse" HorizontalAlignment="Left" Height="100" Margin="812,438,0,0" VerticalAlignment="Top" Fill="{x:Bind Mode=OneWay, Path=ViewModel.BkElementEngagedBrush}" Width="100"/>
 
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->

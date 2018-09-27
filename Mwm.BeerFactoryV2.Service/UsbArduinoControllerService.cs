@@ -24,7 +24,8 @@ namespace Mwm.BeerFactoryV2.Service {
             TempChange,
             SsrChange,
             HeaterChange,
-            PumpChange
+            PumpChange,
+            Message
         };
 
         private SerialTransport _serialTransport;
@@ -75,9 +76,10 @@ namespace Mwm.BeerFactoryV2.Service {
             _cmdMessenger.Attach((int)Command.Acknowledge, OnAcknowledge);
             _cmdMessenger.Attach((int)Command.Error, OnError);
             _cmdMessenger.Attach((int)Command.TempChange, OnTempChange);
-            _cmdMessenger.Attach((int)Command.SsrChange, OnSsrChange);
-            _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
             _cmdMessenger.Attach((int)Command.KettleResult, OnKettleResult);
+            _cmdMessenger.Attach((int)Command.SsrChange, OnSsrChange);
+            _cmdMessenger.Attach((int)Command.Message, OnMessage);
+            // _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
 
             _cmdMessenger.NewLineReceived += NewLineReceived;
             _cmdMessenger.NewLineSent += NewLineSent;
@@ -132,20 +134,21 @@ namespace Mwm.BeerFactoryV2.Service {
         private async void OnSsrChange(ReceivedCommand receivedCommand) {
             int.TryParse(receivedCommand.ReadStringArg(), out int ssrIndex);
             int.TryParse(receivedCommand.ReadStringArg(), out int ssrValue);
+            int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
 
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<SsrResultEvent>().Publish(new SsrResult { Index = ssrIndex, IsEngaged = ssrValue == 1 });
+                _eventAggregator.GetEvent<SsrResultEvent>().Publish(new SsrResult { Index = ssrIndex, IsEngaged = ssrValue == 1, Percentage = percentage });
             });
         }
 
-        private async void OnHeaterChange(ReceivedCommand receivedCommand) {
-            int.TryParse(receivedCommand.ReadStringArg(), out int heaterIndex);
-            int.TryParse(receivedCommand.ReadStringArg(), out int heaterValue);
+        //private async void OnHeaterChange(ReceivedCommand receivedCommand) {
+        //    int.TryParse(receivedCommand.ReadStringArg(), out int heaterIndex);
+        //    int.TryParse(receivedCommand.ReadStringArg(), out int heaterValue);
 
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<HeaterResultEvent>().Publish(new HeaterResult { Index = heaterIndex, IsEngaged = heaterIndex == 1 });
-            });
-        }
+        //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //        _eventAggregator.GetEvent<HeaterResultEvent>().Publish(new HeaterResult { Index = heaterIndex, IsEngaged = heaterIndex == 1 });
+        //    });
+        //}
 
         private async void OnTempChange(ReceivedCommand receivedCommand) {
             int.TryParse(receivedCommand.ReadStringArg(), out int probeIndex);
@@ -157,12 +160,33 @@ namespace Mwm.BeerFactoryV2.Service {
         }
 
         private async void OnKettleResult(ReceivedCommand receivedCommand) {
-            int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
-            int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+            try {
+                int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
+                //int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+                var percentageString = receivedCommand.ReadStringArg();
+                int.TryParse(percentageString.Split(':')[1], out int percentage);
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    _eventAggregator.GetEvent<KettleResultEvent>().Publish(new KettleResult { Index = kettleIndex, Percentage = percentage });
+                });
+            } catch (Exception ex) {
 
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<KettleResultEvent>().Publish(new KettleResult { Index = kettleIndex, Percentage = percentage });
-            });
+                throw;
+            }
+        }
+
+        private async void OnMessage(ReceivedCommand receivedCommand) {
+            try {
+                int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
+                var message = ""; // receivedCommand.ReadStringArg();
+                int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    _eventAggregator.GetEvent<MessageEvent>().Publish(new Message { Index = kettleIndex, Body = message, Percentage = percentage });
+                });
+            } catch (Exception ex) {
+
+                throw;
+            }
         }
 
         private void OnUnknownCommand(ReceivedCommand arguments) {

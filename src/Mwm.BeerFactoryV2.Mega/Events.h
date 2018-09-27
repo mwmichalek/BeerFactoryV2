@@ -25,7 +25,8 @@ public:
 		kTempChange,
 		kSsrChange,
 		kHeaterChange,
-		kPumpChange
+		kPumpChange,
+		kMessage
 	};
 
 };

@@ -115,15 +115,29 @@ void LocalController::update() {
 void LocalController::handleKettleRequest() {
 	int index = _cmdMessenger->readInt16Arg();
 	int percentage = _cmdMessenger->readInt16Arg();
+
 	if (index == 1) {
 		_hotLiquorTank->setPercentage(percentage);
-		//_hotLiquorTank->enable(percentage > 0);
-		postKettle(1, _hotLiquorTank->currentPercentage());
+		//_hotLiquorTank->postKettleStatus();
+		//postKettle(index, percentage);
 	} else if (index == 2) {
 		_boilKettle->setPercentage(percentage);
-		//_boilKettle->enable(percentage > 0);
-		postKettle(2, _boilKettle->currentPercentage());
+		//_boilKettle->postKettleStatus();
+		//postKettle(2, _boilKettle->currentPercentage());
 	}
+
+	//_cmdMessenger->sendCmdStart(Events::kKettleResult);
+	//_cmdMessenger->sendCmdArg(index);
+	//_cmdMessenger->sendCmdArg("BagOfDicks:" + String(percentage) + ":Go fuck yourself");
+	//_cmdMessenger->sendCmdEnd();
+
+	// FOR SOME FUCKED UP REASON THIS ONE KIND OF WORKS, BUT kKettleResult DOESN"T
+	_cmdMessenger->sendCmdStart(Events::kMessage);
+	_cmdMessenger->sendCmdArg(index);
+	_cmdMessenger->sendCmdArg(percentage);
+	_cmdMessenger->sendCmdEnd();
+
+	//postKettle(index, percentage);
 }
 
 void LocalController::postTemperature(int index, double temperature) {
@@ -135,14 +149,13 @@ void LocalController::postTemperature(int index, double temperature) {
 	}
 }
 
-void LocalController::postKettle(int index, int percentage) {
-	_cmdMessenger->sendCmdStart(Events::kKettleResult);
-	_cmdMessenger->sendCmdArg(index);
-	_cmdMessenger->sendCmdArg(percentage);
-	_cmdMessenger->sendCmdEnd();
-	_lcd.setCursor(0, 3);
-	_lcd.print(String(index) + " " + String(percentage));
-}
+//void LocalController::postKettle(int index, int percentage) {
+//	_cmdMessenger->sendCmdStart(Events::kKettleResult);
+//	_cmdMessenger->sendCmdArg(index);
+//	_cmdMessenger->sendCmdArg(test++);
+//	_cmdMessenger->sendCmdEnd();
+//	//postStatus();
+//}
 
 void LocalController::postStatus() {
 	_isConnected = true;
@@ -156,8 +169,8 @@ void LocalController::postStatus() {
 	postTemperature(8, _temperature8);
 	postTemperature(9, _temperature9);
 
-	postKettle(1, _hotLiquorTank->currentPercentage());
-	postKettle(2, _boilKettle->currentPercentage());
+	_hotLiquorTank->postKettleStatus();
+	_boilKettle->postKettleStatus();
 }
 
 void LocalController::connectionStatus(bool isConnected) {

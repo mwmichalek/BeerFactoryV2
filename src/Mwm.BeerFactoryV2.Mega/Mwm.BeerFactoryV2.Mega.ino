@@ -112,15 +112,15 @@ void setup() {
 	thermometer1 = Thermometer(sensors, probe01, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer2 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer3 = Thermometer(sensors, probe05, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer4 = Thermometer(sensors, probe06, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer5 = Thermometer(sensors, probe09, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer6 = Thermometer(sensors, probe10, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer7 = Thermometer(sensors, probe11, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer8 = Thermometer(sensors, probe12, TEMP_READING_CYCLE_IN_MILLIS);
-	thermometer9 = Thermometer(sensors, probe13, TEMP_READING_CYCLE_IN_MILLIS);
+	thermometer4 = Thermometer(sensors, probe06, TEMP_READING_CYCLE_IN_MILLIS, false);
+	thermometer5 = Thermometer(sensors, probe09, TEMP_READING_CYCLE_IN_MILLIS, false);
+	thermometer6 = Thermometer(sensors, probe10, TEMP_READING_CYCLE_IN_MILLIS, false);
+	thermometer7 = Thermometer(sensors, probe11, TEMP_READING_CYCLE_IN_MILLIS, false);
+	thermometer8 = Thermometer(sensors, probe12, TEMP_READING_CYCLE_IN_MILLIS, false);
+	thermometer9 = Thermometer(sensors, probe13, TEMP_READING_CYCLE_IN_MILLIS, false);
 
-	hotLiquorTank = Kettle(SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2, &cmdMessenger);
-	boilKettle = Kettle(SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4, &cmdMessenger);
+	hotLiquorTank = Kettle(1, SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2, &cmdMessenger);
+	boilKettle = Kettle(2, SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4, &cmdMessenger);
 
 	Thermometer* thermometers[] = { &thermometer1, &thermometer2, &thermometer3, 
 								    &thermometer4, &thermometer5, &thermometer6, 

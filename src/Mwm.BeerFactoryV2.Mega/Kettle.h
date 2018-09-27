@@ -14,7 +14,7 @@ class Kettle {
 
 public:
 	Kettle();
-	Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2, CmdMessenger* _cmdMessenger);
+	Kettle(int index, int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2, CmdMessenger* _cmdMessenger);
 	
 
 	void update();
@@ -25,9 +25,11 @@ public:
 	void disengage();
 	int currentPercentage();
 	void setPercentage(int percentage);
-	void postStatus(int index, int onOrOff);
+	void postSsrStatus();
+	void postKettleStatus();
 	
 private:
+	int _index;
 	int _ssrPin;
 	String _name;
 	HeatingElement _heatingElement1;

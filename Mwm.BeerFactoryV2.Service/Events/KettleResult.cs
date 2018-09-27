@@ -11,7 +11,6 @@ namespace Mwm.BeerFactoryV2.Service.Events {
         public int Index { get; set; }
 
         public int Percentage { get; set; }
-
     }
 
     public class KettleResultEvent : PubSubEvent<KettleResult> {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using Prism.Windows.Mvvm;
-
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
     public class MainViewModel : ViewModelBase {
@@ -41,18 +43,42 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
                 ConnectionStatus = $"{connectionStatus.Type}";
             });
 
+            _eventAggregator.GetEvent<SsrResultEvent>().Subscribe((ssrResult) => {
+                //Debug.WriteLine($"SSR Status: {ssrResult.Index} {ssrResult.IsEngaged}");
+                if (ssrResult.Index == 1) {
+                    HltElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
+                    HltPercentage = ssrResult.Percentage;
+                } else if (ssrResult.Index == 2) {
+                    BkElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
+                    BkPercentage = ssrResult.Percentage;
+                }
+            });
+
             _eventAggregator.GetEvent<KettleResultEvent>().Subscribe((kettleResult) => {
+                Debug.WriteLine($"Kettle Shit Happened: {kettleResult.Index} {kettleResult.Percentage}");
                 if (kettleResult.Index == 1) {
-                    Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
+                    //Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
                     HltPercentage = kettleResult.Percentage;
                 } else if (kettleResult.Index == 2) {
-                    Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
+                    //Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
                     BkPercentage = kettleResult.Percentage;
+                }
+            });
+
+            _eventAggregator.GetEvent<MessageEvent>().Subscribe((message) => {
+                Debug.WriteLine($"Message: {message.Index} {message.Body}");
+
+                if (message.Index == 1) {
+                    //Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
+                    HltPercentage = message.Percentage;
+                } else if (message.Index == 2) {
+                    //Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
+                    BkPercentage = message.Percentage;
                 }
             });
         }
 
-        public string connectionStatus = "";
+        private string connectionStatus = "";
         public string ConnectionStatus {
             get { return connectionStatus; }
             set { SetProperty(ref connectionStatus, value); }
@@ -142,6 +168,35 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
                 //Debug.WriteLine($"BkPercentageSetting: {value}");
                 //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = value });
             }
+        }
+
+        //private bool hltElementEngaged = false;
+        //public bool HltElementEngaged {
+        //    get { return hltElementEngaged; }
+        //    set { SetProperty(ref hltElementEngaged, value); }
+
+        //}
+
+        //private bool bkElementEngaged = false;
+        //public bool BkElementEngaged {
+        //    get { return bkElementEngaged; }
+        //    set { SetProperty(ref bkElementEngaged, value); }
+
+        //}
+
+        private static SolidColorBrush yellow = new SolidColorBrush(Colors.Yellow);
+        private static SolidColorBrush black = new SolidColorBrush(Colors.Black);
+
+        private Brush hltElementEngagedBrush = black;
+        public Brush HltElementEngagedBrush {
+            get { return hltElementEngagedBrush; }
+            set { SetProperty(ref hltElementEngagedBrush, value); }
+        }
+
+        private Brush bkElementEngagedBrush = black;
+        public Brush BkElementEngagedBrush {
+            get { return bkElementEngagedBrush; }
+            set { SetProperty(ref bkElementEngagedBrush, value); }
         }
 
         public void HltPublishChangeEvent() {

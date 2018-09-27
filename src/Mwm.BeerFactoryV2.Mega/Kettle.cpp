@@ -7,7 +7,8 @@
 Kettle::Kettle() {
 }
 
-Kettle::Kettle(int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2, CmdMessenger* cmdMessenger) {
+Kettle::Kettle(int index, int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2, CmdMessenger* cmdMessenger) {
+	_index = index;
 	pinMode(ssrPin, OUTPUT);
 	_cmdMessenger = cmdMessenger;
 	_name = name;
@@ -76,16 +77,15 @@ void Kettle::engage(bool isEngaged) {
 
 	// This doesn't do much but launch events when the parent SSR is engaged.
 	if (valueChanged) {
-		if (trueEngaged) {
+		if (trueEngaged) 
 			digitalWrite(_ssrPin, HIGH);
-			postStatus(_ssrPin, true);
-		} else {
+		else 
 			digitalWrite(_ssrPin, LOW);
-			postStatus(_ssrPin, false);
-		}
-
+		
+		
 		_heatingElement1.engage(trueEngaged);
 		_heatingElement2.engage(trueEngaged);
+		postSsrStatus();
 	}
 }
 
@@ -99,10 +99,18 @@ int Kettle::currentPercentage() {
 	return _percentage;
 }
 
-void Kettle::postStatus(int index, int onOrOff) {
+void Kettle::postSsrStatus() {
 	_cmdMessenger->sendCmdStart(Events::kSsrChange);
-	_cmdMessenger->sendCmdArg(index);
-	_cmdMessenger->sendCmdArg(onOrOff);
+	_cmdMessenger->sendCmdArg(_index);
+	_cmdMessenger->sendCmdArg(_engaged);
+	_cmdMessenger->sendCmdArg(_percentage);
+	_cmdMessenger->sendCmdEnd();
+}
+
+void Kettle::postKettleStatus() {
+	_cmdMessenger->sendCmdStart(Events::kKettleResult);
+	_cmdMessenger->sendCmdArg(_index);
+	_cmdMessenger->sendCmdArg("Percentage:" + String(_percentage));
 	_cmdMessenger->sendCmdEnd();
 }
 
@@ -110,7 +118,8 @@ void Kettle::postStatus(int index, int onOrOff) {
 void Kettle::setPercentage(int percentage) {
 	// TODO: Validate percentage
 	_percentage = percentage;
-	
+	//postKettleStatus();
+
 	if (_percentage == 100) {
 		_millisOfOn = _cycleLengthInMillis * 100000;
 		_millisOfOff = 0;
@@ -125,6 +134,7 @@ void Kettle::setPercentage(int percentage) {
 	
 	disengage();
 	update();
+	
 }
 
 
