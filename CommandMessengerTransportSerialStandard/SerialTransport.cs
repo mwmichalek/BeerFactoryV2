@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.IO.Ports;
 
 namespace CommandMessenger.Transport.Serial {
@@ -66,6 +67,14 @@ namespace CommandMessenger.Transport.Serial {
         /// <summary> Connects to a serial port defined through the current settings. </summary>
         /// <returns> true if it succeeds, false if it fails. </returns>
         public bool Connect() {
+
+
+            //Debug.WriteLine($"1 : {SerialUtils.PortExists("COM1")}");
+            //Debug.WriteLine($"2 : {SerialUtils.PortExists("COM2")}");
+            //Debug.WriteLine($"3 : {SerialUtils.PortExists("COM3")}");
+            //Debug.WriteLine($"4 : {SerialUtils.PortExists("COM4")}");
+            //Debug.WriteLine($"5 : {SerialUtils.PortExists("COM5")}");
+            //Debug.WriteLine($"6 : {SerialUtils.PortExists("COM6")}");
 
             if (_serialPort == null) {
                 if (!_currentSerialSettings.IsValid())

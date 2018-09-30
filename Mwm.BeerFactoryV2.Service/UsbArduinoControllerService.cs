@@ -73,47 +73,45 @@ namespace Mwm.BeerFactoryV2.Service {
 
         public async Task<bool> Setup() {
 
-            UInt32 _pid = 0x0042;
-            UInt32 _vid = 0x2341;
+            //UInt32 _pid = 0x0042;
+            //UInt32 _vid = 0x2341;
 
 
-            //USB\VID_2341&PID_0042&REV_0001
-            //USB\VID_2341&PID_0042
+            ////USB\VID_2341&PID_0042&REV_0001
+            ////USB\VID_2341&PID_0042
 
-            //string aqs = UsbDevice.GetDeviceSelector(_vid, _pid);
+            ////string aqs = UsbDevice.GetDeviceSelector(_vid, _pid);
 
-            string aqs = SerialDevice.GetDeviceSelector();
-            var dis = await DeviceInformation.FindAllAsync(aqs);
+            //string aqs = SerialDevice.GetDeviceSelector();
+            //var dis = await DeviceInformation.FindAllAsync(aqs);
 
-            //SerialPort serialPort = null;
+            ////SerialPort serialPort = null;
 
-            foreach (var di in dis) {
-                if (di.Id.Contains("VID_2341")) {
+            //foreach (var di in dis) {
+            //    if (di.Id.Contains("VID_2341")) {
 
-                    try {
-                        var serialPort = await SerialDevice.FromIdAsync(di.Id);
+            //        try {
+            //            var serialPort = await SerialDevice.FromIdAsync(di.Id);
 
-                        if (serialPort != null)
-                            Debug.WriteLine($"serialPort: {di.Id} {serialPort.PortName}");
-                        else
-                            Debug.WriteLine($"serialPort: -");
-                    } catch (Exception ex) {
+            //            if (serialPort != null)
+            //                Debug.WriteLine($"serialPort: {di.Id} {serialPort.PortName}");
+            //            else
+            //                Debug.WriteLine($"serialPort: -");
+            //        } catch (Exception ex) {
 
-                        Debug.WriteLine(ex);
-                    }
+            //            Debug.WriteLine(ex);
+            //        }
 
 
 
-                    //Debug.WriteLine($"Device: {device.Properties["FriendlyName"]}");
-                }
+            //        //Debug.WriteLine($"Device: {device.Properties["FriendlyName"]}");
+            //    }
 
-            }
+            //}
 
             _serialTransport = new SerialTransport {
-                CurrentSerialSettings = { PortName = "COM3", BaudRate = 57600, DtrEnable = false } // object initializer
+                CurrentSerialSettings = { PortName = "COM6", BaudRate = 57600, DtrEnable = false } // object initializer
             };
-
-            var serialPort = new SerialPort()
 
             _cmdMessenger = new CmdMessenger(_serialTransport, BoardType.Bit32);
 
