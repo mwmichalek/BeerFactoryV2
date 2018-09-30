@@ -143,6 +143,8 @@ void setup() {
 void loop() {
 	localController.update();
 	cmdMessenger.feedinSerialData();
+
+
 }
 
 void configureCmdMessenger() {

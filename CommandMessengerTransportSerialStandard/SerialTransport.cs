@@ -20,13 +20,11 @@
 using System;
 using System.IO.Ports;
 
-namespace CommandMessenger.Transport.Serial
-{
+namespace CommandMessenger.Transport.Serial {
     /// <summary>Fas
     /// Manager for serial port data
     /// </summary>
-    public class SerialTransport : ITransport
-    {
+    public class SerialTransport : ITransport {
         private const int BufferSize = 4096;
 
         private volatile bool _connected;
@@ -43,48 +41,52 @@ namespace CommandMessenger.Transport.Serial
 
         /// <summary> Gets or sets the current serial port settings. </summary>
         /// <value> The current serial settings. </value>
-        public SerialSettings CurrentSerialSettings
-        {
+        public SerialSettings CurrentSerialSettings {
             get { return _currentSerialSettings; }
             set { _currentSerialSettings = value; }
         }
 
-        public SerialTransport()
-        {
+        public SerialTransport() {
             _worker = new AsyncWorker(Poll, "SerialTransport");
         }
 
-        private bool Poll()
-        {
+        public SerialTransport(SerialPort serialPort) {
+            _worker = new AsyncWorker(Poll, "SerialTransport");
+            _serialPort = serialPort;
+        }
+
+        private bool Poll() {
             var bytes = UpdateBuffer();
             if (bytes > 0 && DataReceived != null) DataReceived(this, EventArgs.Empty);
 
             // Return true as we always have work to do here. The delay is achieved by SerialPort.Read timeout.
             return true;
-        }        
+        }
 
         /// <summary> Connects to a serial port defined through the current settings. </summary>
         /// <returns> true if it succeeds, false if it fails. </returns>
-        public bool Connect()
-        {
-            if (!_currentSerialSettings.IsValid())
-                throw new InvalidOperationException("Unable to open connection - serial settings invalid.");
+        public bool Connect() {
 
-            if (IsConnected())
-                throw new InvalidOperationException("Serial port is already opened.");
+            if (_serialPort == null) {
+                if (!_currentSerialSettings.IsValid())
+                    throw new InvalidOperationException("Unable to open connection - serial settings invalid.");
 
-            // Setting serial port settings
-            _serialPort = new SerialPort(
-                _currentSerialSettings.PortName,
-                _currentSerialSettings.BaudRate,
-                _currentSerialSettings.Parity,
-                _currentSerialSettings.DataBits,
-                _currentSerialSettings.StopBits)
-                {
+                if (IsConnected())
+                    throw new InvalidOperationException("Serial port is already opened.");
+
+
+                // Setting serial port settings
+                _serialPort = new SerialPort(
+                    _currentSerialSettings.PortName,
+                    _currentSerialSettings.BaudRate,
+                    _currentSerialSettings.Parity,
+                    _currentSerialSettings.DataBits,
+                    _currentSerialSettings.StopBits) {
                     DtrEnable = _currentSerialSettings.DtrEnable,
                     WriteTimeout = _currentSerialSettings.Timeout,
-                    ReadTimeout  = 1000, // read timeout is used for polling in worker thread
+                    ReadTimeout = 1000, // read timeout is used for polling in worker thread
                 };
+            }
 
             _connected = Open();
             if (_connected) _worker.Start();
@@ -94,18 +96,15 @@ namespace CommandMessenger.Transport.Serial
 
         /// <summary> Query if the serial port is open. </summary>
         /// <returns> true if open, false if not. </returns>
-        public bool IsConnected()
-        {
+        public bool IsConnected() {
             return _connected && _serialPort.IsOpen;
         }
 
         /// <summary> Stops listening to the serial port. </summary>
         /// <returns> true if it succeeds, false if it fails. </returns>
-        public bool Disconnect()
-        {
+        public bool Disconnect() {
             bool result = Close();
-            if (_connected)
-            {
+            if (_connected) {
                 _connected = false;
                 _worker.Stop();
             }
@@ -114,36 +113,25 @@ namespace CommandMessenger.Transport.Serial
 
         /// <summary> Writes a parameter to the serial port. </summary>
         /// <param name="buffer"> The buffer to write. </param>
-        public void Write(byte[] buffer)
-        {
-            if (IsConnected())
-            {
-                try
-                {
-                    lock (_serialReadWriteLock)
-                    {
+        public void Write(byte[] buffer) {
+            if (IsConnected()) {
+                try {
+                    lock (_serialReadWriteLock) {
                         _serialPort.Write(buffer, 0, buffer.Length);
                     }
-                }
-                catch (TimeoutException)
-                {
+                } catch (TimeoutException) {
                     // Timeout (expected)
-                }
-                catch
-                {
+                } catch {
                     Disconnect();
                 }
             }
         }
 
         /// <summary> Reads the serial buffer into the string buffer. </summary>
-        public byte[] Read()
-        {
-            if (IsConnected())
-            {
+        public byte[] Read() {
+            if (IsConnected()) {
                 byte[] buffer;
-                lock (_readLock)
-                {
+                lock (_readLock) {
                     buffer = new byte[_bufferFilled];
                     Array.Copy(_readBuffer, buffer, _bufferFilled);
                     _bufferFilled = 0;
@@ -154,27 +142,21 @@ namespace CommandMessenger.Transport.Serial
             return new byte[0];
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         /// <summary> Opens the serial port. </summary>
         /// <returns> true if it succeeds, false if it fails. </returns>
-        private bool Open()
-        {
-            if (!_connected && PortExists() && !_serialPort.IsOpen)
-            {
-                try
-                {
+        private bool Open() {
+            if (!_connected && PortExists() && !_serialPort.IsOpen) {
+                try {
                     _serialPort.Open();
                     _serialPort.DiscardInBuffer();
                     _serialPort.DiscardOutBuffer();
                     return _serialPort.IsOpen;
-                }
-                catch
-                {
+                } catch {
                     // Ignore.
                 }
             }
@@ -184,47 +166,34 @@ namespace CommandMessenger.Transport.Serial
 
         /// <summary> Closes the serial port. </summary>
         /// <returns> true if it succeeds, false if it fails. </returns>
-        private bool Close()
-        {
+        private bool Close() {
             if (!IsConnected()) return false;
 
-            try
-            {
+            try {
                 _serialPort.Close();
                 return true;
-            }
-            catch
-            {
+            } catch {
                 return false;
-            }            
+            }
         }
 
         /// <summary> Queries if a current port exists. </summary>
         /// <returns> true if it succeeds, false if it fails. </returns>
-        private bool PortExists()
-        {
+        private bool PortExists() {
             return SerialUtils.PortExists(_serialPort.PortName);
         }
 
-        private int UpdateBuffer()
-        {
-            if (IsConnected())
-            {
-                try
-                {
-                    lock (_readLock)
-                    {
+        private int UpdateBuffer() {
+            if (IsConnected()) {
+                try {
+                    lock (_readLock) {
                         var nbrDataRead = _serialPort.Read(_readBuffer, _bufferFilled, (BufferSize - _bufferFilled));
                         _bufferFilled += nbrDataRead;
                     }
                     return _bufferFilled;
-                }
-                catch (TimeoutException)
-                {
+                } catch (TimeoutException) {
                     // Timeout (expected)
-                }
-                catch
-                {
+                } catch {
                     Disconnect();
                 }
             }
@@ -232,10 +201,8 @@ namespace CommandMessenger.Transport.Serial
             return 0;
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
+        protected virtual void Dispose(bool disposing) {
+            if (disposing) {
                 Disconnect();
                 if (_serialPort != null) _serialPort.Dispose();
             }
