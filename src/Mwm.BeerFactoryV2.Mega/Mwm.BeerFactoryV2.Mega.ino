@@ -1,29 +1,13 @@
-//#include <SoftI2CMaster.h>
-//#include <SI2CIO.h>
-//#include <LiquidCrystal_SR3W.h>
-//#include <LiquidCrystal_SR2W.h>
-//#include <LiquidCrystal_SR1W.h>
-//#include <LiquidCrystal_SR.h>
-//#include <LiquidCrystal_SI2C.h>
-//#include <LiquidCrystal_I2C_ByVac.h>
-//#include <LiquidCrystal.h>
+#include <Wire.h>
+#include <Firmata.h>
+#include <Boards.h>
 #include <Timer.h>
 #include <Event.h>
 #include <LCD.h>
-//#include <I2CIO.h>
-//#include <FastIO.h>
 #include "Events.h"
 #include <CmdMessenger.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-//#include <Boards.h>
-//#include <PID_v1.h>
-//#include "RotaryEncoder.h"
-//#include <TimerOne.h>
-//#include <LiquidCrystal_I2C.h>
-//#include <utility.h>
-//#include <unwind-cxx.h>
-//#include <system_configuration.h>
 #include "Pump.h"
 #include "RemoteController.h"
 #include "LocalController.h"
@@ -40,6 +24,7 @@
 // C:\Program Files (x86)\Arduino\libraries\NewliquidCrystal
 //
 //******************************************************************************
+#define SLAVE_ADDRESS 0x40
 
 #define SSR_PIN_1 5
 #define SSR_PIN_2 6
@@ -48,8 +33,6 @@
 #define HEATINGELEMENT_PIN_2 2
 #define HEATINGELEMENT_PIN_3 3
 #define HEATINGELEMENT_PIN_4 4
-
-
 
 #define PUMP_PIN_1 10
 #define PUMP_PIN_2 11
@@ -106,8 +89,9 @@ CmdMessenger cmdMessenger = CmdMessenger(Serial);
 
 void setup() {
 	Serial.begin(57600);
-
 	sensors.begin();
+
+	Wire.begin(SLAVE_ADDRESS);
 
 	thermometer1 = Thermometer(sensors, probe01, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer2 = Thermometer(sensors, probe04, TEMP_READING_CYCLE_IN_MILLIS);
@@ -144,7 +128,16 @@ void loop() {
 	localController.update();
 	cmdMessenger.feedinSerialData();
 
+	//Serial.println("[" + String(millis()) + "]");
 
+	//Wire.write(toCharArray("[" + String(millis()) + "]"));
+}
+
+char* toCharArray(String command) {
+	if (command.length() != 0) {
+		char *p = const_cast<char*>(command.c_str());
+		return p;
+	}
 }
 
 void configureCmdMessenger() {

@@ -4,6 +4,7 @@ using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.SerialCommunication;
 using Windows.Devices.Usb;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 
 namespace Mwm.BeerFactoryV2.Service {
@@ -37,6 +39,13 @@ namespace Mwm.BeerFactoryV2.Service {
         public bool IsConnected { get; set; }
 
         private IEventAggregator _eventAggregator;
+
+        private SerialDevice serialPort = null;
+        DataWriter dataWriteObject = null;
+        DataReader dataReaderObject = null;
+
+        private ObservableCollection<DeviceInformation> listOfDevices = new ObservableCollection<DeviceInformation>();
+        private CancellationTokenSource ReadCancellationTokenSource;
 
         public UsbArduinoControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
@@ -69,9 +78,77 @@ namespace Mwm.BeerFactoryV2.Service {
             }
         }
 
- 
+        private async void Listen() {
+            try {
+                if (serialPort != null) {
+                    dataReaderObject = new DataReader(serialPort.InputStream);
+                    while (true) {
+                        await ReadData(ReadCancellationTokenSource.Token);
+                    }
+                }
+            } catch (Exception ex) {
+                Message = ex.Message;
+            } finally {
+                if (dataReaderObject != null) {
+                    dataReaderObject.DetachStream();
+                    dataReaderObject = null;
+                }
+            }
+        }
+
+        private string Message { get; set; }
+
+        private async Task ReadData(CancellationToken cancellationToken) {
+            Task<UInt32> loadAsyncTask;
+            uint ReadBufferLength = 1024;
+            cancellationToken.ThrowIfCancellationRequested();
+            dataReaderObject.InputStreamOptions = InputStreamOptions.Partial;
+            loadAsyncTask = dataReaderObject.LoadAsync(ReadBufferLength).AsTask(cancellationToken);
+            UInt32 bytesRead = await loadAsyncTask;
+            if (bytesRead > 0) {
+                Message += dataReaderObject.ReadString(bytesRead);
+                Debug.WriteLine(Message);
+            }
+        }
 
         public async Task<bool> Setup() {
+
+            string aqs = SerialDevice.GetDeviceSelector();
+            var dis = await DeviceInformation.FindAllAsync(aqs);
+            for (int i = 0; i < dis.Count; i++) {
+                listOfDevices.Add(dis[i]);
+                Debug.WriteLine(dis[i]);
+
+            }
+
+
+
+            var entry = listOfDevices[0];
+
+            try {
+                serialPort = await SerialDevice.FromIdAsync(entry.Id);
+                serialPort.WriteTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.ReadTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.BaudRate = 9600;
+                serialPort.Parity = SerialParity.None;
+                serialPort.StopBits = SerialStopBitCount.One;
+                serialPort.DataBits = 8;
+                serialPort.Handshake = SerialHandshake.None;
+                ReadCancellationTokenSource = new CancellationTokenSource();
+                Listen();
+            } catch (Exception ex) {
+
+            }
+
+
+            
+    
+
+
+
+
+
+
 
             //UInt32 _pid = 0x0042;
             //UInt32 _vid = 0x2341;
@@ -110,7 +187,7 @@ namespace Mwm.BeerFactoryV2.Service {
             //}
 
             _serialTransport = new SerialTransport {
-                CurrentSerialSettings = { PortName = "COM6", BaudRate = 57600, DtrEnable = false } // object initializer
+                CurrentSerialSettings = { PortName = $"COM4", BaudRate = 57600, DtrEnable = false } // object initializer
             };
 
             _cmdMessenger = new CmdMessenger(_serialTransport, BoardType.Bit32);
@@ -129,6 +206,8 @@ namespace Mwm.BeerFactoryV2.Service {
 
             IsConnected = _cmdMessenger.Connect();
 
+            
+            
 
             if (IsConnected) {
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
