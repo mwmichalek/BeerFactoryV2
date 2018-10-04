@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Practices.Unity;
 using Mwm.BeerFactoryV2.Service;
+using Mwm.BeerFactoryV2.Service.Controllers;
 using Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks;
 using Mwm.BeerFactoryV2.Uwp.Tips.Services;
 using Mwm.BeerFactoryV2.Uwp.Tips.Views;
@@ -12,7 +13,7 @@ using Prism.Mvvm;
 using Prism.Unity.Windows;
 using Prism.Windows.AppModel;
 using Prism.Windows.Navigation;
-
+using Serilog;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -29,16 +30,21 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             // register a singleton using Container.RegisterType<IInterface, Type>(new ContainerControlledLifetimeManager());
             base.ConfigureContainer();
 
-            Container.RegisterType<UsbArduinoControllerService>(new ContainerControlledLifetimeManager());
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Trace()
+                .CreateLogger();
 
+            Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
-            //var arduinoControllerService = new ArduinoControllerService();
-            //Container.RegisterInstance<ArduinoControllerService>(arduinoControllerService);
+            Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
+
+
 
             Task.Run(() => {
-                Container.Resolve<LameUsbArduinoControllerService>().Run();
+                Container.Resolve<ITemperatureControllerService>().Run();
             });
         }
 

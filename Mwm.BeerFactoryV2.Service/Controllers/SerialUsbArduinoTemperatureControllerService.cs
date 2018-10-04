@@ -18,8 +18,8 @@ using Windows.UI.Core;
 using SerialPortLib;
 using SerialArduino;
 
-namespace Mwm.BeerFactoryV2.Service {
-    public class LameUsbArduinoControllerService : ArduinoControllerService {
+namespace Mwm.BeerFactoryV2.Service.Controllers {
+    public class SerialUsbArduinoTemperatureControllerService : TemperatureControllerService {
         private string[] stringSeparators = new string[] { "\r\n" };
 
         public bool IsConnected { get; set; }
@@ -38,22 +38,16 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private IEventAggregator _eventAggregator;
 
-        public LameUsbArduinoControllerService(IEventAggregator eventAggregator) {
+        public SerialUsbArduinoTemperatureControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
-
-            //_eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
-            //    ExecuteKettleCommand(kettleCommand);
-            //});
         }
 
-        public async void Run() {
+        public override async Task Run() {
 
             while (true) {
                 try {
                     var setupResult = await Setup();
                     if (setupResult) {
-
-
                         await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                             _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Disconnected });
                         });
@@ -61,16 +55,8 @@ namespace Mwm.BeerFactoryV2.Service {
                         await RequestAllTemperatures();
 
                         while (IsConnected) {
-                            //Thread.Sleep(1000);
                             await ProcessTemperatures();
-
-
-
-
                         }
-
-
-                        
                     } else {
                         await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                             _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
@@ -97,12 +83,6 @@ namespace Mwm.BeerFactoryV2.Service {
             if (devicesInformation != null && devicesInformation.Count > 0) {
 
                 var deviceInformation = devicesInformation[0];
-
-                //var aqs = SerialDevice.GetDeviceSelector();
-                //var deviceSelector = DeviceInformation.FindAllAsync(aqs).GetResults()[0];
-                // Create a device watcher to look for instances of the Serial Device that match the device selector
-                // used earlier.
-
                 var deviceWatcher = DeviceInformation.CreateWatcher(deviceSelector);
 
                 // Allow the EventHandlerForDevice to handle device watcher events that relates or effects our device (i.e. device removal, addition, app suspension/resume)
@@ -113,11 +93,6 @@ namespace Mwm.BeerFactoryV2.Service {
                 // Get notified when the device was successfully connected to or about to be closed
                 //EventHandlerForDevice.Current.OnDeviceConnected = this.OnDeviceConnected;
                 //EventHandlerForDevice.Current.OnDeviceClose = this.OnDeviceClosing;
-
-
-                
-
-
 
                 // It is important that the FromIdAsync call is made on the UI thread because the consent prompt, when present,
                 // can only be displayed on the UI thread. Since this method is invoked by the UI, we are already in the UI thread.
@@ -160,7 +135,6 @@ namespace Mwm.BeerFactoryV2.Service {
             } catch (OperationCanceledException /*exception*/) {
                 NotifyReadTaskCanceled();
             } catch (Exception exception) {
-                //MainPage.Current.NotifyUser(exception.Message.ToString(), NotifyType.ErrorMessage);
                 Debug.WriteLine(exception.Message.ToString());
             } finally {
                 DataReaderObject.DetachStream();
@@ -196,77 +170,6 @@ namespace Mwm.BeerFactoryV2.Service {
                 WriteCancellationTokenSource = null;
             }
         }
-
-        /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
-        ///
-        /// We will enable/disable parts of the UI if the device doesn't support it.
-        /// </summary>
-        /// <param name="eventArgs">Event data that describes how this page was reached.  The Parameter
-        /// property is typically used to configure the page.</param>
-        //protected override void OnNavigatedTo(NavigationEventArgs eventArgs) {
-        //    if (EventHandlerForDevice.Current.Device == null) {
-        //        LEDTempScrollViewer.Visibility = Visibility.Collapsed;
-        //        MainPage.Current.NotifyUser("Device is not connected", NotifyType.ErrorMessage);
-        //    } else {
-        //        MainPage.Current.NotifyUser("Connected to " + EventHandlerForDevice.Current.DeviceInformation.Id,
-        //                                    NotifyType.StatusMessage);
-
-        //        //Set device connection defaults for Read and Write
-        //        EventHandlerForDevice.Current.Device.BaudRate = 9600;
-        //        EventHandlerForDevice.Current.Device.StopBits = SerialStopBitCount.One;
-        //        EventHandlerForDevice.Current.Device.DataBits = 8;
-        //        EventHandlerForDevice.Current.Device.Parity = SerialParity.None;
-        //        EventHandlerForDevice.Current.Device.Handshake = SerialHandshake.None;
-        //        EventHandlerForDevice.Current.Device.WriteTimeout = TimeSpan.FromMilliseconds(500);
-        //        EventHandlerForDevice.Current.Device.ReadTimeout = TimeSpan.FromMilliseconds(500);
-
-        //        // So we can reset future tasks
-        //        ResetReadCancellationTokenSource();
-        //        ResetWriteCancellationTokenSource();
-        //    }
-        //}
-
-
-
-        //private async void MessageButton_Click(object sender, RoutedEventArgs e) {
-        //    if (EventHandlerForDevice.Current.IsDeviceConnected) {
-        //        try {
-        //            //rootPage.NotifyUser("Getting message...", NotifyType.StatusMessage);
-
-        //            DataWriterObject = new DataWriter(EventHandlerForDevice.Current.Device.OutputStream);
-        //            DataWriterObject.WriteString("msg\r");
-
-        //            await WriteAsync(WriteCancellationTokenSource.Token);
-        //        } catch (OperationCanceledException /*exception*/) {
-        //            NotifyWriteTaskCanceled();
-        //        } catch (Exception exception) {
-        //            //MainPage.Current.NotifyUser(exception.Message.ToString(), NotifyType.ErrorMessage);
-        //            Debug.WriteLine(exception.Message.ToString());
-        //        } finally {
-        //            DataWriterObject.DetachStream();
-        //            DataWriterObject = null;
-        //        }
-
-        //        String message = String.Empty;
-        //        try {
-        //            DataReaderObject = new DataReader(EventHandlerForDevice.Current.Device.InputStream);
-        //            message = await ReadAsync(ReadCancellationTokenSource.Token, 70);
-        //        } catch (OperationCanceledException /*exception*/) {
-        //            NotifyReadTaskCanceled();
-        //        } catch (Exception exception) {
-        //            //MainPage.Current.NotifyUser(exception.Message.ToString(), NotifyType.ErrorMessage);
-        //            Debug.WriteLine(exception.Message.ToString());
-        //        } finally {
-        //            DataReaderObject.DetachStream();
-        //            DataReaderObject = null;
-        //        }
-
-        //        //MessageValue.Text = message;
-        //    } else {
-        //        Utilities.NotifyDeviceNotConnected();
-        //    }
-        //}
 
         /// <summary>
         /// Write to the output stream using a task 

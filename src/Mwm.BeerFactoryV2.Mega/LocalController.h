@@ -32,14 +32,11 @@ public:
 	void postStatus();
 	void postMsg(String msg);
 	void connectionStatus(bool isConnected);
-	//void handleCommand();
-	//void receivedCommand(String command);
 	void handleKettleRequest();
 
 
 
 private:
-	//Thermometer* _thermometers;
 	Thermometer* _thermometer1;
 	Thermometer* _thermometer2;
 	Thermometer* _thermometer3;
@@ -58,8 +55,6 @@ private:
 	double _temperature1;
 	double _temperature2;
 	double _temperature3;
-	//double _temperatures[9];
-
 	double _temperature4;
 	double _temperature5;
 	double _temperature6;
@@ -75,10 +70,7 @@ private:
 
 	void postTemperature(int index, double temperature);
 	void processCommands();
-	//void postKettle(int index, int percentage);
 
-	//String inputString = "";         // a string to hold incoming data
-	//boolean stringComplete = false;  // whether the string is complete
 };
 
 #endif

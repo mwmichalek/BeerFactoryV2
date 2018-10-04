@@ -17,8 +17,8 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using SerialPortLib;
 
-namespace Mwm.BeerFactoryV2.Service {
-    public class UsbArduinoControllerService : ArduinoControllerService {
+namespace Mwm.BeerFactoryV2.Service.Controllers {
+    public class OldUsbArduinoControllerService : TemperatureControllerService {
         enum Command {
             Acknowledge,
             Error,
@@ -41,7 +41,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private IEventAggregator _eventAggregator;
 
-        public UsbArduinoControllerService(IEventAggregator eventAggregator) {
+        public OldUsbArduinoControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
@@ -49,7 +49,7 @@ namespace Mwm.BeerFactoryV2.Service {
             });
         }
 
-        public async void Run() {
+        public override async Task Run() {
 
             while (true) {
                 var setupResult = await Setup();

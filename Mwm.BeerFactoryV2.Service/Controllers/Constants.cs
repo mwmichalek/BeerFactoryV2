@@ -18,16 +18,13 @@ using System.Threading.Tasks;
 using SerialArduino;
 using Windows.UI.Xaml.Controls;
 
-namespace SerialArduino
-{
-    public class DeviceProperties
-    {
+namespace SerialArduino {
+    public class DeviceProperties {
         //public const String DeviceInstanceId = "System.Devices.DeviceInstanceId";
         public const String DeviceInstanceId = "System.ItemNameDisplay";
     }
 
-    public class ArduinoDevice
-    {
+    public class ArduinoDevice {
         public const UInt16 Vid = 0x2341;
         public const UInt16 Pid = 0x0042;
     }
