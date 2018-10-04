@@ -8,7 +8,7 @@ LocalController::LocalController() {
 }
 
 LocalController::LocalController(Thermometer* thermometers[], 
-	Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger) {
+	Kettle* hotLiquorTank, Kettle* boilKettle) {
 	_thermometer1 = thermometers[0];
 	_thermometer2 = thermometers[1];
 	_thermometer3 = thermometers[2];
@@ -21,8 +21,6 @@ LocalController::LocalController(Thermometer* thermometers[],
 
 	_hotLiquorTank = hotLiquorTank;
 	_boilKettle = boilKettle;
-
-	_cmdMessenger = cmdMessenger;
 
 	_lcd.begin(20, 4);
 	_lcd.setBacklight(HIGH);
@@ -39,7 +37,6 @@ LocalController::LocalController(Thermometer* thermometers[],
 }
 
 void LocalController::update() {
-
 	_thermometer1->update();
 	_thermometer2->update();
 	_thermometer3->update();
@@ -108,44 +105,61 @@ void LocalController::update() {
 	_boilKettle->update();
 
 	//handleCommand();
+	processCommands();
 
 	displayStatus();
 }
 
-void LocalController::handleKettleRequest() {
-	int index = _cmdMessenger->readInt16Arg();
-	int percentage = _cmdMessenger->readInt16Arg();
+void LocalController::processCommands() {
+	if (Serial.available()) {
+		String function = Serial.readString();
+		
+		if (function.startsWith("temps"))
+			postStatus();
 
-	if (index == 1) {
-		_hotLiquorTank->setPercentage(percentage);
-		//_hotLiquorTank->postKettleStatus();
-		//postKettle(index, percentage);
-	} else if (index == 2) {
-		_boilKettle->setPercentage(percentage);
-		//_boilKettle->postKettleStatus();
-		//postKettle(2, _boilKettle->currentPercentage());
 	}
+}
 
-	//_cmdMessenger->sendCmdStart(Events::kKettleResult);
+void LocalController::handleKettleRequest() {
+	//int index = _cmdMessenger->readInt16Arg();
+	//int percentage = _cmdMessenger->readInt16Arg();
+
+	//if (index == 1) {
+	//	_hotLiquorTank->setPercentage(percentage);
+	//	//_hotLiquorTank->postKettleStatus();
+	//	//postKettle(index, percentage);
+	//} else if (index == 2) {
+	//	_boilKettle->setPercentage(percentage);
+	//	//_boilKettle->postKettleStatus();
+	//	//postKettle(2, _boilKettle->currentPercentage());
+	//}
+
+	////_cmdMessenger->sendCmdStart(Events::kKettleResult);
+	////_cmdMessenger->sendCmdArg(index);
+	////_cmdMessenger->sendCmdArg("BagOfDicks:" + String(percentage) + ":Go fuck yourself");
+	////_cmdMessenger->sendCmdEnd();
+
+	//// FOR SOME FUCKED UP REASON THIS ONE KIND OF WORKS, BUT kKettleResult DOESN"T
+	//_cmdMessenger->sendCmdStart(Events::kMessage);
 	//_cmdMessenger->sendCmdArg(index);
-	//_cmdMessenger->sendCmdArg("BagOfDicks:" + String(percentage) + ":Go fuck yourself");
+	//_cmdMessenger->sendCmdArg(percentage);
 	//_cmdMessenger->sendCmdEnd();
-
-	// FOR SOME FUCKED UP REASON THIS ONE KIND OF WORKS, BUT kKettleResult DOESN"T
-	_cmdMessenger->sendCmdStart(Events::kMessage);
-	_cmdMessenger->sendCmdArg(index);
-	_cmdMessenger->sendCmdArg(percentage);
-	_cmdMessenger->sendCmdEnd();
 
 	//postKettle(index, percentage);
 }
 
+//void LocalController::postTemperature(int index, double temperature) {
+//	if (temperature != 185) {
+//		_cmdMessenger->sendCmdStart(Events::kTempChange);
+//		_cmdMessenger->sendCmdArg(index);
+//		_cmdMessenger->sendCmdArg(temperature);
+//		_cmdMessenger->sendCmdEnd();
+//	}
+//}
+
 void LocalController::postTemperature(int index, double temperature) {
 	if (temperature != 185) {
-		_cmdMessenger->sendCmdStart(Events::kTempChange);
-		_cmdMessenger->sendCmdArg(index);
-		_cmdMessenger->sendCmdArg(temperature);
-		_cmdMessenger->sendCmdEnd();
+		Serial.println(String(index) + "|" + String(temperature));
 	}
 }
 
@@ -157,21 +171,38 @@ void LocalController::postTemperature(int index, double temperature) {
 //	//postStatus();
 //}
 
+//void LocalController::postStatus() {
+//	_isConnected = true;
+//	postTemperature(1, _temperature1);
+//	postTemperature(2, _temperature2);
+//	postTemperature(3, _temperature3);
+//	postTemperature(4, _temperature4);
+//	postTemperature(5, _temperature5);
+//	postTemperature(6, _temperature6);
+//	postTemperature(7, _temperature7);
+//	postTemperature(8, _temperature8);
+//	postTemperature(9, _temperature9);
+//
+//	_hotLiquorTank->postKettleStatus();
+//	_boilKettle->postKettleStatus();
+//}
+
 void LocalController::postStatus() {
 	_isConnected = true;
-	postTemperature(1, _temperature1);
-	postTemperature(2, _temperature2);
-	postTemperature(3, _temperature3);
-	postTemperature(4, _temperature4);
-	postTemperature(5, _temperature5);
-	postTemperature(6, _temperature6);
-	postTemperature(7, _temperature7);
-	postTemperature(8, _temperature8);
-	postTemperature(9, _temperature9);
+	Serial.println("1|" + String(_temperature1));
+	Serial.println("2|" + String(_temperature2));
+	Serial.println("3|" + String(_temperature3));
+	Serial.println("4|" + String(_temperature4));
+	Serial.println("5|" + String(_temperature5));
+	Serial.println("6|" + String(_temperature6));
+	Serial.println("7|" + String(_temperature7));
+	Serial.println("8|" + String(_temperature8));
+	Serial.println("9|" + String(_temperature9));
 
-	_hotLiquorTank->postKettleStatus();
-	_boilKettle->postKettleStatus();
+	//_hotLiquorTank->postKettleStatus();
+	//_boilKettle->postKettleStatus();
 }
+
 
 void LocalController::connectionStatus(bool isConnected) {
 	if (isConnected)

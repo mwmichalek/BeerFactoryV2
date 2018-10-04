@@ -13,14 +13,13 @@ class HeatingElement {
 
 	public:
 		HeatingElement();
-		HeatingElement(int relayPin, const String name, CmdMessenger* _cmdMessenger);
-		HeatingElement(int relayPin, const int index, CmdMessenger* _cmdMessenger);
+		HeatingElement(int relayPin, const String name);
+		HeatingElement(int relayPin, const int index);
 		void enable(bool isEnabled);
 		void engage(bool isEngaged);
 		void postStatus(int index, int onOrOff);
 
 	private:
-		CmdMessenger * _cmdMessenger;
 		int _relayPin;
 		bool _enabled;
 		bool _engaged;

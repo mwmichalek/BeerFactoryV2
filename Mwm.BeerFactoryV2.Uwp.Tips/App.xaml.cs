@@ -38,7 +38,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             //Container.RegisterInstance<ArduinoControllerService>(arduinoControllerService);
 
             Task.Run(() => {
-                Container.Resolve<UsbArduinoControllerService>().Run();
+                Container.Resolve<LameUsbArduinoControllerService>().Run();
             });
         }
 

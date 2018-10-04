@@ -10,16 +10,14 @@ HeatingElement::HeatingElement() {
 
 }
 
-HeatingElement::HeatingElement(int relayPin, const int index, CmdMessenger* cmdMessenger) {
+HeatingElement::HeatingElement(int relayPin, const int index) {
 	pinMode(relayPin, OUTPUT);
-	_cmdMessenger = cmdMessenger;
 	_relayPin = relayPin;
 	_index = index;
 }
 
-HeatingElement::HeatingElement(int relayPin, const String name, CmdMessenger* cmdMessenger) {
+HeatingElement::HeatingElement(int relayPin, const String name) {
 	pinMode(relayPin, OUTPUT);
-	_cmdMessenger = cmdMessenger;
 	_relayPin = relayPin;
 	_name = name;
 }

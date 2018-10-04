@@ -15,6 +15,7 @@ using Windows.Devices.SerialCommunication;
 using Windows.Devices.Usb;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using SerialPortLib;
 
 namespace Mwm.BeerFactoryV2.Service {
     public class UsbArduinoControllerService : ArduinoControllerService {
@@ -39,13 +40,6 @@ namespace Mwm.BeerFactoryV2.Service {
         public bool IsConnected { get; set; }
 
         private IEventAggregator _eventAggregator;
-
-        private SerialDevice serialPort = null;
-        DataWriter dataWriteObject = null;
-        DataReader dataReaderObject = null;
-
-        private ObservableCollection<DeviceInformation> listOfDevices = new ObservableCollection<DeviceInformation>();
-        private CancellationTokenSource ReadCancellationTokenSource;
 
         public UsbArduinoControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
@@ -78,89 +72,41 @@ namespace Mwm.BeerFactoryV2.Service {
             }
         }
 
-        private async void Listen() {
-            try {
-                if (serialPort != null) {
-                    dataReaderObject = new DataReader(serialPort.InputStream);
-                    while (true) {
-                        await ReadData(ReadCancellationTokenSource.Token);
-                    }
-                }
-            } catch (Exception ex) {
-                Message = ex.Message;
-            } finally {
-                if (dataReaderObject != null) {
-                    dataReaderObject.DetachStream();
-                    dataReaderObject = null;
-                }
-            }
-        }
-
-        private string Message { get; set; }
-
-        private async Task ReadData(CancellationToken cancellationToken) {
-            Task<UInt32> loadAsyncTask;
-            uint ReadBufferLength = 1024;
-            cancellationToken.ThrowIfCancellationRequested();
-            dataReaderObject.InputStreamOptions = InputStreamOptions.Partial;
-            loadAsyncTask = dataReaderObject.LoadAsync(ReadBufferLength).AsTask(cancellationToken);
-            UInt32 bytesRead = await loadAsyncTask;
-            if (bytesRead > 0) {
-                Message += dataReaderObject.ReadString(bytesRead);
-                Debug.WriteLine(Message);
-            }
-        }
-
         public async Task<bool> Setup() {
 
-            string aqs = SerialDevice.GetDeviceSelector();
-            var dis = await DeviceInformation.FindAllAsync(aqs);
-            for (int i = 0; i < dis.Count; i++) {
-                listOfDevices.Add(dis[i]);
-                Debug.WriteLine(dis[i]);
-
-            }
 
 
 
-            var entry = listOfDevices[0];
+            var serialPort = new SerialPortInput();
 
-            try {
-                serialPort = await SerialDevice.FromIdAsync(entry.Id);
-                serialPort.WriteTimeout = TimeSpan.FromMilliseconds(1000);
-                serialPort.ReadTimeout = TimeSpan.FromMilliseconds(1000);
-                serialPort.BaudRate = 9600;
-                serialPort.Parity = SerialParity.None;
-                serialPort.StopBits = SerialStopBitCount.One;
-                serialPort.DataBits = 8;
-                serialPort.Handshake = SerialHandshake.None;
-                ReadCancellationTokenSource = new CancellationTokenSource();
-                Listen();
-            } catch (Exception ex) {
+            // Listen to Serial Port events
 
-            }
+            serialPort.ConnectionStatusChanged += delegate (object sender, ConnectionStatusChangedEventArgs args) {
+                Debug.WriteLine("Connected = {0}", args.Connected);
+            };
 
+            serialPort.MessageReceived += delegate (object sender, MessageReceivedEventArgs args) {
+                var msg = Encoding.UTF8.GetString(args.Data, 0, args.Data.Length);
+                Debug.WriteLine($"Received message: {msg}");
+            };
 
-            
-    
+            serialPort.SetPort("COM4", 57600);
 
+            // Connect the serial port
+            serialPort.Connect();
 
-
-
-
-
-
-            //UInt32 _pid = 0x0042;
-            //UInt32 _vid = 0x2341;
+            UInt32 _pid = 0x0042;
+            UInt32 _vid = 0x2341;
 
 
             ////USB\VID_2341&PID_0042&REV_0001
             ////USB\VID_2341&PID_0042
 
-            ////string aqs = UsbDevice.GetDeviceSelector(_vid, _pid);
+            var aqs = UsbDevice.GetDeviceSelector(_vid, _pid);
 
             //string aqs = SerialDevice.GetDeviceSelector();
-            //var dis = await DeviceInformation.FindAllAsync(aqs);
+            var dis = await DeviceInformation.FindAllAsync(aqs);
+            var myDeviceInfo = dis[0];
 
             ////SerialPort serialPort = null;
 
@@ -186,36 +132,36 @@ namespace Mwm.BeerFactoryV2.Service {
 
             //}
 
-            _serialTransport = new SerialTransport {
-                CurrentSerialSettings = { PortName = $"COM4", BaudRate = 57600, DtrEnable = false } // object initializer
-            };
+            //_serialTransport = new SerialTransport {
+            //    CurrentSerialSettings = { PortName = $"COM4", BaudRate = 57600, DtrEnable = false } // object initializer
+            //};
 
-            _cmdMessenger = new CmdMessenger(_serialTransport, BoardType.Bit32);
+            //_cmdMessenger = new CmdMessenger(_serialTransport, BoardType.Bit32);
 
-            _cmdMessenger.Attach(OnUnknownCommand);
-            _cmdMessenger.Attach((int)Command.Acknowledge, OnAcknowledge);
-            _cmdMessenger.Attach((int)Command.Error, OnError);
-            _cmdMessenger.Attach((int)Command.TempChange, OnTempChange);
-            _cmdMessenger.Attach((int)Command.KettleResult, OnKettleResult);
-            _cmdMessenger.Attach((int)Command.SsrChange, OnSsrChange);
-            _cmdMessenger.Attach((int)Command.Message, OnMessage);
-            // _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
+            //_cmdMessenger.Attach(OnUnknownCommand);
+            //_cmdMessenger.Attach((int)Command.Acknowledge, OnAcknowledge);
+            //_cmdMessenger.Attach((int)Command.Error, OnError);
+            //_cmdMessenger.Attach((int)Command.TempChange, OnTempChange);
+            //_cmdMessenger.Attach((int)Command.KettleResult, OnKettleResult);
+            //_cmdMessenger.Attach((int)Command.SsrChange, OnSsrChange);
+            //_cmdMessenger.Attach((int)Command.Message, OnMessage);
+            //// _cmdMessenger.Attach((int)Command.HeaterChange, OnHeaterChange);
 
-            _cmdMessenger.NewLineReceived += NewLineReceived;
-            _cmdMessenger.NewLineSent += NewLineSent;
+            //_cmdMessenger.NewLineReceived += NewLineReceived;
+            //_cmdMessenger.NewLineSent += NewLineSent;
 
-            IsConnected = _cmdMessenger.Connect();
+            ////IsConnected = _cmdMessenger.Connect();
 
-            
-            
 
-            if (IsConnected) {
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Connected });
-                });
-                
-                RequestStatus();
-            }
+
+
+            //if (IsConnected) {
+            //    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+            //        _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Connected });
+            //    });
+
+            //    RequestStatus();
+            //}
 
             return IsConnected;
         }
@@ -248,7 +194,7 @@ namespace Mwm.BeerFactoryV2.Service {
                 var kettleResultCommand = _cmdMessenger.SendCommand(kettleRequest);
                 var success = kettleRequest.Ok;
             });
-            
+
         }
 
         // ------------------  C A L L B A C K S ---------------------
@@ -325,7 +271,7 @@ namespace Mwm.BeerFactoryV2.Service {
         private void OnError(ReceivedCommand arguments) {
             Console.WriteLine(" Arduino has experienced an error");
         }
-         
+
         // Log received line to console
         private void NewLineReceived(object sender, CommandEventArgs e) {
             //Console.WriteLine(@"Received > " + e.Command.CommandString());

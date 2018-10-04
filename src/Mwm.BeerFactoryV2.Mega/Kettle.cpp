@@ -7,16 +7,15 @@
 Kettle::Kettle() {
 }
 
-Kettle::Kettle(int index, int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2, CmdMessenger* cmdMessenger) {
+Kettle::Kettle(int index, int ssrPin, String name, int cycleLengthInMillis, int heatingElementPin1, int heatingElementPin2) {
 	_index = index;
 	pinMode(ssrPin, OUTPUT);
-	_cmdMessenger = cmdMessenger;
 	_name = name;
 	_ssrPin = ssrPin;
 	_cycleLengthInMillis = cycleLengthInMillis;
 
-	_heatingElement1 = HeatingElement(heatingElementPin1, name + "1", cmdMessenger);
-	_heatingElement2 = HeatingElement(heatingElementPin2, name + "2", cmdMessenger);
+	_heatingElement1 = HeatingElement(heatingElementPin1, name + "1");
+	_heatingElement2 = HeatingElement(heatingElementPin2, name + "2");
 
 	setPercentage(0);
 }
@@ -100,18 +99,18 @@ int Kettle::currentPercentage() {
 }
 
 void Kettle::postSsrStatus() {
-	_cmdMessenger->sendCmdStart(Events::kSsrChange);
-	_cmdMessenger->sendCmdArg(_index);
-	_cmdMessenger->sendCmdArg(_engaged);
-	_cmdMessenger->sendCmdArg(_percentage);
-	_cmdMessenger->sendCmdEnd();
+	//_cmdMessenger->sendCmdStart(Events::kSsrChange);
+	//_cmdMessenger->sendCmdArg(_index);
+	//_cmdMessenger->sendCmdArg(_engaged);
+	//_cmdMessenger->sendCmdArg(_percentage);
+	//_cmdMessenger->sendCmdEnd();
 }
 
 void Kettle::postKettleStatus() {
-	_cmdMessenger->sendCmdStart(Events::kKettleResult);
-	_cmdMessenger->sendCmdArg(_index);
-	_cmdMessenger->sendCmdArg("Percentage:" + String(_percentage));
-	_cmdMessenger->sendCmdEnd();
+	//_cmdMessenger->sendCmdStart(Events::kKettleResult);
+	//_cmdMessenger->sendCmdArg(_index);
+	//_cmdMessenger->sendCmdArg("Percentage:" + String(_percentage));
+	//_cmdMessenger->sendCmdEnd();
 }
 
 

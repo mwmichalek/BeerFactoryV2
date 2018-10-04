@@ -20,11 +20,11 @@ public:
 	LocalController();
 
 	LocalController::LocalController(Thermometer* thermometers[],
-		Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger);
+		Kettle* hotLiquorTank, Kettle* boilKettle);
 
 
 	LocalController(Thermometer* thermometer1, Thermometer* thermometer2, Thermometer* thermometer3,
-		            Kettle* hotLiquorTank, Kettle* boilKettle, CmdMessenger* cmdMessenger);
+		            Kettle* hotLiquorTank, Kettle* boilKettle);
 	void update();
 	
 	void displayStatus();
@@ -54,7 +54,7 @@ private:
 	
 	Kettle* _hotLiquorTank;
 	Kettle* _boilKettle;
-	CmdMessenger* _cmdMessenger;
+
 	double _temperature1;
 	double _temperature2;
 	double _temperature3;
@@ -74,6 +74,7 @@ private:
 	LiquidCrystal_I2C _lcd = LiquidCrystal_I2C(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 	void postTemperature(int index, double temperature);
+	void processCommands();
 	//void postKettle(int index, int percentage);
 
 	//String inputString = "";         // a string to hold incoming data

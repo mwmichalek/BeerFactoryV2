@@ -5,7 +5,7 @@
 #include <Event.h>
 #include <LCD.h>
 #include "Events.h"
-#include <CmdMessenger.h>
+//#include <CmdMessenger.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include "Pump.h"
@@ -85,7 +85,7 @@ LocalController localController;
 
 bool isConfigured = false;
 
-CmdMessenger cmdMessenger = CmdMessenger(Serial);
+//CmdMessenger cmdMessenger = CmdMessenger(Serial);
 
 void setup() {
 	Serial.begin(57600);
@@ -103,14 +103,14 @@ void setup() {
 	thermometer8 = Thermometer(sensors, probe12, TEMP_READING_CYCLE_IN_MILLIS);
 	thermometer9 = Thermometer(sensors, probe13, TEMP_READING_CYCLE_IN_MILLIS);
 
-	hotLiquorTank = Kettle(1, SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2, &cmdMessenger);
-	boilKettle = Kettle(2, SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4, &cmdMessenger);
+	hotLiquorTank = Kettle(1, SSR_PIN_1, "HLT", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_1, HEATINGELEMENT_PIN_2);
+	boilKettle = Kettle(2, SSR_PIN_2, "BK", HEATER_CYCLE_IN_MILLIS, HEATINGELEMENT_PIN_3, HEATINGELEMENT_PIN_4);
 
 	Thermometer* thermometers[] = { &thermometer1, &thermometer2, &thermometer3, 
 								    &thermometer4, &thermometer5, &thermometer6, 
 		                            &thermometer7, &thermometer8, &thermometer9 };
 
-	localController = LocalController(thermometers, &hotLiquorTank, &boilKettle, &cmdMessenger);
+	localController = LocalController(thermometers, &hotLiquorTank, &boilKettle);
 
 	pinMode(PUMP_PIN_1, OUTPUT);
 	pinMode(PUMP_PIN_2, OUTPUT);
@@ -120,59 +120,55 @@ void setup() {
 	digitalWrite(PUMP_PIN_2, LOW);
 	digitalWrite(PUMP_PIN_3, HIGH);
 
-	configureCmdMessenger();
+	//configureCmdMessenger();
 }
 
 
 void loop() {
 	localController.update();
-	cmdMessenger.feedinSerialData();
-
-	//Serial.println("[" + String(millis()) + "]");
-
-	//Wire.write(toCharArray("[" + String(millis()) + "]"));
+	//cmdMessenger.feedinSerialData();
 }
 
-char* toCharArray(String command) {
-	if (command.length() != 0) {
-		char *p = const_cast<char*>(command.c_str());
-		return p;
-	}
-}
+//char* toCharArray(String command) {
+//	if (command.length() != 0) {
+//		char *p = const_cast<char*>(command.c_str());
+//		return p;
+//	}
+//}
 
-void configureCmdMessenger() {
-	cmdMessenger.printLfCr();
-	cmdMessenger.attach(onUnknownCommand);
-	cmdMessenger.attach(Events::kStatusRequest, onStatusRequest);
-	cmdMessenger.attach(Events::kPingRequest, onPing);
-	cmdMessenger.attach(Events::kKettleRequest, onKettleRequest);
-	onArduinoReady();
-}
+//void configureCmdMessenger() {
+//	cmdMessenger.printLfCr();
+//	cmdMessenger.attach(onUnknownCommand);
+//	cmdMessenger.attach(Events::kStatusRequest, onStatusRequest);
+//	cmdMessenger.attach(Events::kPingRequest, onPing);
+//	cmdMessenger.attach(Events::kKettleRequest, onKettleRequest);
+//	onArduinoReady();
+//}
 
 // ------------------  C A L L B A C K S -----------------------
 
 // Called when a received command has no attached function
-void onUnknownCommand() {
-	cmdMessenger.sendCmd(Events::kError, "Command without attached callback");
-}
-
-void onStatusRequest() {
-	localController.postStatus();
-}
-
-// Callback function that responds that Arduino is ready (has booted up)
-void onArduinoReady() {
-	cmdMessenger.sendCmd(Events::kAcknowledge, "Arduino ready");
-}
-
-void onPing() {
-	cmdMessenger.sendCmdStart(Events::kPingResult);
-	cmdMessenger.sendCmdEnd();
-}
-
-void onKettleRequest() {
-	localController.handleKettleRequest();
-}
+//void onUnknownCommand() {
+//	cmdMessenger.sendCmd(Events::kError, "Command without attached callback");
+//}
+//
+//void onStatusRequest() {
+//	localController.postStatus();
+//}
+//
+//// Callback function that responds that Arduino is ready (has booted up)
+//void onArduinoReady() {
+//	cmdMessenger.sendCmd(Events::kAcknowledge, "Arduino ready");
+//}
+//
+//void onPing() {
+//	cmdMessenger.sendCmdStart(Events::kPingResult);
+//	cmdMessenger.sendCmdEnd();
+//}
+//
+//void onKettleRequest() {
+//	localController.handleKettleRequest();
+//}
 
 
 
