@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Controllers;
+using Mwm.BeerFactoryV2.Service.Phases;
 using Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks;
 using Mwm.BeerFactoryV2.Uwp.Tips.Services;
+using Mwm.BeerFactoryV2.Uwp.Tips.ViewModels;
 using Mwm.BeerFactoryV2.Uwp.Tips.Views;
 
 using Prism.Mvvm;
@@ -41,6 +43,10 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
 
             Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
 
+            Container.RegisterType<ShellViewModel>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<BlankViewModel>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<SettingsViewModel>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<MainPhase>(new ContainerControlledLifetimeManager());
 
 
             Task.Run(() => {
@@ -75,12 +81,43 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             await Container.Resolve<IBackgroundTaskService>().RegisterBackgroundTasksAsync(backgroundTasks);
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
 
+            ViewModelLocationProvider.Register<ShellPage>(() => {
+                return Container.Resolve<ShellViewModel>();
+            });
+
+            ViewModelLocationProvider.Register<SettingsPage>(() => {
+                return Container.Resolve<SettingsViewModel>();
+            });
+
+            ViewModelLocationProvider.Register<BlankPage>(() => {
+                return Container.Resolve<BlankViewModel>();
+            });
+
+            ViewModelLocationProvider.Register<MainPage>(() => {
+                return Container.Resolve<MainPhase>();
+            });
+
+
+
             // We are remapping the default ViewNamePage and ViewNamePageViewModel naming to ViewNamePage and ViewNameViewModel to
             // gain better code reuse with other frameworks and pages within Windows Template Studio
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => {
-                var viewModelTypeName = string.Format(CultureInfo.InvariantCulture, "Mwm.BeerFactoryV2.Uwp.Tips.ViewModels.{0}ViewModel, Mwm.BeerFactoryV2.Uwp.Tips", viewType.Name.Substring(0, viewType.Name.Length - 4));
-                return Type.GetType(viewModelTypeName);
-            });
+            //ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => {
+            //    string viewModelTypeName = "";
+            //    if (viewType.Name != "MainPage") {
+            //        var viewName = $"{viewType.Name.Replace("Page", "")}ViewModel";
+            //        viewModelTypeName = $"Mwm.BeerFactoryV2.Uwp.Tips.ViewModels.{viewName}ViewModel, Mwm.BeerFactoryV2.Uwp.Tips";
+            //    } else {
+            //        var phaseName = $"{viewType.Name.Replace("Page", "")}Phase";
+            //        viewModelTypeName = $"Mwm.BeerFactoryV2.Service.Phases.{phaseName}, Mwm.BeerFactoryV2.Service";
+            //    }
+            //    return Type.GetType(viewModelTypeName);
+            //});
+
+            //ViewModelLocationProvider.SetDefaultViewModelFactory((viewType) => {
+            //    return Container.Resolve(viewType);
+            //});
+
+
             await base.OnInitializeAsync(args);
         }
 
