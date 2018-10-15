@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Phases {
-    public class MainPhase : BeerFactoryPhaseBase {
+    public class MainPhase : BeerFactoryPhase {
 
-        public MainPhase(IEventAggregator eventAggregator) : base(eventAggregator) {
+        public MainPhase(IEventAggregator eventAggregator, IBeerFactory beerFactory) : base(eventAggregator, beerFactory) {
 
         }
     }

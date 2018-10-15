@@ -16,7 +16,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
 
         private IEventAggregator _eventAggregator;
 
-        public BeerFactoryViewModelBase(IEventAggregator eventAggregator, IBeerFactory beerfactory) {
+        public BeerFactoryViewModelBase(IBeerFactory beerfactory) {
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<TemperatureResultEvent>().Subscribe((temperatureResult) => {

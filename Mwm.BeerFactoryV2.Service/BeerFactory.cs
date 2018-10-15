@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using Mwm.BeerFactoryV2.Service.Phases;
+using Prism.Events;
+using Serilog;
 using Serilog.Core;
 using System;
 using System.Collections.Generic;
@@ -10,18 +12,26 @@ namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
 
+        void AddBeerFactoryPhase(BeerFactoryPhase beerFactoryPhase);
+
     }
-    public class BeerFactory : IBeerFactory {
+    public partial class BeerFactory : IBeerFactory {
 
         private ILogger Logger { get; set; }
 
-        public BeerFactory() {
+        private List<BeerFactoryPhase> _beerFactoryPhases = new List<BeerFactoryPhase>();
+
+        public BeerFactory(IEventAggregator eventAggregator) {
+            _eventAggregator = eventAggregator;
+
             Logger = Log.Logger;
 
             Logger.Information("Suck it");
         }
 
-
+        public void AddBeerFactoryPhase(BeerFactoryPhase beerFactoryPhase) {
+            _beerFactoryPhases.Add(beerFactoryPhase);
+        }
 
     }
 }

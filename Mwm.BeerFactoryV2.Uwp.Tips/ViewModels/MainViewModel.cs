@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Media;
 namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
     public class MainViewModel : BeerFactoryViewModelBase {
 
-        public MainViewModel(IEventAggregator eventAggregator, IBeerFactory beerfactor) : base(eventAggregator, beerfactor) {
+        public MainViewModel(IBeerFactory beerfactor) : base(beerfactor) {
 
         }
 

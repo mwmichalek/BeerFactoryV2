@@ -12,12 +12,15 @@ using Windows.UI;
 using Windows.UI.Xaml.Media;
 
 namespace Mwm.BeerFactoryV2.Service.Phases {
-    public abstract class BeerFactoryPhaseBase : ViewModelBase {
+    public abstract class BeerFactoryPhase : ViewModelBase {
 
         private IEventAggregator _eventAggregator;
 
-        public BeerFactoryPhaseBase(IEventAggregator eventAggregator) {
+        private IBeerFactory _beerFactory;
+
+        public BeerFactoryPhase(IEventAggregator eventAggregator, IBeerFactory beerFactory) {
             _eventAggregator = eventAggregator;
+            _beerFactory = beerFactory;
 
             _eventAggregator.GetEvent<TemperatureResultEvent>().Subscribe((temperatureResult) => {
                 if (temperatureResult.Index == 1)

@@ -47,7 +47,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             Container.RegisterType<BlankViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<SettingsViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<MainPhase>(new ContainerControlledLifetimeManager());
-
+            Container.RegisterType<MainViewModel>(new ContainerControlledLifetimeManager());
 
             Task.Run(() => {
                 Container.Resolve<ITemperatureControllerService>().Run();
@@ -81,42 +81,31 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             await Container.Resolve<IBackgroundTaskService>().RegisterBackgroundTasksAsync(backgroundTasks);
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
 
-            ViewModelLocationProvider.Register<ShellPage>(() => {
-                return Container.Resolve<ShellViewModel>();
-            });
+            //ViewModelLocationProvider.Register<ShellPage>(() => {
+            //    return Container.Resolve<ShellViewModel>();
+            //});
 
-            ViewModelLocationProvider.Register<SettingsPage>(() => {
-                return Container.Resolve<SettingsViewModel>();
-            });
+            //ViewModelLocationProvider.Register<SettingsPage>(() => {
+            //    return Container.Resolve<SettingsViewModel>();
+            //});
 
-            ViewModelLocationProvider.Register<BlankPage>(() => {
-                return Container.Resolve<BlankViewModel>();
-            });
+            //ViewModelLocationProvider.Register<BlankPage>(() => {
+            //    return Container.Resolve<BlankViewModel>();
+            //});
 
-            ViewModelLocationProvider.Register<MainPage>(() => {
-                return Container.Resolve<MainPhase>();
-            });
-
-
+            //ViewModelLocationProvider.Register<MainPage>(() => {
+            //    //return Container.Resolve<MainPhase>();
+            //    return Container.Resolve<MainViewModel>();
+            //});
 
             // We are remapping the default ViewNamePage and ViewNamePageViewModel naming to ViewNamePage and ViewNameViewModel to
             // gain better code reuse with other frameworks and pages within Windows Template Studio
-            //ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => {
-            //    string viewModelTypeName = "";
-            //    if (viewType.Name != "MainPage") {
-            //        var viewName = $"{viewType.Name.Replace("Page", "")}ViewModel";
-            //        viewModelTypeName = $"Mwm.BeerFactoryV2.Uwp.Tips.ViewModels.{viewName}ViewModel, Mwm.BeerFactoryV2.Uwp.Tips";
-            //    } else {
-            //        var phaseName = $"{viewType.Name.Replace("Page", "")}Phase";
-            //        viewModelTypeName = $"Mwm.BeerFactoryV2.Service.Phases.{phaseName}, Mwm.BeerFactoryV2.Service";
-            //    }
-            //    return Type.GetType(viewModelTypeName);
-            //});
 
-            //ViewModelLocationProvider.SetDefaultViewModelFactory((viewType) => {
-            //    return Container.Resolve(viewType);
-            //});
-
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver((viewType) => {
+                var viewName = $"{viewType.Name.Replace("Page", "")}ViewModel";
+                var viewModelTypeName = $"Mwm.BeerFactoryV2.Uwp.Tips.ViewModels.{viewName}, Mwm.BeerFactoryV2.Uwp.Tips";
+                return Type.GetType(viewModelTypeName);
+            });
 
             await base.OnInitializeAsync(args);
         }
