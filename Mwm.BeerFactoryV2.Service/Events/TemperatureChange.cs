@@ -6,14 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
-    public class KettleCommand : IEventPayload {
+    public class TemperatureChange : IEventPayload {
 
         public int Index { get; set; }
 
-        public int Percentage { get; set; }
+        public decimal Value { get; set; }
     }
 
-    public class KettleCommandEvent : PubSubEvent<KettleCommand> {
+    public class TemperatureChangeEvent : PubSubEvent<TemperatureChange> {
 
     }
 }

@@ -44,9 +44,9 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
         public OldUsbArduinoControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
-                ExecuteKettleCommand(kettleCommand);
-            });
+            //_eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
+            //    ExecuteKettleCommand(kettleCommand);
+            //});
         }
 
         public override async Task Run() {
@@ -184,18 +184,18 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
             var success = statusResultCommand.Ok;
         }
 
-        public void ExecuteKettleCommand(KettleCommand kettleCommand) {
-            Debug.WriteLine($"ExecuteKettleCommand: {kettleCommand.Index} {kettleCommand.Percentage}");
+        //public void ExecuteKettleCommand(KettleCommand kettleCommand) {
+        //    Debug.WriteLine($"ExecuteKettleCommand: {kettleCommand.Index} {kettleCommand.Percentage}");
 
-            Task.Run(() => {
-                var kettleRequest = new SendCommand((int)Command.KettleRequest, (int)Command.KettleResult, 2000);
-                kettleRequest.AddArgument(kettleCommand.Index);
-                kettleRequest.AddArgument(kettleCommand.Percentage);
-                var kettleResultCommand = _cmdMessenger.SendCommand(kettleRequest);
-                var success = kettleRequest.Ok;
-            });
+        //    Task.Run(() => {
+        //        var kettleRequest = new SendCommand((int)Command.KettleRequest, (int)Command.KettleResult, 2000);
+        //        kettleRequest.AddArgument(kettleCommand.Index);
+        //        kettleRequest.AddArgument(kettleCommand.Percentage);
+        //        var kettleResultCommand = _cmdMessenger.SendCommand(kettleRequest);
+        //        var success = kettleRequest.Ok;
+        //    });
 
-        }
+        //}
 
         // ------------------  C A L L B A C K S ---------------------
 
@@ -205,7 +205,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
             int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
 
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<SsrResultEvent>().Publish(new SsrResult { Index = ssrIndex, IsEngaged = ssrValue == 1, Percentage = percentage });
+                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = ssrIndex, IsEngaged = ssrValue == 1, Percentage = percentage });
             });
         }
 
@@ -223,24 +223,24 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
             decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
 
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<TemperatureResultEvent>().Publish(new TemperatureResult { Index = probeIndex, Value = temp });
+                _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = probeIndex, Value = temp });
             });
         }
 
-        private async void OnKettleResult(ReceivedCommand receivedCommand) {
-            try {
-                int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
-                //int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
-                var percentageString = receivedCommand.ReadStringArg();
-                int.TryParse(percentageString.Split(':')[1], out int percentage);
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    _eventAggregator.GetEvent<KettleResultEvent>().Publish(new KettleResult { Index = kettleIndex, Percentage = percentage });
-                });
-            } catch (Exception ex) {
+        //private async void OnKettleResult(ReceivedCommand receivedCommand) {
+        //    try {
+        //        int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
+        //        //int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+        //        var percentageString = receivedCommand.ReadStringArg();
+        //        int.TryParse(percentageString.Split(':')[1], out int percentage);
+        //        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //            _eventAggregator.GetEvent<KettleResultEvent>().Publish(new KettleResult { Index = kettleIndex, Percentage = percentage });
+        //        });
+        //    } catch (Exception ex) {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
         private async void OnMessage(ReceivedCommand receivedCommand) {
             try {

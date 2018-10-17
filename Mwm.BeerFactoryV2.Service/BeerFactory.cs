@@ -1,4 +1,5 @@
-﻿using Mwm.BeerFactoryV2.Service.Phases;
+﻿using Mwm.BeerFactoryV2.Service.Components;
+using Mwm.BeerFactoryV2.Service.Phases;
 using Prism.Events;
 using Serilog;
 using Serilog.Core;
@@ -21,12 +22,18 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private List<BeerFactoryPhase> _beerFactoryPhases = new List<BeerFactoryPhase>();
 
+        private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
+
         public BeerFactory(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 
             Logger = Log.Logger;
 
-            Logger.Information("Suck it");
+            foreach (var index in Enumerable.Range((int)ThermometerId.BK, (int)ThermometerId.FERM)) {
+                _thermometers.Add(new Thermometer((ThermometerId)index, _eventAggregator));
+            }
+
+            ConfigureEvents();
         }
 
         public void AddBeerFactoryPhase(BeerFactoryPhase beerFactoryPhase) {

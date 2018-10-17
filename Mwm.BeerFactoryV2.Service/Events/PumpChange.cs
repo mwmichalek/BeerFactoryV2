@@ -6,10 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
-    public class StatusCommand : IEventPayload {
+    public class PumpChange : IEventPayload {
+
+        public int Index { get; set;}
+
+        public bool IsEngaged { get; set; }
     }
 
-    public class StatusCommandEvent : PubSubEvent<StatusCommand> {
+    public class PumpChangeEvent : PubSubEvent<PumpChange> {
 
     }
 }

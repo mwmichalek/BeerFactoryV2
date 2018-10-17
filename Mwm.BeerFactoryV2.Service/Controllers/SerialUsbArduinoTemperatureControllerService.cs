@@ -128,7 +128,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         decimal.TryParse(tempReadingValues[1], out decimal temperature);
 
                         await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                            _eventAggregator.GetEvent<TemperatureResultEvent>().Publish(new TemperatureResult { Index = index, Value = temperature });
+                            _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index, Value = temperature });
                         });
                     }
                 }

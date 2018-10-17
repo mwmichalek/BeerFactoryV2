@@ -6,14 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
-    public class HeaterResult : IEventPayload {
-
+    public class SsrChange : IEventPayload {
         public int Index { get; set; }
 
         public bool IsEngaged { get; set; }
+
+        public int Percentage { get; set; }
+
     }
 
-    public class HeaterResultEvent : PubSubEvent<HeaterResult> {
+    public class SsrChangeEvent : PubSubEvent<SsrChange> {
 
     }
 }
