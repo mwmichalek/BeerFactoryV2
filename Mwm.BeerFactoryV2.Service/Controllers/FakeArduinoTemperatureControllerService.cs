@@ -18,12 +18,15 @@ using Windows.UI.Core;
 using SerialPortLib;
 using SerialArduino;
 using System.Linq;
+using Mwm.BeerFactoryV2.Service.Components;
 
 namespace Mwm.BeerFactoryV2.Service.Controllers {
     public class FakeArduinoTemperatureControllerService : TemperatureControllerService {
 
-        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory) {
+        private IBeerFactory _beerFactory;
 
+        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory) {
+            _beerFactory = beerFactory;
         }
 
 
@@ -35,19 +38,21 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
 
         private Random rnd = new Random();
 
-        public FakeArduinoTemperatureControllerService(IEventAggregator eventAggregator) {
-            _eventAggregator = eventAggregator;
+        //public FakeArduinoTemperatureControllerService(IEventAggregator eventAggregator) {
+        //    _eventAggregator = eventAggregator;
 
-            //Random rnd = new Random();
-            //int month = rnd.Next(1, 13); // creates a number between 1 and 12
-        }
+        //    //Random rnd = new Random();
+        //    //int month = rnd.Next(1, 13); // creates a number between 1 and 12
+        //}
 
         public override async Task Run() {
 
-            foreach (var temperature in temperatures.Select((value, index) => new { Value = value, Index = index })) {
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
-                });
+            foreach (var temperature in temperatures.Select((value, index) => new { Value = value, Index = index + 1 })) {
+                await _beerFactory.UpdateTemperatureAsync((ThermometerId)temperature.Index, temperature.Value);
+
+                //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
+                //});
             }
 
             while (true) {
@@ -55,9 +60,11 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     int index = rnd.Next(0, 10);
                     temperatures[index] += rnd.NextDecimal();
 
-                    await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
-                    });
+                    await _beerFactory.UpdateTemperatureAsync((ThermometerId)(index + 1), temperatures[index]);
+
+                    //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
+                    //});
                 } catch (Exception ex) {
 
                 }

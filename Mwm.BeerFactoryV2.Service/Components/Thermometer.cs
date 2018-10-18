@@ -20,11 +20,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
     }
 
     public class Thermometer {
-
-        private IEventAggregator _eventAggregator;
-
-        public Thermometer(ThermometerId id, IEventAggregator eventAggregator) {
-            _eventAggregator = eventAggregator;
+        public Thermometer(ThermometerId id) {
             Id = id;
         }
 
@@ -37,9 +33,9 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         public decimal Temperature {
             get { return temperature; }
             set {
-                var newValue = value;
-                Change = newValue - temperature;
+                Change = value - temperature;
                 Timestamp = DateTime.Now;
+                temperature = value;
             }
         }
 
