@@ -12,14 +12,18 @@ namespace PidController {
     /// <see cref="https://en.wikipedia.org/wiki/PID_controller"/>
     public sealed class PidController {
         private double processVariable = 0;
+        private int updateWindowInSeconds = 5;
 
-        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMax, double OutputMin) {
+        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMax, double OutputMin, int updateWindowInSeconds = 5) {
             this.GainDerivative = GainDerivative;
             this.GainIntegral = GainIntegral;
             this.GainProportional = GainProportional;
             this.OutputMax = OutputMax;
             this.OutputMin = OutputMin;
+            this.updateWindowInSeconds = updateWindowInSeconds;
         }
+
+
 
         /// <summary>
         /// The controller output
@@ -27,16 +31,18 @@ namespace PidController {
         /// <param name="timeSinceLastUpdate">timespan of the elapsed time
         /// since the previous time that ControlVariable was called</param>
         /// <returns>Value of the variable that needs to be controlled</returns>
-        public double ControlVariable(TimeSpan timeSinceLastUpdate) {
+        public double ControlVariable(TimeSpan? timeSinceLastUpdate = null) {
+            var secondsSinceLastUpdate = (timeSinceLastUpdate.HasValue) ? timeSinceLastUpdate.Value.Seconds : updateWindowInSeconds;
+
             double error = SetPoint - ProcessVariable;
 
             // integral term calculation
-            IntegralTerm += (GainIntegral * error * timeSinceLastUpdate.TotalSeconds);
+            IntegralTerm += (GainIntegral * error * secondsSinceLastUpdate);
             IntegralTerm = Clamp(IntegralTerm);
 
             // derivative term calculation
             double dInput = processVariable - ProcessVariableLast;
-            double derivativeTerm = GainDerivative * (dInput / timeSinceLastUpdate.TotalSeconds);
+            double derivativeTerm = GainDerivative * (dInput / secondsSinceLastUpdate);
 
             // proportional term calcullation
             double proportionalTerm = GainProportional * error;
