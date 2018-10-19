@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="BeerFactory.cs" />
     <Compile Include="BeerFactory_Events.cs" />
+    <Compile Include="Components\Phase.cs" />
     <Compile Include="Components\Thermometer.cs" />
     <Compile Include="Controllers\Constants.cs" />
     <Compile Include="Controllers\DeviceListEntry.cs" />
@@ -124,8 +125,6 @@
     <Compile Include="Events\IEventPayload.cs" />
     <Compile Include="Events\SsrChange.cs" />
     <Compile Include="Events\TemperatureChange.cs" />
-    <Compile Include="Phases\BeerFactoryPhase.cs" />
-    <Compile Include="Phases\MainPhase.cs" />
     <Compile Include="Pid\PidController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\WebArduinoControllerService.cs" />

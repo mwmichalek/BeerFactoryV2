@@ -1,6 +1,5 @@
 ﻿using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
-using Mwm.BeerFactoryV2.Service.Phases;
 using Prism.Events;
 using Serilog;
 using Serilog.Core;
@@ -15,8 +14,6 @@ namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
 
-        void AddBeerFactoryPhase(BeerFactoryPhase beerFactoryPhase);
-
         Task UpdateTemperatureAsync(ThermometerId id, decimal temperature);
 
     }
@@ -24,7 +21,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private ILogger Logger { get; set; }
 
-        private List<BeerFactoryPhase> _beerFactoryPhases = new List<BeerFactoryPhase>();
+        private List<Phase> _phases = new List<Phase>();
 
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
 
@@ -35,12 +32,16 @@ namespace Mwm.BeerFactoryV2.Service {
 
             for (int index = 1; index <= (int)ThermometerId.FERM; index++ )
                 _thermometers.Add(new Thermometer((ThermometerId)index));
-   
-            ConfigureEvents();
-        }
 
-        public void AddBeerFactoryPhase(BeerFactoryPhase beerFactoryPhase) {
-            _beerFactoryPhases.Add(beerFactoryPhase);
+            _phases.Add(new Phase(PhaseId.FillStrikeWater, 20));
+            _phases.Add(new Phase(PhaseId.HeatStrikeWater, 40));
+            _phases.Add(new Phase(PhaseId.Mash, 90));
+            _phases.Add(new Phase(PhaseId.MashOut, 90));
+            _phases.Add(new Phase(PhaseId.Sparge, 60));
+            _phases.Add(new Phase(PhaseId.Boil, 90));
+            _phases.Add(new Phase(PhaseId.Chill, 30));
+
+            ConfigureEvents();
         }
 
         public async Task UpdateTemperatureAsync(ThermometerId id, decimal temperature) {

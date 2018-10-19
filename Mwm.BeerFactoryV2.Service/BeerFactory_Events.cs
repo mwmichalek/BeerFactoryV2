@@ -1,5 +1,4 @@
 ﻿using Mwm.BeerFactoryV2.Service.Events;
-using Mwm.BeerFactoryV2.Service.Phases;
 using Prism.Events;
 using Serilog;
 using Serilog.Core;
