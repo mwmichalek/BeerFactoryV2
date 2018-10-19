@@ -126,6 +126,7 @@
     <Compile Include="Events\TemperatureChange.cs" />
     <Compile Include="Phases\BeerFactoryPhase.cs" />
     <Compile Include="Phases\MainPhase.cs" />
+    <Compile Include="Pid\PidController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\WebArduinoControllerService.cs" />
     <EmbeddedResource Include="Properties\Mwm.BeerFactoryV2.Service.rd.xml" />
