@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PidController {
+namespace Mwm.BeerFactoryV2.Service.Pid {
     /// <summary>
     /// A (P)roportional, (I)ntegral, (D)erivative Controller
     /// </summary>
@@ -12,16 +12,16 @@ namespace PidController {
     /// <see cref="https://en.wikipedia.org/wiki/PID_controller"/>
     public sealed class PidController {
         private double processVariable = 0;
-        private int updateWindowInSeconds = 5;
+        private DateTime lastRun;
 
-        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMax, double OutputMin, int updateWindowInSeconds = 5) {
+        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMax, double OutputMin, double setPoint) {
             this.GainDerivative = GainDerivative;
             this.GainIntegral = GainIntegral;
             this.GainProportional = GainProportional;
             this.OutputMax = OutputMax;
             this.OutputMin = OutputMin;
-            this.updateWindowInSeconds = updateWindowInSeconds;
-        }
+            this.SetPoint = setPoint;
+        }   
 
 
 
@@ -31,8 +31,16 @@ namespace PidController {
         /// <param name="timeSinceLastUpdate">timespan of the elapsed time
         /// since the previous time that ControlVariable was called</param>
         /// <returns>Value of the variable that needs to be controlled</returns>
-        public double ControlVariable(TimeSpan? timeSinceLastUpdate = null) {
-            var secondsSinceLastUpdate = (timeSinceLastUpdate.HasValue) ? timeSinceLastUpdate.Value.Seconds : updateWindowInSeconds;
+        public double Process(double? currentValue = null) {
+            if (currentValue.HasValue)
+                ProcessVariable = currentValue.Value;
+
+            var currentTime = DateTime.Now;
+            if (lastRun == null)
+                lastRun = currentTime;
+
+
+            var secondsSinceLastUpdate = (currentTime - lastRun).Seconds;
 
             double error = SetPoint - ProcessVariable;
 
@@ -50,6 +58,8 @@ namespace PidController {
             double output = proportionalTerm + IntegralTerm - derivativeTerm;
 
             output = Clamp(output);
+
+            lastRun = currentTime;
 
             return output;
         }

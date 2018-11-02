@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-
 using Microsoft.Practices.Unity;
 using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Controllers;
-using Mwm.BeerFactoryV2.Service.Phases;
 using Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks;
 using Mwm.BeerFactoryV2.Uwp.Tips.Services;
 using Mwm.BeerFactoryV2.Uwp.Tips.ViewModels;
 using Mwm.BeerFactoryV2.Uwp.Tips.Views;
-
 using Prism.Mvvm;
 using Prism.Unity.Windows;
 using Prism.Windows.AppModel;
@@ -46,7 +43,6 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             Container.RegisterType<ShellViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<BlankViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<SettingsViewModel>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<MainPhase>(new ContainerControlledLifetimeManager());
             Container.RegisterType<MainViewModel>(new ContainerControlledLifetimeManager());
 
             Task.Run(() => {
