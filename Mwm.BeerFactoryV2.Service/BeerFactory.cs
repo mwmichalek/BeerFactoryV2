@@ -12,6 +12,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.Devices.Pwm;
+using Windows.Devices.Gpio;
+using Microsoft.IoT.DeviceCore.Pwm;
+using Microsoft.IoT.Devices.Pwm;
 
 namespace Mwm.BeerFactoryV2.Service {
 
@@ -26,9 +30,11 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private List<Phase> _phases = new List<Phase>();
 
-        private PidController _hltPidController = new PidController(1, 1, 1, 0, 100, 90);
+        private PidController _hltPidController = new PidController(1, 1, 1, 0, 100, 80);
 
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
+
+        
 
         public BeerFactory(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
@@ -46,16 +52,26 @@ namespace Mwm.BeerFactoryV2.Service {
             _phases.Add(new Phase(PhaseId.Boil, 90));
             _phases.Add(new Phase(PhaseId.Chill, 30));
 
+            var ssr = new SSR(4);
+            ssr.Start();
+            
+
+            
 
             Task.Run(() => {
                 FakePidShit();
             });
 
+            //var pwm = new Pwm();
+            //pwm.Setup(4, 50, .01);
+
 
             ConfigureEvents();
         }
 
-        private double Bullshit = 75;
+        
+
+        private double Bullshit = 70;
 
         private void FakePidShit() {
 
@@ -64,7 +80,8 @@ namespace Mwm.BeerFactoryV2.Service {
                 Debug.WriteLine($"PID: {_hltPidController.Process(Bullshit)}, Temp: {Bullshit}");
 
                 Bullshit += .5;
-
+                //pinValue = (pinValue == GpioPinValue.High) ? GpioPinValue.Low : GpioPinValue.High;
+                //pin.Write(pinValue);
                 Thread.Sleep(2000);
             }
 

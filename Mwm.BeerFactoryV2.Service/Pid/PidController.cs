@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 
 namespace Mwm.BeerFactoryV2.Service.Pid {
     /// <summary>
@@ -14,7 +15,10 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
         private double processVariable = 0;
         private DateTime lastRun;
 
-        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMax, double OutputMin, double setPoint) {
+        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMin, double OutputMax, double setPoint) {
+            if (OutputMax < OutputMin)
+                throw new FormatException("OutputMax is less than OutputMin");
+
             this.GainDerivative = GainDerivative;
             this.GainIntegral = GainIntegral;
             this.GainProportional = GainProportional;
