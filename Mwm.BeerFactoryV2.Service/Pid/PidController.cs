@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Mwm.BeerFactoryV2.Service.Components;
+using System;
 using System.Configuration;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Pid {
     /// <summary>
@@ -12,21 +16,56 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
     /// </remarks>
     /// <see cref="https://en.wikipedia.org/wiki/PID_controller"/>
     public sealed class PidController {
+        private Ssr ssr;
+        private Thermometer thermometer;
+
         private double processVariable = 0;
         private DateTime lastRun;
+        private bool isRunning = false;
 
-        public PidController(double GainProportional, double GainIntegral, double GainDerivative, double OutputMin, double OutputMax, double setPoint) {
+        private int dutyCycleInMillis = 2000;
+
+        public PidController(Ssr ssr, Thermometer thermometer) {
+            this.ssr = ssr;
+            this.thermometer = thermometer;
+        }
+
+        public PidController(Ssr ssr, Thermometer thermometer, double setPoint) {
+            this.ssr = ssr;
+            this.thermometer = thermometer;
+            this.SetPoint = setPoint;
+        }
+
+        public PidController(Ssr ssr, Thermometer thermometer, double gainProportional, double gainIntegral, double gainDerivative, double outputMin, double outputMax, double setPoint) {
             if (OutputMax < OutputMin)
                 throw new FormatException("OutputMax is less than OutputMin");
-
-            this.GainDerivative = GainDerivative;
-            this.GainIntegral = GainIntegral;
-            this.GainProportional = GainProportional;
-            this.OutputMax = OutputMax;
-            this.OutputMin = OutputMin;
+            this.ssr = ssr;
+            this.thermometer = thermometer;
+            this.GainDerivative = gainDerivative;
+            this.GainIntegral = gainIntegral;
+            this.GainProportional = gainProportional;
+            this.OutputMax = outputMax;
+            this.OutputMin = outputMin;
             this.SetPoint = setPoint;
-        }   
+        }
 
+        public void Start() {
+            isRunning = true;
+ 
+            // Call new thread to run
+            Task.Run(() => Run());
+        }
+
+        public void Stop() {
+            isRunning = false;
+        }
+
+        private void Run() {
+            while (isRunning) {
+                Process();
+                Thread.Sleep(dutyCycleInMillis);
+            }
+        }
 
 
         /// <summary>
@@ -35,50 +74,93 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
         /// <param name="timeSinceLastUpdate">timespan of the elapsed time
         /// since the previous time that ControlVariable was called</param>
         /// <returns>Value of the variable that needs to be controlled</returns>
-        public double Process(double? currentValue = null) {
-            if (currentValue.HasValue)
-                ProcessVariable = currentValue.Value;
+        public void Process() {
+            
+            ProcessVariable = (double)thermometer.Temperature;
 
-            var currentTime = DateTime.Now;
-            if (lastRun == null)
+            if (ProcessVariable != 0) {
+                var currentTime = DateTime.Now;
+                if (lastRun == null)
+                    lastRun = currentTime;
+
+
+                var secondsSinceLastUpdate = (currentTime - lastRun).Seconds;
+
+                double error = SetPoint - ProcessVariable;
+
+                // integral term calculation
+                IntegralTerm += (GainIntegral * error * secondsSinceLastUpdate);
+                IntegralTerm = Clamp(IntegralTerm);
+
+                // derivative term calculation
+                double dInput = processVariable - ProcessVariableLast;
+                double derivativeTerm = GainDerivative * (dInput / secondsSinceLastUpdate);
+
+                // proportional term calcullation
+                double proportionalTerm = GainProportional * error;
+
+                double output = proportionalTerm + IntegralTerm - derivativeTerm;
+
+                output = Clamp(output);
+
                 lastRun = currentTime;
 
+                Debug.WriteLine($"Temperature: {ProcessVariable}  SSR: {output}");
 
-            var secondsSinceLastUpdate = (currentTime - lastRun).Seconds;
-
-            double error = SetPoint - ProcessVariable;
-
-            // integral term calculation
-            IntegralTerm += (GainIntegral * error * secondsSinceLastUpdate);
-            IntegralTerm = Clamp(IntegralTerm);
-
-            // derivative term calculation
-            double dInput = processVariable - ProcessVariableLast;
-            double derivativeTerm = GainDerivative * (dInput / secondsSinceLastUpdate);
-
-            // proportional term calcullation
-            double proportionalTerm = GainProportional * error;
-
-            double output = proportionalTerm + IntegralTerm - derivativeTerm;
-
-            output = Clamp(output);
-
-            lastRun = currentTime;
-
-            return output;
+                ssr.Percentage = (int)output;
+            }
         }
+
+        /// <summary>
+        /// The controller output
+        /// </summary>
+        /// <param name="timeSinceLastUpdate">timespan of the elapsed time
+        /// since the previous time that ControlVariable was called</param>
+        /// <returns>Value of the variable that needs to be controlled</returns>
+        //public double Process(double? currentValue = null) {
+        //    if (currentValue.HasValue)
+        //        ProcessVariable = currentValue.Value;
+
+        //    var currentTime = DateTime.Now;
+        //    if (lastRun == null)
+        //        lastRun = currentTime;
+
+
+        //    var secondsSinceLastUpdate = (currentTime - lastRun).Seconds;
+
+        //    double error = SetPoint - ProcessVariable;
+
+        //    // integral term calculation
+        //    IntegralTerm += (GainIntegral * error * secondsSinceLastUpdate);
+        //    IntegralTerm = Clamp(IntegralTerm);
+
+        //    // derivative term calculation
+        //    double dInput = processVariable - ProcessVariableLast;
+        //    double derivativeTerm = GainDerivative * (dInput / secondsSinceLastUpdate);
+
+        //    // proportional term calcullation
+        //    double proportionalTerm = GainProportional * error;
+
+        //    double output = proportionalTerm + IntegralTerm - derivativeTerm;
+
+        //    output = Clamp(output);
+
+        //    lastRun = currentTime;
+
+        //    return output;
+        //}
 
         /// <summary>
         /// The derivative term is proportional to the rate of
         /// change of the error
         /// </summary>
-        public double GainDerivative { get; set; } = 0;
+        public double GainDerivative { get; set; } = 1;
 
         /// <summary>
         /// The integral term is proportional to both the magnitude
         /// of the error and the duration of the error
         /// </summary>
-        public double GainIntegral { get; set; } = 0;
+        public double GainIntegral { get; set; } = 1;
 
         /// <summary>
         /// The proportional term produces an output value that
@@ -88,12 +170,12 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
         /// Tuning theory and industrial practice indicate that the
         /// proportional term should contribute the bulk of the output change.
         /// </remarks>
-        public double GainProportional { get; set; } = 0;
+        public double GainProportional { get; set; } = 1;
 
         /// <summary>
         /// The max output value the control device can accept.
         /// </summary>
-        public double OutputMax { get; private set; } = 0;
+        public double OutputMax { get; private set; } = 100;
 
         /// <summary>
         /// The minimum ouput value the control device can accept.

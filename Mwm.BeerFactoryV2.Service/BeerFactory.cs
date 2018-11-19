@@ -21,7 +21,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
 
-        Task UpdateTemperatureAsync(ThermometerId id, decimal temperature);
+        //Task UpdateTemperatureAsync(ThermometerId id, decimal temperature);
 
     }
     public partial class BeerFactory : IBeerFactory {
@@ -30,11 +30,9 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private List<Phase> _phases = new List<Phase>();
 
-        private PidController _hltPidController = new PidController(1, 1, 1, 0, 100, 80);
+        private PidController _hltPidController;
 
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
-
-        
 
         public BeerFactory(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
@@ -52,52 +50,46 @@ namespace Mwm.BeerFactoryV2.Service {
             _phases.Add(new Phase(PhaseId.Boil, 90));
             _phases.Add(new Phase(PhaseId.Chill, 30));
 
-            var ssr = new SSR(4);
-            ssr.Start();
-            
+            var hltSsr = new Ssr(4);
+            hltSsr.Percentage = 25;
+            hltSsr.Start();
 
-            
+            var bkSsr = new Ssr(5);
+            bkSsr.Percentage = 5;
+            bkSsr.Start();
 
-            Task.Run(() => {
-                FakePidShit();
-            });
+
+            //Task.Run(() => {
+            //    FakePidShit();
+            //});
 
             //var pwm = new Pwm();
             //pwm.Setup(4, 50, .01);
 
 
             ConfigureEvents();
+
+            _hltPidController = new PidController(hltSsr, _thermometers.GetById(ThermometerId.MT_IN));
+            _hltPidController.GainProportional = 18;
+            _hltPidController.GainIntegral = 3.6;
+            _hltPidController.GainDerivative = 22.5;
+
+            _hltPidController.SetPoint = 120;
+            _hltPidController.Start();
+                                 
         }
 
-        
+        //public async Task UpdateTemperatureAsync(ThermometerId id, decimal temperature) {
+        //    var thermometer = _thermometers.SingleOrDefault(t => t.Id == id);
+        //    if (thermometer != null) {
+        //        thermometer.Temperature = temperature;
 
-        private double Bullshit = 70;
+        //        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //            _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = (int)thermometer.Id, Value = thermometer.Temperature });
+        //        });
+        //    }
 
-        private void FakePidShit() {
-
-            while (true) {
-
-                Debug.WriteLine($"PID: {_hltPidController.Process(Bullshit)}, Temp: {Bullshit}");
-
-                Bullshit += .5;
-                //pinValue = (pinValue == GpioPinValue.High) ? GpioPinValue.Low : GpioPinValue.High;
-                //pin.Write(pinValue);
-                Thread.Sleep(2000);
-            }
-
-        }
-
-        public async Task UpdateTemperatureAsync(ThermometerId id, decimal temperature) {
-            var thermometer = _thermometers.SingleOrDefault(t => t.Id == id);
-            if (thermometer != null) {
-                thermometer.Temperature = temperature;
-
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = (int)thermometer.Id, Value = thermometer.Temperature });
-                });
-            }
-
-        }
+        //}
 
     }
 }

@@ -11,13 +11,32 @@ using Windows.Devices.Gpio;
 using Windows.Devices.Pwm;
 
 namespace Mwm.BeerFactoryV2.Service.Components {
-    public class SSR {
+    public class Ssr {
 
         public int Pin { get; set; }
 
-        public int DutyCycleInMillis { get; set; } = 2000;
+        private int _dutyCycleInMillis = 2000;
+        public int DutyCycleInMillis {
+            get {
+                return _dutyCycleInMillis;
+            }
+            set {
+                _dutyCycleInMillis = value;
+                CalculateDurations();
+            }
+        }
 
-        public int Percentage { get; set; } = 50;
+        private int _percentage = 50;
+
+        public int Percentage {
+            get {
+                return _percentage;
+            }
+            set {
+                _percentage = value;
+                CalculateDurations();
+            }
+        }
 
         private GpioPin pin;
         private GpioPinValue pinValue = GpioPinValue.High;
@@ -27,7 +46,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private int millisOn = 1000;
         private int millisOff = 1000;
 
-        public SSR(int pinNumber) {
+        public Ssr(int pinNumber) {
             Pin = pinNumber;
 
             var gpio = GpioController.GetDefault();
@@ -39,14 +58,17 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         public void Start() {
             isRunning = true;
-
-            // Calculate On and Off durations
-            decimal fraction = ((decimal)Percentage / 100.0m);
-            millisOn = (int)(fraction * (decimal)DutyCycleInMillis);
-            millisOff = DutyCycleInMillis - millisOn;
+            CalculateDurations();
 
             // Call new thread to run
             Task.Run(() => Run());
+        }
+
+        private void CalculateDurations() {
+            // Calculate On and Off durations
+            decimal fraction = ((decimal)_percentage / 100.0m);
+            millisOn = (int)(fraction * (decimal)_dutyCycleInMillis);
+            millisOff = _dutyCycleInMillis - millisOn;
         }
 
         private void Run() {

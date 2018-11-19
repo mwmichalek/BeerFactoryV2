@@ -41,4 +41,12 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         public DateTime Timestamp { get; set; }
     }
+
+    public static class ThermometerHelper {
+
+        public static Thermometer GetById(this List<Thermometer> thermometers, ThermometerId thermometerId) {
+            return thermometers.SingleOrDefault(t => t.Id == thermometerId);
+        }
+
+    }
 }

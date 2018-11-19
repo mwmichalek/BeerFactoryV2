@@ -48,7 +48,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
         public override async Task Run() {
 
             foreach (var temperature in temperatures.Select((value, index) => new { Value = value, Index = index + 1 })) {
-                await _beerFactory.UpdateTemperatureAsync((ThermometerId)temperature.Index, temperature.Value);
+                //await _beerFactory.UpdateTemperatureAsync((ThermometerId)temperature.Index, temperature.Value);
 
                 //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                 //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
@@ -60,7 +60,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     int index = rnd.Next(0, 10);
                     temperatures[index] += rnd.NextDecimal();
 
-                    await _beerFactory.UpdateTemperatureAsync((ThermometerId)(index + 1), temperatures[index]);
+                    //await _beerFactory.UpdateTemperatureAsync((ThermometerId)(index + 1), temperatures[index]);
 
                     //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                     //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index + 1, Value = temperatures[index] });

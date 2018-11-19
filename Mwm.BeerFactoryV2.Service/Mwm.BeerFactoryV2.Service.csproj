@@ -109,7 +109,7 @@
     <Compile Include="BeerFactory.cs" />
     <Compile Include="BeerFactory_Events.cs" />
     <Compile Include="Components\Phase.cs" />
-    <Compile Include="Components\SSR.cs" />
+    <Compile Include="Components\Ssr.cs" />
     <Compile Include="Components\Thermometer.cs" />
     <Compile Include="Controllers\Constants.cs" />
     <Compile Include="Controllers\DeviceListEntry.cs" />

@@ -18,24 +18,11 @@ namespace Mwm.BeerFactoryV2.Service {
         public void ConfigureEvents() {
 
             _eventAggregator.GetEvent<TemperatureChangeEvent>().Subscribe((temperatureResult) => {
-                if (temperatureResult.Index == 1)
-                    //Temperature1 = temperatureResult.Value;
-                    if (temperatureResult.Index == 2)
-                        //Temperature2 = temperatureResult.Value;
-                        if (temperatureResult.Index == 3)
-                            //Temperature3 = temperatureResult.Value;
-                            if (temperatureResult.Index == 4)
-                                //Temperature4 = temperatureResult.Value;
-                                if (temperatureResult.Index == 5)
-                                    //Temperature5 = temperatureResult.Value;
-                                    if (temperatureResult.Index == 6)
-                                        //Temperature6 = temperatureResult.Value;
-                                        if (temperatureResult.Index == 7)
-                                            //Temperature7 = temperatureResult.Value;
-                                            if (temperatureResult.Index == 8)
-                                                //Temperature8 = temperatureResult.Value;
-                                                if (temperatureResult.Index == 9) ;
-                    //Temperature9 = temperatureResult.Value;
+                var thermometer = _thermometers.SingleOrDefault(t => (int)t.Id == temperatureResult.Index);
+                if (thermometer != null) {
+                    thermometer.Temperature = temperatureResult.Value;
+                    thermometer.Timestamp = DateTime.Now;
+                }
             });
 
             _eventAggregator.GetEvent<ConnectionStatusEvent>().Subscribe((connectionStatus) => {

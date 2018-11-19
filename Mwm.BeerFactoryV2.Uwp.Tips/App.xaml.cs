@@ -3,7 +3,9 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using Mwm.BeerFactoryV2.Service;
+using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Controllers;
+using Mwm.BeerFactoryV2.Service.Pid;
 using Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks;
 using Mwm.BeerFactoryV2.Uwp.Tips.Services;
 using Mwm.BeerFactoryV2.Uwp.Tips.ViewModels;
@@ -34,7 +36,9 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
                 .WriteTo.Trace()
                 .CreateLogger();
 
-            Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
@@ -44,6 +48,9 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             Container.RegisterType<BlankViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<SettingsViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<MainViewModel>(new ContainerControlledLifetimeManager());
+
+            //Container.RegisterType<Ssr>(new PerResolveLifetimeManager());
+            //Container.RegisterType<PidController>(new PerResolveLifetimeManager());
 
             Task.Run(() => {
                 Container.Resolve<ITemperatureControllerService>().Run();
