@@ -13,12 +13,16 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.Views {
             InitializeComponent();
         }
 
-        private void HltSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
-            ViewModel.HltPublishChangeEvent();
+        private void StrikeWaterSetPointSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
+            ViewModel.StrikeWaterSetPointPublishChangeEvent();
         }
 
-        private void BkSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
-            ViewModel.BkPublishChangeEvent();
+        private void MashSetPointSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
+            ViewModel.MashSetPointPublishChangeEvent();
+        }
+
+        private void BoilKettleSetPointSlider_PointerCaptureLost(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e) {
+            ViewModel.BoilKettleSetPointPublishChangeEvent();
         }
     }
 }

@@ -17,5 +17,16 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
 
         }
 
+        public void StrikeWaterSetPointPublishChangeEvent() {
+            //_eventAggregator.GetEvent<SsrChangeEvent>().Publish(new KettleCommand { Index = 1, Percentage = hltPercentageSetting });
+        }
+
+        public void MashSetPointPublishChangeEvent() {
+            //throw new NotImplementedException();
+        }
+
+        public void BoilKettleSetPointPublishChangeEvent() {
+            //throw new NotImplementedException();
+        }
     }
 }

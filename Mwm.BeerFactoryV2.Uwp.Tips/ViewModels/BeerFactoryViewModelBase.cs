@@ -1,4 +1,5 @@
 ﻿using Mwm.BeerFactoryV2.Service;
+using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using Prism.Windows.Mvvm;
@@ -47,10 +48,10 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
 
             _eventAggregator.GetEvent<SsrChangeEvent>().Subscribe((ssrResult) => {
                 //Debug.WriteLine($"SSR Status: {ssrResult.Index} {ssrResult.IsEngaged}");
-                if (ssrResult.Index == 1) {
+                if (ssrResult.Index == (int)SsrId.HLT) {
                     HltElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
                     HltPercentage = ssrResult.Percentage;
-                } else if (ssrResult.Index == 2) {
+                } else if (ssrResult.Index == (int)SsrId.BK) {
                     BkElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
                     BkPercentage = ssrResult.Percentage;
                 }
@@ -72,10 +73,10 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
 
                 if (message.Index == 1) {
                     //Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
-                    HltPercentage = message.Percentage;
+                    //HltPercentage = message.Percentage;
                 } else if (message.Index == 2) {
                     //Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
-                    BkPercentage = message.Percentage;
+                    //BkPercentage = message.Percentage;
                 }
             });
         }
@@ -96,6 +97,24 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
         public int BkPercentage {
             get { return bkPercentage; }
             set { SetProperty(ref bkPercentage, value); }
+        }
+
+        private int strikeWaterSetPoint;
+        public int StrikeWaterSetPoint {
+            get { return strikeWaterSetPoint; }
+            set { SetProperty(ref strikeWaterSetPoint, value); }
+        }
+
+        private int mashSetPoint;
+        public int MashSetPoint {
+            get { return mashSetPoint; }
+            set { SetProperty(ref mashSetPoint, value); }
+        }
+
+        private int boilKettleSetPoint;
+        public int BoilKettleSetPoint {
+            get { return boilKettleSetPoint; }
+            set { SetProperty(ref boilKettleSetPoint, value); }
         }
 
         private decimal temperature1 = 0.0m;
@@ -201,12 +220,12 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             set { SetProperty(ref bkElementEngagedBrush, value); }
         }
 
-        public void HltPublishChangeEvent() {
-            //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 1, Percentage = hltPercentageSetting });
-        }
+        //public void HltPublishChangeEvent() {
+        //    //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 1, Percentage = hltPercentageSetting });
+        //}
 
-        public void BkPublishChangeEvent() {
-            //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = bkPercentageSetting });
-        }
+        //public void BkPublishChangeEvent() {
+        //    //_eventAggregator.GetEvent<KettleCommandEvent>().Publish(new KettleCommand { Index = 2, Percentage = bkPercentageSetting });
+        //}
     }
 }

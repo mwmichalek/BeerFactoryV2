@@ -21,8 +21,6 @@ namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
 
-        //Task UpdateTemperatureAsync(ThermometerId id, decimal temperature);
-
     }
     public partial class BeerFactory : IBeerFactory {
 
@@ -50,46 +48,24 @@ namespace Mwm.BeerFactoryV2.Service {
             _phases.Add(new Phase(PhaseId.Boil, 90));
             _phases.Add(new Phase(PhaseId.Chill, 30));
 
-            var hltSsr = new Ssr(4);
+            var hltSsr = new Ssr(eventAggregator, SsrId.HLT);
             hltSsr.Percentage = 25;
             hltSsr.Start();
 
-            var bkSsr = new Ssr(5);
+            var bkSsr = new Ssr(eventAggregator, SsrId.BK);
             bkSsr.Percentage = 5;
             bkSsr.Start();
-
-
-            //Task.Run(() => {
-            //    FakePidShit();
-            //});
-
-            //var pwm = new Pwm();
-            //pwm.Setup(4, 50, .01);
-
 
             ConfigureEvents();
 
             _hltPidController = new PidController(hltSsr, _thermometers.GetById(ThermometerId.MT_IN));
             _hltPidController.GainProportional = 18;
-            _hltPidController.GainIntegral = 3.6;
+            _hltPidController.GainIntegral = 1.5;
             _hltPidController.GainDerivative = 22.5;
 
             _hltPidController.SetPoint = 120;
             _hltPidController.Start();
                                  
         }
-
-        //public async Task UpdateTemperatureAsync(ThermometerId id, decimal temperature) {
-        //    var thermometer = _thermometers.SingleOrDefault(t => t.Id == id);
-        //    if (thermometer != null) {
-        //        thermometer.Temperature = temperature;
-
-        //        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-        //            _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = (int)thermometer.Id, Value = thermometer.Temperature });
-        //        });
-        //    }
-
-        //}
-
     }
 }

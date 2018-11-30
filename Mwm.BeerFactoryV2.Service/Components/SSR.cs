@@ -1,5 +1,7 @@
 ﻿using Microsoft.IoT.DeviceCore.Pwm;
 using Microsoft.IoT.Devices.Pwm;
+using Mwm.BeerFactoryV2.Service.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,9 +11,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.Devices.Pwm;
+using Windows.UI.Core;
 
 namespace Mwm.BeerFactoryV2.Service.Components {
+    public enum SsrId {
+        HLT = 4,
+        BK = 5
+    }
+
     public class Ssr {
+
+        public SsrId Id { get; set; }
+
+        private IEventAggregator _eventAggregator;
 
         public int Pin { get; set; }
 
@@ -46,8 +58,10 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private int millisOn = 1000;
         private int millisOff = 1000;
 
-        public Ssr(int pinNumber) {
-            Pin = pinNumber;
+        public Ssr(IEventAggregator eventAggregator, SsrId id) {
+            Id = id;
+            _eventAggregator = eventAggregator;
+            Pin = (int)id;
 
             var gpio = GpioController.GetDefault();
             if (gpio != null) {
@@ -73,19 +87,27 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         private void Run() {
             while (isRunning) {
-                On();
+                OnAsync();
                 Thread.Sleep(millisOn);
                 Off();
                 Thread.Sleep(millisOff);
             }
         }
 
-        private void On() {
+        private void OnAsync() {
             pin?.Write(GpioPinValue.High);
+
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = (int)Id, IsEngaged = true, Percentage = _percentage });
+            });
         }
 
         private void Off() {
             pin?.Write(GpioPinValue.Low);
+
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = (int)Id, IsEngaged = false, Percentage = _percentage });
+            });
         }
 
         public void Stop() {

@@ -111,44 +111,7 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
             }
         }
 
-        /// <summary>
-        /// The controller output
-        /// </summary>
-        /// <param name="timeSinceLastUpdate">timespan of the elapsed time
-        /// since the previous time that ControlVariable was called</param>
-        /// <returns>Value of the variable that needs to be controlled</returns>
-        //public double Process(double? currentValue = null) {
-        //    if (currentValue.HasValue)
-        //        ProcessVariable = currentValue.Value;
 
-        //    var currentTime = DateTime.Now;
-        //    if (lastRun == null)
-        //        lastRun = currentTime;
-
-
-        //    var secondsSinceLastUpdate = (currentTime - lastRun).Seconds;
-
-        //    double error = SetPoint - ProcessVariable;
-
-        //    // integral term calculation
-        //    IntegralTerm += (GainIntegral * error * secondsSinceLastUpdate);
-        //    IntegralTerm = Clamp(IntegralTerm);
-
-        //    // derivative term calculation
-        //    double dInput = processVariable - ProcessVariableLast;
-        //    double derivativeTerm = GainDerivative * (dInput / secondsSinceLastUpdate);
-
-        //    // proportional term calcullation
-        //    double proportionalTerm = GainProportional * error;
-
-        //    double output = proportionalTerm + IntegralTerm - derivativeTerm;
-
-        //    output = Clamp(output);
-
-        //    lastRun = currentTime;
-
-        //    return output;
-        //}
 
         /// <summary>
         /// The derivative term is proportional to the rate of

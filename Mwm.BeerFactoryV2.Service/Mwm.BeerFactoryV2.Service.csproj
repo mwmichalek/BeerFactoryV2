@@ -116,14 +116,17 @@
     <Compile Include="Controllers\EventHandlerForDevice.cs" />
     <Compile Include="Controllers\SerialUsbArduinoTemperatureControllerService.cs" />
     <Compile Include="Events\EventHelper.cs" />
+    <Compile Include="Events\EventManager.cs" />
     <Compile Include="Events\Message.cs" />
     <Compile Include="Controllers\ITemperatureControllerService.cs" />
     <Compile Include="Controllers\FakeArduinoTemperatureControllerService.cs" />
     <Compile Include="Controllers\OldUsbArduinoControllerService.cs" />
     <Compile Include="Events\ConnectionStatus.cs" />
     <Compile Include="Events\HeaterChange.cs" />
+    <Compile Include="Events\PidRequest.cs" />
     <Compile Include="Events\PumpChange.cs" />
     <Compile Include="Events\IEventPayload.cs" />
+    <Compile Include="Events\SsrRequest.cs" />
     <Compile Include="Events\SsrChange.cs" />
     <Compile Include="Events\TemperatureChange.cs" />
     <Compile Include="Pid\PidController.cs" />

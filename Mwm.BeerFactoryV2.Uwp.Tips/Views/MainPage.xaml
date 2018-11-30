@@ -27,9 +27,10 @@
 
             <TextBlock x:Name="ConnectionStatusTextBlock" HorizontalAlignment="Left" Margin="1169,917,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.ConnectionStatus}" TextWrapping="Wrap" VerticalAlignment="Top" Height="41" Width="316" FontSize="20" FontWeight="Normal"/>
 
-            <Slider x:Name="HltSlider" Value="{x:Bind ViewModel.HltPercentageSetting, Mode=TwoWay}"  HorizontalAlignment="Left" PointerCaptureLost="HltSlider_PointerCaptureLost" Margin="633,133,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
-            <Slider x:Name="BkSlider" Value="{x:Bind ViewModel.BkPercentageSetting, Mode=TwoWay}" HorizontalAlignment="Left" PointerCaptureLost="BkSlider_PointerCaptureLost" Margin="633,261,0,0" VerticalAlignment="Top" Width="256" Maximum="100"/>
-
+            <Slider x:Name="StrikeWaterSetPointSlider" Value="{x:Bind ViewModel.StrikeWaterSetPoint, Mode=TwoWay}"  HorizontalAlignment="Left" PointerCaptureLost="StrikeWaterSetPointSlider_PointerCaptureLost" Margin="633,133,0,0" VerticalAlignment="Top" Width="256" Minimum="32" Maximum="212"/>
+            <Slider x:Name="MashSetPointSlider" Value="{x:Bind ViewModel.MashSetPoint, Mode=TwoWay}" HorizontalAlignment="Left" PointerCaptureLost="MashSetPointSlider_PointerCaptureLost" Margin="633,266,0,0" VerticalAlignment="Top" Width="256" Minimum="32" Maximum="212"/>
+            <Slider x:Name="BoilKettleSetPointSlider" Value="{x:Bind ViewModel.BoilKettleSetPoint, Mode=TwoWay}" HorizontalAlignment="Left" PointerCaptureLost="BoilKettleSetPointSlider_PointerCaptureLost" Margin="633,399,0,0" VerticalAlignment="Top" Width="256" Minimum="32" Maximum="212"/>
+            
             <TextBlock x:Name="HltPercentageTextBlock" HorizontalAlignment="Left" Margin="951,107,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.HltPercentage}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
             <TextBlock x:Name="BkPercentageTextBlock" HorizontalAlignment="Left" Margin="951,237,0,0" Text="{x:Bind Mode=OneWay, Path=ViewModel.BkPercentage}" TextWrapping="Wrap" VerticalAlignment="Top" Height="105" Width="186" FontSize="72" FontWeight="Normal"/>
 
