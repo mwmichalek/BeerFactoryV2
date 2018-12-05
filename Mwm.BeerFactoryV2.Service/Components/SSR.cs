@@ -27,6 +27,8 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         public int Pin { get; set; }
 
+        public bool IsEngaged { get; set; }
+
         private int _dutyCycleInMillis = 2000;
         public int DutyCycleInMillis {
             get {
@@ -47,6 +49,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
             set {
                 _percentage = value;
                 CalculateDurations();
+                SendNotification();
             }
         }
 
@@ -87,26 +90,28 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         private void Run() {
             while (isRunning) {
-                OnAsync();
+                On();
                 Thread.Sleep(millisOn);
                 Off();
                 Thread.Sleep(millisOff);
             }
         }
 
-        private void OnAsync() {
+        private void On() {
             pin?.Write(GpioPinValue.High);
-
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = (int)Id, IsEngaged = true, Percentage = _percentage });
-            });
+            IsEngaged = true;
+            SendNotification();
         }
 
         private void Off() {
             pin?.Write(GpioPinValue.Low);
+            IsEngaged = false;
+            SendNotification();
+        }
 
+        private void SendNotification() {
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = (int)Id, IsEngaged = false, Percentage = _percentage });
+                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = (int)Id, IsEngaged = IsEngaged, Percentage = _percentage });
             });
         }
 
