@@ -15,7 +15,5 @@ namespace Mwm.BeerFactoryV2.Service.Events {
         public int Percentage { get; set; }
     }
 
-    public class MessageEvent : PubSubEvent<Message> {
-
-    }
+   
 }

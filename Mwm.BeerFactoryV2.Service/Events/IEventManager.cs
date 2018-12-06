@@ -8,9 +8,10 @@ namespace Mwm.BeerFactoryV2.Service.Events {
 
     public interface IEventManager {
 
-    }
-    public class EventManager : IEventManager {
+        void Subscribe<TEventPayload>(Action<TEventPayload> eventAction) where TEventPayload : IEventPayload;
 
+        void Publish<TEventPayload>(TEventPayload payload) where TEventPayload : IEventPayload;
 
     }
+
 }

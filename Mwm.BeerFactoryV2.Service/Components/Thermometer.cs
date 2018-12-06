@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Mwm.BeerFactoryV2.Service.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,12 @@ namespace Mwm.BeerFactoryV2.Service.Components {
     }
 
     public class Thermometer {
-        public Thermometer(ThermometerId id) {
+
+        public IEventManager _eventManager { get; set; }
+
+        public Thermometer(ThermometerId id, IEventManager eventManager) {
             Id = id;
+            _eventManager = eventManager;
         }
 
         public ThermometerId Id { get; private set; }

@@ -13,7 +13,5 @@ namespace Mwm.BeerFactoryV2.Service.Events {
         public bool IsEngaged { get; set; }
     }
 
-    public class HeaterChangeEvent : PubSubEvent<HeaterChange> {
-
-    }
+    
 }

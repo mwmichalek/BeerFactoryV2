@@ -25,25 +25,18 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
 
         private IBeerFactory _beerFactory;
 
-        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory) {
+        private IEventManager _eventManager;
+
+        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory, IEventManager eventManager) {
             _beerFactory = beerFactory;
+            _eventManager = eventManager;
         }
-
-
-        private IEventAggregator _eventAggregator;
 
         private List<decimal> temperatures = new List<decimal> { 70.01m, 69.54m, 70.12m,
                                                                  70.43m, 69.72m, 68.91m,
                                                                  71.44m, 70.54m, 69.87m };
 
         private Random rnd = new Random();
-
-        //public FakeArduinoTemperatureControllerService(IEventAggregator eventAggregator) {
-        //    _eventAggregator = eventAggregator;
-
-        //    //Random rnd = new Random();
-        //    //int month = rnd.Next(1, 13); // creates a number between 1 and 12
-        //}
 
         public override async Task Run() {
 
@@ -53,6 +46,9 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                 //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
                 //});
+
+                _eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
+
             }
 
             while (true) {
@@ -65,6 +61,8 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                     //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
                     //});
+
+                    _eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
                 } catch (Exception ex) {
 
                 }
