@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Controllers;
+using Mwm.BeerFactoryV2.Service.Events;
 using Mwm.BeerFactoryV2.Service.Pid;
 using Mwm.BeerFactoryV2.Uwp.Tips.BackgroundTasks;
+using Mwm.BeerFactoryV2.Uwp.Tips.Events;
 using Mwm.BeerFactoryV2.Uwp.Tips.Services;
 using Mwm.BeerFactoryV2.Uwp.Tips.ViewModels;
 using Mwm.BeerFactoryV2.Uwp.Tips.Views;
@@ -36,13 +39,46 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
                 .WriteTo.Trace()
                 .CreateLogger();
 
-            Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
-            //Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
+            Container.RegisterType<IEventManager, EventAggregatorEventManager>(new ContainerControlledLifetimeManager());
+
+            var eventManager = Container.Resolve<IEventManager>();
+
+            var thermometers = new List<Thermometer>();
+            for (int index = 1; index <= (int)ThermometerId.FERM; index++) {
+                var thermometer = new Thermometer((ThermometerId)index, eventManager);
+                thermometers.Add(thermometer);
+                Container.RegisterInstance<Thermometer>($"Thermometer{index}", thermometer);
+            }
+            var hltSsr = new Ssr(SsrId.HLT, eventManager);
+            hltSsr.Percentage = 25;
+            Container.RegisterInstance<Ssr>($"Ssr{SsrId.HLT}", hltSsr);
+            //hltSsr.Start();
+
+            var bkSsr = new Ssr(SsrId.BK, eventManager);
+            bkSsr.Percentage = 5;
+            //bkSsr.Start();
+            Container.RegisterInstance<Ssr>($"Ssr{SsrId.BK}", bkSsr);
+
+
+            var hltPidController = new PidController(hltSsr, thermometers.GetById(ThermometerId.MT_IN));
+            hltPidController.GainProportional = 18;
+            hltPidController.GainIntegral = 1.5;
+            hltPidController.GainDerivative = 22.5;
+            hltPidController.SetPoint = 120;
+
+            Container.RegisterInstance<PidController>("hltPidController", hltPidController);
+
+
             Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
+
+            Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<ShellViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<BlankViewModel>(new ContainerControlledLifetimeManager());

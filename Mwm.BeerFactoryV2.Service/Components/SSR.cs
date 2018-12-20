@@ -23,7 +23,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         public SsrId Id { get; set; }
 
-        private IEventAggregator _eventAggregator;
+        private IEventManager _eventManager;
 
         public int Pin { get; set; }
 
@@ -61,9 +61,9 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private int millisOn = 1000;
         private int millisOff = 1000;
 
-        public Ssr(IEventAggregator eventAggregator, SsrId id) {
+        public Ssr(SsrId id, IEventManager eventManager) {
             Id = id;
-            _eventAggregator = eventAggregator;
+            _eventManager = eventManager;
             Pin = (int)id;
 
             var gpio = GpioController.GetDefault();
@@ -110,9 +110,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         }
 
         private void SendNotification() {
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = (int)Id, IsEngaged = IsEngaged, Percentage = _percentage });
-            });
+            _eventManager.Publish<SsrChange>(new SsrChange { Index = (int)Id, IsEngaged = IsEngaged, Percentage = _percentage });            
         }
 
         public void Stop() {

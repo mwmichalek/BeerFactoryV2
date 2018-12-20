@@ -48,9 +48,9 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 try {
                     var setupResult = await Setup();
                     if (setupResult) {
-                        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                            _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Disconnected });
-                        });
+                        //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Disconnected });
+                        //});
 
                         await RequestAllTemperatures();
 
@@ -58,9 +58,9 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                             await ProcessTemperatures();
                         }
                     } else {
-                        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                            _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
-                        });
+                        //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
+                        //});
                     }
                     
                 } catch (Exception ex) {
@@ -127,9 +127,9 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         int.TryParse(tempReadingValues[0], out int index);
                         decimal.TryParse(tempReadingValues[1], out decimal temperature);
 
-                        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                            _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index, Value = temperature });
-                        });
+                        //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index, Value = temperature });
+                        //});
                     }
                 }
             } catch (OperationCanceledException /*exception*/) {

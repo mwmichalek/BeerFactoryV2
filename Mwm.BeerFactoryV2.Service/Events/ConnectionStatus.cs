@@ -18,7 +18,5 @@ namespace Mwm.BeerFactoryV2.Service.Events {
         public EventType Type { get; set; }
     }
 
-    public class ConnectionStatusEvent : PubSubEvent<ConnectionStatus> {
-
-    }
+    
 }

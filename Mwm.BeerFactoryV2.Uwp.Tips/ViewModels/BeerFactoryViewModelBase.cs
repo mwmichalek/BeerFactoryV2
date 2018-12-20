@@ -15,12 +15,12 @@ using Windows.UI.Xaml.Media;
 namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
     public abstract class BeerFactoryViewModelBase : ViewModelBase {
 
-        private IEventAggregator _eventAggregator;
+        private IEventManager _eventManager;
 
-        public BeerFactoryViewModelBase(IBeerFactory beerfactory, IEventAggregator eventAggregator) {
-            _eventAggregator = eventAggregator;
+        public BeerFactoryViewModelBase(IBeerFactory beerfactory, IEventManager eventManager) {
+            _eventManager = eventManager;
 
-            _eventAggregator.GetEvent<TemperatureChangeEvent>().Subscribe((temperatureResult) => {
+            _eventManager.Subscribe<TemperatureChange>((temperatureResult) => {
                 if (temperatureResult.Index == 1)
                     Temperature1 = temperatureResult.Value;
                 if (temperatureResult.Index == 2)
@@ -41,12 +41,12 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
                     Temperature9 = temperatureResult.Value;
             });
 
-            _eventAggregator.GetEvent<ConnectionStatusEvent>().Subscribe((connectionStatus) => {
+            _eventManager.Subscribe<ConnectionStatus>((connectionStatus) => {
                 Debug.WriteLine($"Connection Status: {connectionStatus.Type}");
                 ConnectionStatus = $"{connectionStatus.Type}";
             });
 
-            _eventAggregator.GetEvent<SsrChangeEvent>().Subscribe((ssrResult) => {
+            _eventManager.Subscribe<SsrChange>((ssrResult) => {
                 //Debug.WriteLine($"SSR Status: {ssrResult.Index} {ssrResult.IsEngaged}");
                 if (ssrResult.Index == (int)SsrId.HLT) {
                     HltElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
@@ -68,7 +68,7 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             //    }
             //});
 
-            _eventAggregator.GetEvent<MessageEvent>().Subscribe((message) => {
+            _eventManager.Subscribe<Message>((message) => {
                 Debug.WriteLine($"Message: {message.Index} {message.Body}");
 
                 if (message.Index == 1) {

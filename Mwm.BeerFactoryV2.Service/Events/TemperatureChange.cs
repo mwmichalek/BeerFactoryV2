@@ -13,7 +13,5 @@ namespace Mwm.BeerFactoryV2.Service.Events {
         public decimal Value { get; set; }
     }
 
-    public class TemperatureChangeEvent : PubSubEvent<TemperatureChange> {
-
-    }
+    
 }

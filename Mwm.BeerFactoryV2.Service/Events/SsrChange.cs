@@ -15,7 +15,4 @@ namespace Mwm.BeerFactoryV2.Service.Events {
 
     }
 
-    public class SsrChangeEvent : PubSubEvent<SsrChange> {
-
-    }
 }
