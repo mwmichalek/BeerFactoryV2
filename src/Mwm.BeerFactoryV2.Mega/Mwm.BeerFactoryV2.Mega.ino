@@ -45,7 +45,7 @@
 #define CONFIG_CYCLE_IN_MILLIS 2000
 
 // Data wire is plugged into pin 2 on the Arduino Blue Pin, Red Pin to 3.3V, Black Pin to GND, Resister between Red and Blue
-#define ONE_WIRE_BUS 3   
+#define ONE_WIRE_BUS 2   
 
 OneWire oneWire1(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire1);
@@ -126,6 +126,8 @@ void setup() {
 
 void loop() {
 	localController.update();
+	delay(1000);
+	localController.postStatus();
 	//cmdMessenger.feedinSerialData();
 }
 
