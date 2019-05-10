@@ -77,8 +77,8 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
 
             Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
 
-            Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
-            //Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
 
             Container.RegisterType<ShellViewModel>(new ContainerControlledLifetimeManager());
             Container.RegisterType<BlankViewModel>(new ContainerControlledLifetimeManager());
