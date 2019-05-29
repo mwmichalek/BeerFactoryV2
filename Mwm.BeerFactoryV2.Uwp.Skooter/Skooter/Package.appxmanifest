@@ -48,6 +48,12 @@
   </Applications>
 
   <Capabilities>
+    
+    <DeviceCapability Name="serialcommunication">
+      <Device Id="any">
+        <Function Type="name:serialPort" />
+      </Device>
+    </DeviceCapability>
     <Capability Name="internetClient" />
   </Capabilities>
 

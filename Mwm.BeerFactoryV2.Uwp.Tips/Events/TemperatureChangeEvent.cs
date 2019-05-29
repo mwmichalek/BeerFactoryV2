@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Uwp.Tips.Events {
-    public class TemperatureChangeEvent : PubSubEvent<TemperatureChange> {
+    //public class TemperatureChangeEvent : PubSubEvent<TemperatureChange> {
 
-    }
+    //}
 }

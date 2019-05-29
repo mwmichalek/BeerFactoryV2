@@ -6,13 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 
     xmlns:telerikInput ="using:Telerik.UI.Xaml.Controls.Input"
-    xmlns:telerikRangeSlider ="using:Telerik.UI.Xaml.Controls.Input.RangeSlider"
-    xmlns:telerikRrangeSliderPrimitives ="using:Telerik.UI.Xaml.Controls.Primitives.RangeSlider"
     xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
-    xmlns:rangeSlider ="using:RangeSlider"
-
-
-    
     Style="{StaticResource PageStyle}"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
     xmlns:telerikDataViz="using:Telerik.UI.Xaml.Controls.DataVisualization"
@@ -42,14 +36,16 @@
                 <RadioButton Grid.Column="0" HorizontalAlignment="Center" />
                 <RadioButton Grid.Column="1" HorizontalAlignment="Center" />
                 <RadioButton Grid.Column="2" HorizontalAlignment="Center" />
-
+                <TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Content="MyAwesomeCommand" Command="{Binding MyAwesomeCommand}" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="5" Text="{x:Bind ViewModel.Title, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <!--<telerikInput:RadRangeSlider x:Name="ScoreSlider" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Minimum="80" Maximum="180"  
                                              ShowRangeToolTip="False" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" SelectionStart="0"/>-->
 
                 <telerikInput:RadRangeSlider x:Name="RatingSlider" Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"  TickFrequency="1" SelectionStart="0" 
                                              ShowRangeToolTip="False" SnapsTo="Ticks" LargeChange="5"
                                              Grid.Column="0" Grid.Row="1" Grid.RowSpan="3"
-                                             Margin="10 10 10 10" Orientation="Vertical" HorizontalAlignment="Center">
+                                             Margin="10 10 10 40" Orientation="Vertical" HorizontalAlignment="Center">
 
                     <telerikInput:RadRangeSlider.TopLeftScaleStyle>
                         <Style TargetType="telerikPrimitives:ScalePrimitive">
@@ -120,8 +116,11 @@
                     <telerikDataViz:RadialBarGaugeIndicator Value="{Binding Expenses}" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                     <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                 </telerikDataViz:RadRadialGauge>
+                
+
 
             </Grid>
+            <ToggleSwitch Header="ToggleSwitch" Margin="726,751,0,0" VerticalAlignment="Top"/>
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->
         </Grid>

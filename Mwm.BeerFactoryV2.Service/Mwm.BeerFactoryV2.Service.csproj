@@ -129,7 +129,7 @@
     <Compile Include="Events\IEventPayload.cs" />
     <Compile Include="Events\SsrRequest.cs" />
     <Compile Include="Events\SsrChange.cs" />
-    <Compile Include="Events\TemperatureChange.cs" />
+    <Compile Include="Events\ThermometerChange.cs" />
     <Compile Include="Pid\PidController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\WebArduinoControllerService.cs" />

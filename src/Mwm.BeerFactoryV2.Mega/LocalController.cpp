@@ -132,15 +132,15 @@ void LocalController::postTemperature(int index, double temperature) {
 
 void LocalController::postStatus() {
 	_isConnected = true;
-	Serial.println("1|" + String(_temperature1));
-	Serial.println("2|" + String(_temperature2));
-	Serial.println("3|" + String(_temperature3));
-	Serial.println("4|" + String(_temperature4));
-	Serial.println("5|" + String(_temperature5));
-	Serial.println("6|" + String(_temperature6));
-	Serial.println("7|" + String(_temperature7));
-	Serial.println("8|" + String(_temperature8));
-	Serial.println("9|" + String(_temperature9));
+	Serial.println("1|" + printableTemp(_temperature1));
+	Serial.println("2|" + printableTemp(_temperature2));
+	Serial.println("3|" + printableTemp(_temperature3));
+	Serial.println("4|" + printableTemp(_temperature4));
+	Serial.println("5|" + printableTemp(_temperature5));
+	Serial.println("6|" + printableTemp(_temperature6));
+	Serial.println("7|" + printableTemp(_temperature7));
+	Serial.println("8|" + printableTemp(_temperature8));
+	Serial.println("9|" + printableTemp(_temperature9));
 
 	//_hotLiquorTank->postKettleStatus();
 	//_boilKettle->postKettleStatus();
@@ -159,13 +159,19 @@ void LocalController::postMsg(String msg) {
 	_lcd.print(String(msg));
 }
 
+String LocalController::printableTemp(double temperature) {
+	if (temperature < 0)
+		return "-----";
+	return String(temperature);
+}
+
 void LocalController::displayStatus() {
 	_lcd.setCursor(0, 0);
-	_lcd.print(String(_temperature1) + " " + String(_temperature2) + " " + String(_temperature3));
+	_lcd.print(printableTemp(_temperature1) + " " + printableTemp(_temperature2) + " " + printableTemp(_temperature3));
 	_lcd.setCursor(0, 1);
-	_lcd.print(String(_temperature4) + " " + String(_temperature5) + " " + String(_temperature6));
+	_lcd.print(printableTemp(_temperature4) + " " + printableTemp(_temperature5) + " " + printableTemp(_temperature6));
 	_lcd.setCursor(0, 2);
-	_lcd.print(String(_temperature7) + " " + String(_temperature8) + " " + String(_temperature9));
+	_lcd.print(printableTemp(_temperature7) + " " + printableTemp(_temperature8) + " " + printableTemp(_temperature9));
 	//_lcd.setCursor(0, 3);
 	//_lcd.print("HLT:" + String(_hotLiquorTank->currentPercentage()) + " BK:" + String(_boilKettle->currentPercentage()) );
 }

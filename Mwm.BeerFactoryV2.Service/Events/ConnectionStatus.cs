@@ -6,16 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
+
+    public class ConnectionStatusEvent : PubSubEvent<ConnectionStatus> { }
+
+    public enum Status {
+        Disconnected,
+        Connected,
+        NotConnected,
+        Ready
+    }
+
     public class ConnectionStatus : IEventPayload {
 
-        public enum EventType {
-            Disconnected,
-            Connected,
-            NotConnected,
-            Ready
-        }
-
-        public EventType Type { get; set; }
+        public Status Status { get; set; }
     }
 
     

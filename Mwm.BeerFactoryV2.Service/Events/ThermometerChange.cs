@@ -6,7 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
-    public class TemperatureChange : IEventPayload {
+
+    public class ThermometerChangeEvent : PubSubEvent<ThermometerChange> { }
+
+    public class ThermometerChange : IEventPayload {
 
         public int Index { get; set; }
 

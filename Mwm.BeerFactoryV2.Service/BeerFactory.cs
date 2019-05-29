@@ -16,13 +16,14 @@ using Windows.Devices.Pwm;
 using Windows.Devices.Gpio;
 using Microsoft.IoT.DeviceCore.Pwm;
 using Microsoft.IoT.Devices.Pwm;
+using Prism.Mvvm;
 
 namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
-
+        decimal TemperatureOne { get; set; }
     }
-    public partial class BeerFactory : IBeerFactory {
+    public partial class BeerFactory : BindableBase, IBeerFactory {
 
         private ILogger Logger { get; set; }
 
@@ -30,12 +31,27 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private PidController _hltPidController;
 
+        private IEventAggregator _eventAggregator;
+
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
 
-        public BeerFactory(IEventManager eventManager, Thermometer[] thermometers) {
-            _eventManager = eventManager;
-            _thermometers = thermometers.ToList();
+        private decimal _temperatureOne = 0;
+        public decimal TemperatureOne {
+            get { return _temperatureOne; }
+            set { SetProperty(ref _temperatureOne, value); }
+        }
+
+        public BeerFactory(IEventAggregator eventAggregator, Thermometer[] thermometers) {
             Logger = Log.Logger;
+
+            _eventAggregator = eventAggregator;
+
+            //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusPub, ThreadOption.PublisherThread);
+            //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusBack, ThreadOption.BackgroundThread);
+            _eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusUi, ThreadOption.UIThread);
+
+            _thermometers = thermometers.ToList();
+            
 
             //for (int index = 1; index <= (int)ThermometerId.FERM; index++ )
             //    _thermometers.Add(new Thermometer((ThermometerId)index));
@@ -66,6 +82,12 @@ namespace Mwm.BeerFactoryV2.Service {
             //_hltPidController.SetPoint = 120;
             //_hltPidController.Start();
 
+        }
+
+        private void PrintStatusUi(ThermometerChange thermometerChange) {
+            Logger.Information($"TemperatureChangeUi: {thermometerChange.Index} {thermometerChange.Value}");
+            if (thermometerChange.Index == 1)
+                TemperatureOne = thermometerChange.Value;
         }
     }
 }

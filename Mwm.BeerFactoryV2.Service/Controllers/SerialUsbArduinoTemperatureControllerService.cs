@@ -48,8 +48,9 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 try {
                     var setupResult = await Setup();
                     if (setupResult) {
+
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Disconnected });
+                         _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Status = Status.Disconnected });
                         //});
 
                         await RequestAllTemperatures();
@@ -59,7 +60,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         }
                     } else {
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
+                        _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Status = Status.NotConnected });
                         //});
                     }
                     
@@ -98,16 +99,18 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 // can only be displayed on the UI thread. Since this method is invoked by the UI, we are already in the UI thread.
                 IsConnected = await EventHandlerForDevice.Current.OpenDeviceAsync(entry.DeviceInformation, entry.DeviceSelector);
 
-                EventHandlerForDevice.Current.Device.BaudRate = 57600;
-                EventHandlerForDevice.Current.Device.StopBits = SerialStopBitCount.One;
-                EventHandlerForDevice.Current.Device.DataBits = 8;
-                EventHandlerForDevice.Current.Device.Parity = SerialParity.None;
-                EventHandlerForDevice.Current.Device.Handshake = SerialHandshake.None;
-                EventHandlerForDevice.Current.Device.WriteTimeout = TimeSpan.FromMilliseconds(500);
-                EventHandlerForDevice.Current.Device.ReadTimeout = TimeSpan.FromMilliseconds(500);
+                if (IsConnected) {
+                    EventHandlerForDevice.Current.Device.BaudRate = 57600;
+                    EventHandlerForDevice.Current.Device.StopBits = SerialStopBitCount.One;
+                    EventHandlerForDevice.Current.Device.DataBits = 8;
+                    EventHandlerForDevice.Current.Device.Parity = SerialParity.None;
+                    EventHandlerForDevice.Current.Device.Handshake = SerialHandshake.None;
+                    EventHandlerForDevice.Current.Device.WriteTimeout = TimeSpan.FromMilliseconds(500);
+                    EventHandlerForDevice.Current.Device.ReadTimeout = TimeSpan.FromMilliseconds(500);
 
-                ResetReadCancellationTokenSource();
-                ResetWriteCancellationTokenSource();
+                    ResetReadCancellationTokenSource();
+                    ResetWriteCancellationTokenSource();
+                }
             }
 
             return IsConnected;
@@ -118,7 +121,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
             try {
                 DataReaderObject = new DataReader(EventHandlerForDevice.Current.Device.InputStream);
                 message = await ReadAsync(ReadCancellationTokenSource.Token, 200);
-                Debug.WriteLine($"Msg:\n{message}");
+                //Debug.WriteLine($"Msg:\n{message}");
                 foreach (var tempReading in message.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries)) {
 
                     var tempReadingValues = tempReading.Split('|');
@@ -128,7 +131,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         decimal.TryParse(tempReadingValues[1], out decimal temperature);
 
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        //    _eventAggregator.GetEvent<TemperatureChange>().Publish(new TemperatureChange { Index = index, Value = temperature });
+                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange { Index = index, Value = temperature });
                         //});
                     }
                 }

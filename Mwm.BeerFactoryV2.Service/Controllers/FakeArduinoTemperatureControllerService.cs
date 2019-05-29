@@ -47,7 +47,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
                 //});
 
-                _eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = temperature.Index, Value = temperature.Value });
+                //_eventManager.Publish<ThermometerChangeEvent>(new ThermometerChange { Index = temperature.Index, Value = temperature.Value });
 
             }
 
@@ -62,7 +62,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
                     //});
 
-                    _eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
+                    //_eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
                 } catch (Exception ex) {
 
                 }

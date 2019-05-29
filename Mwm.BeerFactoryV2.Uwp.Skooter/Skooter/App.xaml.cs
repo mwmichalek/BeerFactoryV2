@@ -18,6 +18,8 @@ using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Mwm.BeerFactoryV2.Service.Controllers;
+using Prism.Events;
+using Mwm.BeerFactoryV2.Service;
 
 namespace Skooter {
     [Windows.UI.Xaml.Data.Bindable]
@@ -39,12 +41,27 @@ namespace Skooter {
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
             Container.RegisterType<ISampleDataService, SampleDataService>();
 
+
+            //var eventAggregator = new EventAggregator();
+            //Container.RegisterInstance<IEventAggregator>(eventAggregator);
+
+            //var tempertureControllerService = new SerialUsbArduinoTemperatureControllerService(eventAggregator);
+            //Container.RegisterInstance<ITemperatureControllerService>(tempertureControllerService);
+
             Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
+
+            var temperatureControllerService = Container.Resolve<ITemperatureControllerService>();
+
 
             Task.Run(() => {
-                Container.Resolve<ITemperatureControllerService>().Run();
+                //Container.Resolve<ITemperatureControllerService>().Run();
+
+                temperatureControllerService.Run();
+                //tempertureControllerService.Run();
             });
 
+            //var beerFactory = Container.Resolve<IBeerFactory>();
 
             Log.Information("Initialization complete."); 
 

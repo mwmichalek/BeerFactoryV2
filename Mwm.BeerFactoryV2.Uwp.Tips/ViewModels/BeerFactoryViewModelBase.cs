@@ -20,31 +20,31 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
         public BeerFactoryViewModelBase(IBeerFactory beerfactory, IEventManager eventManager) {
             _eventManager = eventManager;
 
-            _eventManager.Subscribe<TemperatureChange>((temperatureResult) => {
-                if (temperatureResult.Index == 1)
-                    Temperature1 = temperatureResult.Value;
-                if (temperatureResult.Index == 2)
-                    Temperature2 = temperatureResult.Value;
-                if (temperatureResult.Index == 3)
-                    Temperature3 = temperatureResult.Value;
-                if (temperatureResult.Index == 4)
-                    Temperature4 = temperatureResult.Value;
-                if (temperatureResult.Index == 5)
-                    Temperature5 = temperatureResult.Value;
-                if (temperatureResult.Index == 6)
-                    Temperature6 = temperatureResult.Value;
-                if (temperatureResult.Index == 7)
-                    Temperature7 = temperatureResult.Value;
-                if (temperatureResult.Index == 8)
-                    Temperature8 = temperatureResult.Value;
-                if (temperatureResult.Index == 9)
-                    Temperature9 = temperatureResult.Value;
-            });
+            //_eventManager.Subscribe<TemperatureChange>((temperatureResult) => {
+            //    if (temperatureResult.Index == 1)
+            //        Temperature1 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 2)
+            //        Temperature2 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 3)
+            //        Temperature3 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 4)
+            //        Temperature4 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 5)
+            //        Temperature5 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 6)
+            //        Temperature6 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 7)
+            //        Temperature7 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 8)
+            //        Temperature8 = temperatureResult.Value;
+            //    if (temperatureResult.Index == 9)
+            //        Temperature9 = temperatureResult.Value;
+            //});
 
-            _eventManager.Subscribe<ConnectionStatus>((connectionStatus) => {
-                Debug.WriteLine($"Connection Status: {connectionStatus.Type}");
-                ConnectionStatus = $"{connectionStatus.Type}";
-            });
+            //_eventManager.Subscribe<ConnectionStatus>((connectionStatus) => {
+            //    Debug.WriteLine($"Connection Status: {connectionStatus.Type}");
+            //    ConnectionStatus = $"{connectionStatus.Type}";
+            //});
 
             _eventManager.Subscribe<SsrChange>((ssrResult) => {
                 //Debug.WriteLine($"SSR Status: {ssrResult.Index} {ssrResult.IsEngaged}");

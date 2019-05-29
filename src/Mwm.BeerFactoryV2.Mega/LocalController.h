@@ -70,7 +70,7 @@ private:
 
 	void postTemperature(int index, double temperature);
 	void processCommands();
-
+	String printableTemp(double temperature);
 };
 
 #endif
