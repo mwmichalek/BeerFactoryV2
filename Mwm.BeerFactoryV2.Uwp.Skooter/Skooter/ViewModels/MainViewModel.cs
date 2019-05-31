@@ -52,7 +52,8 @@ namespace Skooter.ViewModels {
         }
 
         private void TempTest(ThermometerChange tc) {
-            Title = tc.Value.ToString();
+            if (tc.Index == 1)
+                Title = tc.Value.ToString();
         }
 
     }

@@ -38,10 +38,12 @@
                 <RadioButton Grid.Column="2" HorizontalAlignment="Center" />
                 <TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <Button Content="MyAwesomeCommand" Command="{Binding MyAwesomeCommand}" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="5" Text="{x:Bind ViewModel.Title, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="5" Text="{x:Bind Path=ViewModel.Title, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
                 <!--<telerikInput:RadRangeSlider x:Name="ScoreSlider" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Minimum="80" Maximum="180"  
                                              ShowRangeToolTip="False" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" SelectionStart="0"/>-->
 
+                
                 <telerikInput:RadRangeSlider x:Name="RatingSlider" Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"  TickFrequency="1" SelectionStart="0" 
                                              ShowRangeToolTip="False" SnapsTo="Ticks" LargeChange="5"
                                              Grid.Column="0" Grid.Row="1" Grid.RowSpan="3"
@@ -92,7 +94,7 @@
                         <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="Red" Length="30" />
                     </telerikDataViz:SegmentedRadialGaugeIndicator>
                     <telerikDataViz:RadialBarGaugeIndicator Value="55" Brush="Gray" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                    <telerikDataViz:RadialBarGaugeIndicator Value="{Binding Expenses}" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
+                    <telerikDataViz:RadialBarGaugeIndicator Value="0" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                     <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                 </telerikDataViz:RadRadialGauge>
 
@@ -113,7 +115,7 @@
                         <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="Red" Length="30" />
                     </telerikDataViz:SegmentedRadialGaugeIndicator>
                     <telerikDataViz:RadialBarGaugeIndicator Value="55" Brush="Gray" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                    <telerikDataViz:RadialBarGaugeIndicator Value="{Binding Expenses}" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
+                    <telerikDataViz:RadialBarGaugeIndicator Value="0" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                     <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                 </telerikDataViz:RadRadialGauge>
                 
