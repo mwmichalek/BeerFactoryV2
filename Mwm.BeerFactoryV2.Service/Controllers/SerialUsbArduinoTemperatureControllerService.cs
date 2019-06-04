@@ -67,7 +67,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 } catch (Exception ex) {
                     Debug.WriteLine(ex);
                 }
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
             }
         }
 
@@ -131,7 +131,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         decimal.TryParse(tempReadingValues[1], out decimal temperature);
 
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange { Index = index, Value = temperature });
+                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange { Index = index, Value = temperature, Timestamp = DateTime.Now });
                         //});
                     }
                 }
@@ -226,7 +226,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     //output = Encoding.Unicode.GetString(rawdata, 0, rawdata.Length);
 
 
-                } catch (Exception ex) {
+                } catch (Exception) {
                     
                 }
             }

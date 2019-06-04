@@ -6,11 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
-    public class SsrRequest : IEventPayload {
-        public int Index { get; set; }
 
-        public int Percentage { get; set; }
+    public class PidChangeEvent : PubSubEvent<PidChange> { }
+    public class PidChange {
+
+        public PidMode PidMode { get; set; }
+
+        public int Value { get; set; }
 
     }
-
 }

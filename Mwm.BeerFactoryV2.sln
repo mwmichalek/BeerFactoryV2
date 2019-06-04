@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skooter.Core", "Mwm.BeerFac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skooter.Core.Tests.xUnit", "Mwm.BeerFactoryV2.Uwp.Skooter\Skooter.Core.Tests.xUnit\Skooter.Core.Tests.xUnit.csproj", "{08055ADF-F896-4E5A-8F14-2666E16DB15F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mwm.BeerFactoryV2.Service.Prism", "Mwm.BeerFactoryV2.Service.Prism\Mwm.BeerFactoryV2.Service.Prism.csproj", "{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +179,22 @@ Global
 		{08055ADF-F896-4E5A-8F14-2666E16DB15F}.Release|x64.Build.0 = Release|Any CPU
 		{08055ADF-F896-4E5A-8F14-2666E16DB15F}.Release|x86.ActiveCfg = Release|Any CPU
 		{08055ADF-F896-4E5A-8F14-2666E16DB15F}.Release|x86.Build.0 = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|ARM.Build.0 = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|x64.Build.0 = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Debug|x86.Build.0 = Debug|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|ARM.ActiveCfg = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|ARM.Build.0 = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|x64.ActiveCfg = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|x64.Build.0 = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|x86.ActiveCfg = Release|Any CPU
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +208,7 @@ Global
 		{C4B47FAC-FE9D-41B0-8AF8-0FF4C78B4DFC} = {C0FA14A6-1E01-48AA-AA17-A5D4B11AC361}
 		{26974B10-DD08-4668-9BE8-15E263B710CD} = {C0FA14A6-1E01-48AA-AA17-A5D4B11AC361}
 		{08055ADF-F896-4E5A-8F14-2666E16DB15F} = {C0FA14A6-1E01-48AA-AA17-A5D4B11AC361}
+		{68F99D6F-3C2A-4901-B34C-9DF9BA59D770} = {C0FA14A6-1E01-48AA-AA17-A5D4B11AC361}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FF10671-6B84-4505-A6D5-4D0A8291368F}

@@ -25,11 +25,8 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
 
         private IBeerFactory _beerFactory;
 
-        private IEventManager _eventManager;
-
-        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory, IEventManager eventManager) {
+        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory) {
             _beerFactory = beerFactory;
-            _eventManager = eventManager;
         }
 
         private List<decimal> temperatures = new List<decimal> { 70.01m, 69.54m, 70.12m,
@@ -63,11 +60,11 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     //});
 
                     //_eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
-                } catch (Exception ex) {
+                } catch (Exception) {
 
                 }
 
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
             }
 
         }

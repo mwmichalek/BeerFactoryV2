@@ -17,13 +17,14 @@ using Windows.Devices.Gpio;
 using Microsoft.IoT.DeviceCore.Pwm;
 using Microsoft.IoT.Devices.Pwm;
 using Prism.Mvvm;
+using Mwm.BeerFactoryV2.Service.Events.Subscriber;
 
 namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
         decimal TemperatureOne { get; set; }
     }
-    public partial class BeerFactory : BindableBase, IBeerFactory {
+    public partial class BeerFactory : BeerFactoryEventSubscriber, IBeerFactory {
 
         private ILogger Logger { get; set; }
 
@@ -31,24 +32,20 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private PidController _hltPidController;
 
-        private IEventAggregator _eventAggregator;
-
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
 
         private decimal _temperatureOne = 0;
         public decimal TemperatureOne {
             get { return _temperatureOne; }
-            set { SetProperty(ref _temperatureOne, value); }
+            set { _temperatureOne = value; }
         }
 
-        public BeerFactory(IEventAggregator eventAggregator, Thermometer[] thermometers) {
+        public BeerFactory(IEventAggregator eventAggregator, Thermometer[] thermometers) : base(eventAggregator) {
             Logger = Log.Logger;
-
-            _eventAggregator = eventAggregator;
 
             //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusPub, ThreadOption.PublisherThread);
             //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusBack, ThreadOption.BackgroundThread);
-            _eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusUi, ThreadOption.UIThread);
+            //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusUi, ThreadOption.UIThread);
 
             _thermometers = thermometers.ToList();
             
@@ -72,7 +69,7 @@ namespace Mwm.BeerFactoryV2.Service {
             //bkSsr.Percentage = 5;
             //bkSsr.Start();
 
-            ConfigureEvents();
+            //ConfigureEvents();
 
             //_hltPidController = new PidController(hltSsr, _thermometers.GetById(ThermometerId.MT_IN));
             //_hltPidController.GainProportional = 18;
@@ -84,10 +81,22 @@ namespace Mwm.BeerFactoryV2.Service {
 
         }
 
-        private void PrintStatusUi(ThermometerChange thermometerChange) {
+        public override void ThermometerChangeOccured(ThermometerChange thermometerChange) {
             Logger.Information($"TemperatureChangeUi: {thermometerChange.Index} {thermometerChange.Value}");
-            if (thermometerChange.Index == 1)
+            if (thermometerChange.Index == 1) {
                 TemperatureOne = thermometerChange.Value;
+                TemperatureChangeFired(new TemperatureChange {
+                    Index = thermometerChange.Index,
+                    Value = thermometerChange.Value,
+                    Timestamp = thermometerChange.Timestamp
+                });
+            }
         }
+
+        //private void PrintStatusUi(ThermometerChange thermometerChange) {
+        //    Logger.Information($"TemperatureChangeUi: {thermometerChange.Index} {thermometerChange.Value}");
+        //    if (thermometerChange.Index == 1)
+        //        TemperatureOne = thermometerChange.Value;
+        //}
     }
 }

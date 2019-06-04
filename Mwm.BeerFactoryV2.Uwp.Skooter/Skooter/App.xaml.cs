@@ -39,7 +39,6 @@ namespace Skooter {
 
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
-            Container.RegisterType<ISampleDataService, SampleDataService>();
 
 
             //var eventAggregator = new EventAggregator();
@@ -52,7 +51,7 @@ namespace Skooter {
             Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
 
             var temperatureControllerService = Container.Resolve<ITemperatureControllerService>();
-
+            var beerFactory = Container.Resolve<IBeerFactory>();
 
             Task.Run(() => {
                 //Container.Resolve<ITemperatureControllerService>().Run();

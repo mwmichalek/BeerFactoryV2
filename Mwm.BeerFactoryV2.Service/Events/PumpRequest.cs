@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
 
-    public class PumpChangeEvent : PubSubEvent<PumpChange> { }
-    public class PumpChange : IEventPayload {
+    public class PumpRequestEvent : PubSubEvent<PumpRequest> { }
 
-        public int Index { get; set;}
+    public class PumpRequest : IEventPayload {
+
+        public int Index { get; set; }
 
         public bool IsEngaged { get; set; }
     }
-
-    
 }

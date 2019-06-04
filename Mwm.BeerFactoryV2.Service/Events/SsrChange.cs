@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Events {
+
+    public class SsrChangeEvent : PubSubEvent<SsrChange> { }
+
     public class SsrChange : IEventPayload {
         public int Index { get; set; }
 

@@ -38,11 +38,8 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
         private SerialTransport _serialTransport;
         private CmdMessenger _cmdMessenger;
         public bool IsConnected { get; set; }
+        public OldUsbArduinoControllerService() {
 
-        private IEventManager _eventManager;
-
-        public OldUsbArduinoControllerService(IEventManager eventManager) {
-            _eventManager = eventManager;
 
             //_eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
             //    ExecuteKettleCommand(kettleCommand);
@@ -56,7 +53,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                 if (setupResult) {
                     while (IsConnected) {
                         Ping();
-                        Thread.Sleep(1000);
+                        await Task.Delay(1000);
                     }
                     Exit();
 
@@ -68,7 +65,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.NotConnected });
                     //});
                 }
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
             }
         }
 
@@ -199,15 +196,15 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
 
         // ------------------  C A L L B A C K S ---------------------
 
-        private async void OnSsrChange(ReceivedCommand receivedCommand) {
-            int.TryParse(receivedCommand.ReadStringArg(), out int ssrIndex);
-            int.TryParse(receivedCommand.ReadStringArg(), out int ssrValue);
-            int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+        //private async void OnSsrChange(ReceivedCommand receivedCommand) {
+        //    int.TryParse(receivedCommand.ReadStringArg(), out int ssrIndex);
+        //    int.TryParse(receivedCommand.ReadStringArg(), out int ssrValue);
+        //    int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
 
-            //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-            //    _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = ssrIndex, IsEngaged = ssrValue == 1, Percentage = percentage });
-            //});
-        }
+        //    //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //    //    _eventAggregator.GetEvent<SsrChangeEvent>().Publish(new SsrChange { Index = ssrIndex, IsEngaged = ssrValue == 1, Percentage = percentage });
+        //    //});
+        //}
 
         //private async void OnHeaterChange(ReceivedCommand receivedCommand) {
         //    int.TryParse(receivedCommand.ReadStringArg(), out int heaterIndex);
@@ -218,14 +215,14 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
         //    });
         //}
 
-        private async void OnTempChange(ReceivedCommand receivedCommand) {
-            int.TryParse(receivedCommand.ReadStringArg(), out int probeIndex);
-            decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
+        //private async void OnTempChange(ReceivedCommand receivedCommand) {
+        //    int.TryParse(receivedCommand.ReadStringArg(), out int probeIndex);
+        //    decimal.TryParse(receivedCommand.ReadStringArg(), out decimal temp);
 
-            //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-            //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = probeIndex, Value = temp });
-            //});
-        }
+        //    //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //    //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = probeIndex, Value = temp });
+        //    //});
+        //}
 
         //private async void OnKettleResult(ReceivedCommand receivedCommand) {
         //    try {
@@ -242,30 +239,30 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
         //    }
         //}
 
-        private async void OnMessage(ReceivedCommand receivedCommand) {
-            try {
-                int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
-                var message = ""; // receivedCommand.ReadStringArg();
-                int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
+        //private async void OnMessage(ReceivedCommand receivedCommand) {
+        //    try {
+        //        int.TryParse(receivedCommand.ReadStringArg(), out int kettleIndex);
+        //        var message = ""; // receivedCommand.ReadStringArg();
+        //        int.TryParse(receivedCommand.ReadStringArg(), out int percentage);
 
-                //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                //    _eventAggregator.GetEvent<MessageEvent>().Publish(new Message { Index = kettleIndex, Body = message, Percentage = percentage });
-                //});
-            } catch (Exception ex) {
+        //        //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //        //    _eventAggregator.GetEvent<MessageEvent>().Publish(new Message { Index = kettleIndex, Body = message, Percentage = percentage });
+        //        //});
+        //    } catch (Exception ex) {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
         private void OnUnknownCommand(ReceivedCommand arguments) {
             Console.WriteLine("Command without attached callback received");
         }
 
-        private async void OnAcknowledge(ReceivedCommand arguments) {
-            //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-            //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Ready });
-            //});
-        }
+        //private async void OnAcknowledge(ReceivedCommand arguments) {
+        //    //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+        //    //    _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Type = ConnectionStatus.EventType.Ready });
+        //    //});
+        //}
 
         // Callback function that prints that the Arduino has experienced an error
         private void OnError(ReceivedCommand arguments) {

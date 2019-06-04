@@ -22,11 +22,8 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
     public class Thermometer {
 
-        public IEventManager _eventManager { get; set; }
-
-        public Thermometer(ThermometerId id, IEventManager eventManager) {
+        public Thermometer(ThermometerId id) {
             Id = id;
-            _eventManager = eventManager;
         }
 
         public ThermometerId Id { get; private set; }

@@ -23,8 +23,6 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         public SsrId Id { get; set; }
 
-        private IEventManager _eventManager;
-
         public int Pin { get; set; }
 
         public bool IsEngaged { get; set; }
@@ -49,7 +47,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
             set {
                 _percentage = value;
                 CalculateDurations();
-                SendNotification();
+                //SendNotification();
             }
         }
 
@@ -61,9 +59,8 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private int millisOn = 1000;
         private int millisOff = 1000;
 
-        public Ssr(SsrId id, IEventManager eventManager) {
+        public Ssr(SsrId id) {
             Id = id;
-            _eventManager = eventManager;
             Pin = (int)id;
 
             var gpio = GpioController.GetDefault();
@@ -100,17 +97,13 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private void On() {
             pin?.Write(GpioPinValue.High);
             IsEngaged = true;
-            SendNotification();
+            //SendNotification();
         }
 
         private void Off() {
             pin?.Write(GpioPinValue.Low);
             IsEngaged = false;
-            SendNotification();
-        }
-
-        private void SendNotification() {
-            _eventManager.Publish<SsrChange>(new SsrChange { Index = (int)Id, IsEngaged = IsEngaged, Percentage = _percentage });            
+            //SendNotification();
         }
 
         public void Stop() {

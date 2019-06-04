@@ -7,20 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Uwp.Tips.Events {
-    public class EventAggregatorEventManager : IEventManager {
+    //public class EventAggregatorEventManager : IEventManager {
 
-        private IEventAggregator _eventAggregator;
+    //    private IEventAggregator _eventAggregator;
 
-        public EventAggregatorEventManager(IEventAggregator eventAggregator) {
-            _eventAggregator = eventAggregator;
-        }
+    //    public EventAggregatorEventManager(IEventAggregator eventAggregator) {
+    //        _eventAggregator = eventAggregator;
+    //    }
 
-        public void Publish<TEventPayload>(TEventPayload payload) where TEventPayload : IEventPayload {
-            _eventAggregator.GetEvent<PubSubEvent<TEventPayload>>().Publish(payload);
-        }
+    //    public void Publish<TEventPayload>(TEventPayload payload) where TEventPayload : IEventPayload {
+    //        _eventAggregator.GetEvent<PubSubEvent<TEventPayload>>().Publish(payload);
+    //    }
 
-        public void Subscribe<TEventPayload>(Action<TEventPayload> eventAction) where TEventPayload : IEventPayload {
-            _eventAggregator.GetEvent<PubSubEvent<TEventPayload>>().Subscribe(eventAction);
-        }
-    }
+    //    public void Subscribe<TEventPayload>(Action<TEventPayload> eventAction) where TEventPayload : IEventPayload {
+    //        _eventAggregator.GetEvent<PubSubEvent<TEventPayload>>().Subscribe(eventAction);
+    //    }
+    //}
 }

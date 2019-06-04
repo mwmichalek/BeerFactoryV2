@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Uwp.Tips.Events {
-    public class SsrRequestEvent : PubSubEvent<SsrRequest> {
+    //public class SsrRequestEvent : PubSubEvent<SsrRequest> {
 
-    }
+    //}
 }

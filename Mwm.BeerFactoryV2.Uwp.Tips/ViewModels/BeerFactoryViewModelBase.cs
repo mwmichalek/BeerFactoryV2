@@ -15,11 +15,8 @@ using Windows.UI.Xaml.Media;
 namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
     public abstract class BeerFactoryViewModelBase : ViewModelBase {
 
-        private IEventManager _eventManager;
-
-        public BeerFactoryViewModelBase(IBeerFactory beerfactory, IEventManager eventManager) {
-            _eventManager = eventManager;
-
+        public BeerFactoryViewModelBase(IBeerFactory beerfactory) {
+            
             //_eventManager.Subscribe<TemperatureChange>((temperatureResult) => {
             //    if (temperatureResult.Index == 1)
             //        Temperature1 = temperatureResult.Value;
@@ -46,16 +43,16 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             //    ConnectionStatus = $"{connectionStatus.Type}";
             //});
 
-            _eventManager.Subscribe<SsrChange>((ssrResult) => {
-                //Debug.WriteLine($"SSR Status: {ssrResult.Index} {ssrResult.IsEngaged}");
-                if (ssrResult.Index == (int)SsrId.HLT) {
-                    HltElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
-                    HltPercentage = ssrResult.Percentage;
-                } else if (ssrResult.Index == (int)SsrId.BK) {
-                    BkElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
-                    BkPercentage = ssrResult.Percentage;
-                }
-            });
+            //_eventManager.Subscribe<SsrChange>((ssrResult) => {
+            //    //Debug.WriteLine($"SSR Status: {ssrResult.Index} {ssrResult.IsEngaged}");
+            //    if (ssrResult.Index == (int)SsrId.HLT) {
+            //        HltElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
+            //        HltPercentage = ssrResult.Percentage;
+            //    } else if (ssrResult.Index == (int)SsrId.BK) {
+            //        BkElementEngagedBrush = ssrResult.IsEngaged ? yellow : black;
+            //        BkPercentage = ssrResult.Percentage;
+            //    }
+            //});
 
             //_eventAggregator.GetEvent<KettleResultEvent>().Subscribe((kettleResult) => {
             //    Debug.WriteLine($"Kettle Shit Happened: {kettleResult.Index} {kettleResult.Percentage}");
@@ -68,17 +65,17 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips.ViewModels {
             //    }
             //});
 
-            _eventManager.Subscribe<Message>((message) => {
-                Debug.WriteLine($"Message: {message.Index} {message.Body}");
+            //_eventManager.Subscribe<Message>((message) => {
+            //    Debug.WriteLine($"Message: {message.Index} {message.Body}");
 
-                if (message.Index == 1) {
-                    //Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
-                    //HltPercentage = message.Percentage;
-                } else if (message.Index == 2) {
-                    //Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
-                    //BkPercentage = message.Percentage;
-                }
-            });
+            //    if (message.Index == 1) {
+            //        //Debug.WriteLine($"HLT Percentage: {kettleResult.Percentage}");
+            //        //HltPercentage = message.Percentage;
+            //    } else if (message.Index == 2) {
+            //        //Debug.WriteLine($"BK Percentage: {kettleResult.Percentage}");
+            //        //BkPercentage = message.Percentage;
+            //    }
+            //});
         }
 
         private string connectionStatus = "";

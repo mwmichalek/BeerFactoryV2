@@ -45,34 +45,36 @@ namespace Mwm.BeerFactoryV2.Uwp.Tips {
             Container.RegisterType<IBackgroundTaskService, BackgroundTaskService>(new ContainerControlledLifetimeManager());
             Container.RegisterInstance<IResourceLoader>(new ResourceLoaderAdapter(new ResourceLoader()));
 
-            Container.RegisterType<IEventManager, EventAggregatorEventManager>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<IEventManager, EventAggregatorEventManager>(new ContainerControlledLifetimeManager());
 
-            var eventManager = Container.Resolve<IEventManager>();
+            //var eventManager = Container.Resolve<IEventManager>();
 
-            var thermometers = new List<Thermometer>();
-            for (int index = 1; index <= (int)ThermometerId.FERM; index++) {
-                var thermometer = new Thermometer((ThermometerId)index, eventManager);
-                thermometers.Add(thermometer);
-                Container.RegisterInstance<Thermometer>($"Thermometer{index}", thermometer);
-            }
-            var hltSsr = new Ssr(SsrId.HLT, eventManager);
-            hltSsr.Percentage = 25;
-            Container.RegisterInstance<Ssr>($"Ssr{SsrId.HLT}", hltSsr);
-            //hltSsr.Start();
-
-            var bkSsr = new Ssr(SsrId.BK, eventManager);
-            bkSsr.Percentage = 5;
-            //bkSsr.Start();
-            Container.RegisterInstance<Ssr>($"Ssr{SsrId.BK}", bkSsr);
+            //var thermometers = new List<Thermometer>();
+            //for (int index = 1; index <= (int)ThermometerId.FERM; index++) {
+            //    var thermometer = new Thermometer((ThermometerId)index, eventManager);
+            //    thermometers.Add(thermometer);
+            //    Container.RegisterInstance<Thermometer>($"Thermometer{index}", thermometer);
+            //}
 
 
-            var hltPidController = new PidController(hltSsr, thermometers.GetById(ThermometerId.MT_IN));
-            hltPidController.GainProportional = 18;
-            hltPidController.GainIntegral = 1.5;
-            hltPidController.GainDerivative = 22.5;
-            hltPidController.SetPoint = 120;
+            //var hltSsr = new Ssr(SsrId.HLT, eventManager);
+            //hltSsr.Percentage = 25;
+            //Container.RegisterInstance<Ssr>($"Ssr{SsrId.HLT}", hltSsr);
+            ////hltSsr.Start();
 
-            Container.RegisterInstance<PidController>("hltPidController", hltPidController);
+            //var bkSsr = new Ssr(SsrId.BK, eventManager);
+            //bkSsr.Percentage = 5;
+            ////bkSsr.Start();
+            //Container.RegisterInstance<Ssr>($"Ssr{SsrId.BK}", bkSsr);
+
+
+            //var hltPidController = new PidController(hltSsr, thermometers.GetById(ThermometerId.MT_IN));
+            //hltPidController.GainProportional = 18;
+            //hltPidController.GainIntegral = 1.5;
+            //hltPidController.GainDerivative = 22.5;
+            //hltPidController.SetPoint = 120;
+
+            //Container.RegisterInstance<PidController>("hltPidController", hltPidController);
 
 
             Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
