@@ -63,5 +63,15 @@ namespace Skooter.ViewModels {
                 Title = tc.Value.ToString();
         }
 
+        private int _hltSetpoint;
+
+        public int HltSetpoint {
+            get { return _hltSetpoint; }
+            set {
+                SetProperty(ref _hltSetpoint, value);
+                Title = value.ToString();
+            }
+        }
+
     }
 }
