@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="IArduinoControllerService.cs" />
+    <Compile Include="FakeArduinoControllerService.cs" />
     <Compile Include="UsbArduinoControllerService.cs" />
     <Compile Include="Events\ConnectionStatus.cs" />
     <Compile Include="Events\HeaterResult.cs" />

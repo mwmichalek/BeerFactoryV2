@@ -36,9 +36,9 @@ namespace Mwm.BeerFactoryV2.Service {
         public UsbArduinoControllerService(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
-                ExecuteKettleCommand(kettleCommand);
-            });
+            //_eventAggregator.GetEvent<KettleCommandEvent>().Subscribe((kettleCommand) => {
+            //    ExecuteKettleCommand(kettleCommand);
+            //});
         }
 
         public async void Run() {
