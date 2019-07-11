@@ -17,20 +17,20 @@ using Windows.Devices.Gpio;
 using Microsoft.IoT.DeviceCore.Pwm;
 using Microsoft.IoT.Devices.Pwm;
 using Prism.Mvvm;
-using Mwm.BeerFactoryV2.Service.Events.Subscriber;
+using Mwm.BeerFactoryV2.Service.Events;
 
 namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
         decimal TemperatureOne { get; set; }
     }
-    public partial class BeerFactory : BeerFactoryEventSubscriber, IBeerFactory {
+    public partial class BeerFactory : BeerFactoryEventHandler, IBeerFactory {
 
         private ILogger Logger { get; set; }
 
         private List<Phase> _phases = new List<Phase>();
 
-        private PidController _hltPidController;
+        private List<PidController> _pidControllers;
 
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
 
@@ -82,11 +82,25 @@ namespace Mwm.BeerFactoryV2.Service {
         }
 
         public override void ThermometerChangeOccured(ThermometerChange thermometerChange) {
-            Logger.Information($"TemperatureChangeUi: {thermometerChange.Index} {thermometerChange.Value}");
-            if (thermometerChange.Index == 1) {
+            Logger.Information($"TemperatureChangeUi: {thermometerChange.Id} {thermometerChange.Value}");
+
+            var thermometer = _thermometers.SingleOrDefault(t => t.Id == thermometerChange.Id);
+
+            if (thermometer != null)
+                thermometer.Temperature = thermometerChange.Value;
+
+            var pid = _pidControllers.SingleOrDefault(p => p.Thermometer.Id == thermometerChange.Id);
+
+            if (pid != null)
+                pid.Process();
+
+
+
+
+            if (thermometerChange.Id == ThermometerId.HLT) {
                 TemperatureOne = thermometerChange.Value;
                 TemperatureChangeFired(new TemperatureChange {
-                    Index = thermometerChange.Index,
+                    Index = (int)thermometerChange.Id,
                     Value = thermometerChange.Value,
                     Timestamp = thermometerChange.Timestamp
                 });

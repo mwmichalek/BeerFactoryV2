@@ -1,12 +1,13 @@
 ﻿using System;
 using Mwm.BeerFactoryV2.Service;
+using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Windows.Mvvm;
 
 namespace Skooter.ViewModels {
-    public class MainViewModel : DisplayEventSubscriberViewModelBase {
+    public class MainViewModel : DisplayEventHandlerViewModelBase {
 
         private IEventAggregator _eventAggregator;
 
@@ -59,7 +60,7 @@ namespace Skooter.ViewModels {
         }
 
         private void TempTest(ThermometerChange tc) {
-            if (tc.Index == 1)
+            if (tc.Id == ThermometerId.HLT)
                 Title = tc.Value.ToString();
         }
 

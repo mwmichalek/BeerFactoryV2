@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Skooter.ViewModels {
-    public abstract class DisplayEventSubscriberViewModelBase : ViewModelBase {
+    public abstract class DisplayEventHandlerViewModelBase : ViewModelBase {
         private IEventAggregator _eventAggregator;
 
-        protected DisplayEventSubscriberViewModelBase(IEventAggregator eventAggregator) {
+        protected DisplayEventHandlerViewModelBase(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 
 

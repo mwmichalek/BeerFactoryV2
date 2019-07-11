@@ -45,15 +45,27 @@
                 <Pivot x:Name="rootPivot" Title="PID SETTINGS" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
                     <PivotItem Header="HLT">
                         <Grid>
-                        
-                            <TextBlock Text="Strike Water Temperature Target"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
 
-                            <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="*" />
+
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Strike Water Temperature Target"
+                                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+                            <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                     Grid.Row="1" Grid.Column="1"     />
 
                             <telerikInput:RadRangeSlider x:Name="RatingSlider" Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
                                                          TickFrequency="10" SelectionStart="40" 
                                                          ShowRangeToolTip="True" SnapsTo="Ticks" LargeChange="10"
-                                                         Grid.Column="0" Grid.Row="1" Grid.RowSpan="3"
+                                                         Grid.Column="0" Grid.Row="1" 
                                                          Margin="0 40 0 40" Orientation="Vertical" HorizontalAlignment="Center"
                                                          SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
            
