@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mwm.BeerFactoryV2.Service.Events.Subscriber {
+namespace Mwm.BeerFactoryV2.Service.Events {
 
 
     //************************************************* CHANGE EVENTS ***********************************************
 
-    public abstract class BeerFactoryEventSubscriber {
+    public abstract class BeerFactoryEventHandler {
 
         private IEventAggregator _eventAggregator;
 
-        public BeerFactoryEventSubscriber(IEventAggregator eventAggregator) {
+        public BeerFactoryEventHandler(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(ThermometerChangeOccured);
@@ -52,32 +52,32 @@ namespace Mwm.BeerFactoryV2.Service.Events.Subscriber {
 
     //************************************************* REQUEST EVENTS ***********************************************
 
-    public abstract class DisplayEventSubscriber {
+    //public abstract class DisplayEventSubscriber {
 
-        private IEventAggregator _eventAggregator;
+    //    private IEventAggregator _eventAggregator;
 
-        public DisplayEventSubscriber(IEventAggregator eventAggregator) {
-            _eventAggregator = eventAggregator;
+    //    public DisplayEventSubscriber(IEventAggregator eventAggregator) {
+    //        _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<TemperatureChangeEvent>().Subscribe(TemperatureChangeOccured);
-            _eventAggregator.GetEvent<PumpChangeEvent>().Subscribe(PumpChangeOccured);
-            _eventAggregator.GetEvent<PidChangeEvent>().Subscribe(PidChangeOccured);
-            _eventAggregator.GetEvent<SsrChangeEvent>().Subscribe(SsrChangeOccured);
-            _eventAggregator.GetEvent<ConnectionStatusEvent>().Subscribe(ConnectionStatusOccured);
-        }
+    //        _eventAggregator.GetEvent<TemperatureChangeEvent>().Subscribe(TemperatureChangeOccured);
+    //        _eventAggregator.GetEvent<PumpChangeEvent>().Subscribe(PumpChangeOccured);
+    //        _eventAggregator.GetEvent<PidChangeEvent>().Subscribe(PidChangeOccured);
+    //        _eventAggregator.GetEvent<SsrChangeEvent>().Subscribe(SsrChangeOccured);
+    //        _eventAggregator.GetEvent<ConnectionStatusEvent>().Subscribe(ConnectionStatusOccured);
+    //    }
 
-        public virtual void TemperatureChangeOccured(TemperatureChange temperatureChange) { }
+    //    public virtual void TemperatureChangeOccured(TemperatureChange temperatureChange) { }
 
-        public virtual void PumpChangeOccured(PumpChange pumpChange) { }
+    //    public virtual void PumpChangeOccured(PumpChange pumpChange) { }
 
-        public virtual void PidChangeOccured(PidChange pidChange) { }
+    //    public virtual void PidChangeOccured(PidChange pidChange) { }
 
-        public virtual void SsrChangeOccured(SsrChange ssrChange) { }
+    //    public virtual void SsrChangeOccured(SsrChange ssrChange) { }
 
-        public virtual void ConnectionStatusOccured(ConnectionStatus connectionStatus) { }
+    //    public virtual void ConnectionStatusOccured(ConnectionStatus connectionStatus) { }
 
 
 
-    }
+    //}
 
 }

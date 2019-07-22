@@ -1,4 +1,6 @@
 ﻿using Mwm.BeerFactoryV2.Service.Components;
+using Mwm.BeerFactoryV2.Service.Events;
+using Prism.Events;
 using System;
 using System.Configuration;
 using System.Diagnostics;
@@ -6,6 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Pid {
+
+    public enum PidControllerId {
+        HLT = 1,
+        MT = 2,
+        BK = 3
+    }
+
+
+
     /// <summary>
     /// A (P)roportional, (I)ntegral, (D)erivative Controller
     /// </summary>
@@ -15,9 +26,15 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
     /// process that will affect the measured value.
     /// </remarks>
     /// <see cref="https://en.wikipedia.org/wiki/PID_controller"/>
-    public sealed class PidController {
-        private Ssr ssr;
-        private Thermometer thermometer;
+    public class PidController {
+
+        public PidControllerId Id { get; private set; }
+
+        public Thermometer Thermometer { get; private set; }
+
+        public Ssr Ssr { get; private set; }
+
+        
 
         private double processVariable = 0;
         private DateTime lastRun;
@@ -25,22 +42,25 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
 
         private int dutyCycleInMillis = 2000;
 
-        public PidController(Ssr ssr, Thermometer thermometer) {
-            this.ssr = ssr;
-            this.thermometer = thermometer;
+        public PidController(PidControllerId id, Ssr ssr, Thermometer thermometer) {
+            this.Id = id;
+            this.Ssr = ssr;
+            this.Thermometer = thermometer;
         }
 
-        public PidController(Ssr ssr, Thermometer thermometer, double setPoint) {
-            this.ssr = ssr;
-            this.thermometer = thermometer;
+        public PidController(PidControllerId id, Ssr ssr, Thermometer thermometer, double setPoint) {
+            this.Id = id;
+            this.Ssr = ssr;
+            this.Thermometer = thermometer;
             this.SetPoint = setPoint;
         }
 
-        public PidController(Ssr ssr, Thermometer thermometer, double gainProportional, double gainIntegral, double gainDerivative, double outputMin, double outputMax, double setPoint) {
+        public PidController(PidControllerId id, Ssr ssr, Thermometer thermometer, double gainProportional, double gainIntegral, double gainDerivative, double outputMin, double outputMax, double setPoint) {
             if (OutputMax < OutputMin)
                 throw new FormatException("OutputMax is less than OutputMin");
-            this.ssr = ssr;
-            this.thermometer = thermometer;
+            this.Id = id;
+            this.Ssr = ssr;
+            this.Thermometer = thermometer;
             this.GainDerivative = gainDerivative;
             this.GainIntegral = gainIntegral;
             this.GainProportional = gainProportional;
@@ -49,23 +69,23 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
             this.SetPoint = setPoint;
         }
 
-        public void Start() {
-            isRunning = true;
- 
-            // Call new thread to run
-            Task.Run(() => Run());
-        }
+        //public void Start() {
+        //    isRunning = true;
 
-        public void Stop() {
-            isRunning = false;
-        }
+        //    // Call new thread to run
+        //    Task.Run(() => Run());
+        //}
 
-        private void Run() {
-            while (isRunning) {
-                Process();
-                Thread.Sleep(dutyCycleInMillis);
-            }
-        }
+        //public void Stop() {
+        //    isRunning = false;
+        //}
+
+        //private void Run() {
+        //    while (isRunning) {
+        //        Process();
+        //        Thread.Sleep(dutyCycleInMillis);
+        //    }
+        //}
 
 
         /// <summary>
@@ -75,8 +95,8 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
         /// since the previous time that ControlVariable was called</param>
         /// <returns>Value of the variable that needs to be controlled</returns>
         public void Process() {
-            
-            ProcessVariable = (double)thermometer.Temperature;
+
+            ProcessVariable = (double)Thermometer.Temperature;
 
             if (ProcessVariable != 0) {
                 var currentTime = DateTime.Now;
@@ -107,7 +127,7 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
 
                 Debug.WriteLine($"Temperature: {ProcessVariable}  SSR: {output}");
 
-                ssr.Percentage = (int)output;
+                Ssr.Percentage = (int)output;
             }
         }
 

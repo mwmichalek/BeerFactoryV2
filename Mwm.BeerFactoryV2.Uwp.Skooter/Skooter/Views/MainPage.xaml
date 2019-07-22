@@ -45,22 +45,17 @@
                 <Pivot x:Name="rootPivot" Title="PID SETTINGS" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
                     <PivotItem Header="HLT">
                         <Grid>
-                            
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        
+                            <TextBlock Text="Strike Water Temperature Target"/>
 
-                            <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                     Grid.Row="1" Grid.Column="1"     />
 
                             <telerikInput:RadRangeSlider x:Name="RatingSlider" Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
                                                          TickFrequency="10" SelectionStart="40" 
                                                          ShowRangeToolTip="True" SnapsTo="Ticks" LargeChange="10"
-                                                         Grid.Row="1" 
-                                                         Margin="55 20 0 40" Orientation="Vertical" HorizontalAlignment="Center"
+                                                         Grid.Column="0" Grid.Row="1" Grid.RowSpan="3"
+                                                         Margin="0 40 0 40" Orientation="Vertical" HorizontalAlignment="Center"
                                                          SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
            
                                 <!--<telerikInput:RadRangeSlider.TopLeftScaleStyle>

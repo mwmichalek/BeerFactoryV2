@@ -126,7 +126,7 @@
     <Compile Include="Events\PidChange.cs" />
     <Compile Include="Events\PidRequest.cs" />
     <Compile Include="Events\PumpRequest.cs" />
-    <Compile Include="Events\Subscriber\EventSubscriber.cs" />
+    <Compile Include="Events\BeerFactoryEventHandler.cs" />
     <Compile Include="Events\PubSubEvents.cs" />
     <Compile Include="Events\PumpChange.cs" />
     <Compile Include="Events\IEventPayload.cs" />
@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\Publisher\" />
+    <Folder Include="Events\Subscriber\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
