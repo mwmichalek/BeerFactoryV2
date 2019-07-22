@@ -20,28 +20,70 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         FERM = 8
     }
 
-    public class Thermometer {
+    public class Thermometer : BeerFactoryEventHandler {
 
-        public Thermometer(ThermometerId id) {
-            Id = id;
-        }
+        private List<ThermometerChange> _thermometerChange = new List<ThermometerChange>();
 
         public ThermometerId Id { get; private set; }
 
         public decimal Change { get; set; }
 
-        private decimal temperature;
+        private decimal _temperature;
+
+        private decimal _changeThreshold = 0.05m;
+
+        private int _changeWindowInMillis = 1000;
+
+        private int _changeEventRetentionInMins = 60 * 6;
+
+        public Thermometer(IEventAggregator eventAggregator, ThermometerId id) : base(eventAggregator) {
+            Id = id;
+        }
+
+        public Thermometer(IEventAggregator eventAggregator, ThermometerId id, int changeThreshold, int changeWindowInMillis, int changeEventRetentionInMins) : base(eventAggregator) {
+            _changeThreshold = changeThreshold;
+            _changeWindowInMillis = changeWindowInMillis;
+            _changeWindowInMillis = changeWindowInMillis;
+            Id = id;
+        }
 
         public decimal Temperature {
-            get { return temperature; }
+            get { return _temperature; }
             set {
-                Change = value - temperature;
+                //Change = value - _temperature;
                 Timestamp = DateTime.Now;
-                temperature = value;
+                _temperature = value;
             }
         }
 
         public DateTime Timestamp { get; set; }
+
+        public override void ThermometerChangeOccured(ThermometerChange thermometerChange) {
+            if (thermometerChange.Id == Id) {
+                // Determin Change - Get all changes at least this old, order by newest, take first
+                var earliestTimeOfChange = DateTime.Now.AddMilliseconds(-_changeWindowInMillis);
+                var previousChange = _thermometerChange.Where(tc => tc.Timestamp < earliestTimeOfChange).OrderByDescending(tc => tc.Timestamp).FirstOrDefault();
+                if (previousChange != null)
+                    Change = thermometerChange.Value - previousChange.Value;
+
+                // Determine Retention
+                var oldestTimeOfChange = DateTime.Now.AddMinutes(-_changeEventRetentionInMins);
+                var changesToRemove = _thermometerChange.RemoveAll(tc => tc.Timestamp < oldestTimeOfChange);
+
+                _thermometerChange.Add(thermometerChange);
+
+                // If change is big enough, broadcast Temperature Change
+                if (Math.Abs(Change) > _changeThreshold) {
+                    TemperatureChangeFired(new TemperatureChange {
+                        Id = thermometerChange.Id,
+                        Change = Change,
+                        PercentChange = Change / previousChange.Value * 100,
+                        Timestamp = thermometerChange.Timestamp
+                    });
+                }
+            }
+        }
+
     }
 
     public static class ThermometerHelper {

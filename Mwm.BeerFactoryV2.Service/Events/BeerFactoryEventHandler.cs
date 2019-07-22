@@ -18,10 +18,13 @@ namespace Mwm.BeerFactoryV2.Service.Events {
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(ThermometerChangeOccured);
+            _eventAggregator.GetEvent<TemperatureChangeEvent>().Subscribe(TemperatureChangeOccured);
             _eventAggregator.GetEvent<PidRequestEvent>().Subscribe(PidRequestOccured);
             _eventAggregator.GetEvent<PumpRequestEvent>().Subscribe(PumpRequestOccured);
             _eventAggregator.GetEvent<ConnectionStatusEvent>().Subscribe(ConnectionStatusOccured);
         }
+
+        public virtual void TemperatureChangeOccured(TemperatureChange obj) { }
 
         public virtual void ThermometerChangeOccured(ThermometerChange thermometerChange) { }
 
@@ -33,6 +36,10 @@ namespace Mwm.BeerFactoryV2.Service.Events {
 
         public void TemperatureChangeFired(TemperatureChange temperatureChange) {
             _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(temperatureChange);
+        }
+
+        public void ThermometerChangeFired(ThermometerChange thermometerChange) {
+            _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(thermometerChange);
         }
 
         public void PumpChangeFired(PumpChange pumpChange) {

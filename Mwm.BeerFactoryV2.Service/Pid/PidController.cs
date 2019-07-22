@@ -26,7 +26,7 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
     /// process that will affect the measured value.
     /// </remarks>
     /// <see cref="https://en.wikipedia.org/wiki/PID_controller"/>
-    public class PidController {
+    public class PidController : BeerFactoryEventHandler {
 
         public PidControllerId Id { get; private set; }
 
@@ -34,58 +34,44 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
 
         public Ssr Ssr { get; private set; }
 
-        
-
         private double processVariable = 0;
         private DateTime lastRun;
         private bool isRunning = false;
+        private IEventAggregator _eventAggregator;
 
         private int dutyCycleInMillis = 2000;
 
-        public PidController(PidControllerId id, Ssr ssr, Thermometer thermometer) {
-            this.Id = id;
-            this.Ssr = ssr;
-            this.Thermometer = thermometer;
+        public PidController(IEventAggregator eventAggregator, PidControllerId id, Ssr ssr, Thermometer thermometer) : base(eventAggregator) {
+            _eventAggregator = eventAggregator;
+            Id = id;
+            Ssr = ssr;
+            Thermometer = thermometer;
         }
 
-        public PidController(PidControllerId id, Ssr ssr, Thermometer thermometer, double setPoint) {
-            this.Id = id;
-            this.Ssr = ssr;
-            this.Thermometer = thermometer;
-            this.SetPoint = setPoint;
+        public PidController(IEventAggregator eventAggregator, PidControllerId id, Ssr ssr, Thermometer thermometer, double setPoint) : base(eventAggregator) {
+            Id = id;
+            Ssr = ssr;
+            Thermometer = thermometer;
+            SetPoint = setPoint;
         }
 
-        public PidController(PidControllerId id, Ssr ssr, Thermometer thermometer, double gainProportional, double gainIntegral, double gainDerivative, double outputMin, double outputMax, double setPoint) {
+        public PidController(IEventAggregator eventAggregator, PidControllerId id, Ssr ssr, Thermometer thermometer, double gainProportional, double gainIntegral, double gainDerivative, double outputMin, double outputMax, double setPoint) : base(eventAggregator) {
             if (OutputMax < OutputMin)
                 throw new FormatException("OutputMax is less than OutputMin");
-            this.Id = id;
-            this.Ssr = ssr;
-            this.Thermometer = thermometer;
-            this.GainDerivative = gainDerivative;
-            this.GainIntegral = gainIntegral;
-            this.GainProportional = gainProportional;
-            this.OutputMax = outputMax;
-            this.OutputMin = outputMin;
-            this.SetPoint = setPoint;
+            Id = id;
+            Ssr = ssr;
+            Thermometer = thermometer;
+            GainDerivative = gainDerivative;
+            GainIntegral = gainIntegral;
+            GainProportional = gainProportional;
+            OutputMax = outputMax;
+            OutputMin = outputMin;
+            SetPoint = setPoint;
         }
 
-        //public void Start() {
-        //    isRunning = true;
-
-        //    // Call new thread to run
-        //    Task.Run(() => Run());
-        //}
-
-        //public void Stop() {
-        //    isRunning = false;
-        //}
-
-        //private void Run() {
-        //    while (isRunning) {
-        //        Process();
-        //        Thread.Sleep(dutyCycleInMillis);
-        //    }
-        //}
+        public override void TemperatureChangeOccured(TemperatureChange temperatureChange) {
+            
+        }
 
 
         /// <summary>

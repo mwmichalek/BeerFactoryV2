@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Mwm.BeerFactoryV2.Service.Components;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace Mwm.BeerFactoryV2.Service.Events {
 
     public class TemperatureChange : IEventPayload {
 
-        public int Index { get; set; }
+        public ThermometerId Id { get; set; }
 
         public decimal Value { get; set; }
+
+        public decimal Change { get; set; }
 
         public decimal PercentChange { get; set; }
 

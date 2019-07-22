@@ -17,6 +17,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using SerialPortLib;
 using SerialArduino;
+using Mwm.BeerFactoryV2.Service.Components;
 
 namespace Mwm.BeerFactoryV2.Service.Controllers {
     public class SerialUsbArduinoTemperatureControllerService : TemperatureControllerService {
@@ -131,7 +132,11 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         decimal.TryParse(tempReadingValues[1], out decimal temperature);
 
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange { Index = index, Value = temperature, Timestamp = DateTime.Now });
+
+
+                        var thermometerId = (ThermometerId)Enum.Parse(typeof(ThermometerId), (index + 1).ToString());
+
+                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange { Id = thermometerId, Value = temperature, Timestamp = DateTime.Now });
                         //});
                     }
                 }

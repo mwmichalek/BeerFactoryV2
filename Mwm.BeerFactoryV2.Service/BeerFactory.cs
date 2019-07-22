@@ -30,7 +30,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private List<Phase> _phases = new List<Phase>();
 
-        private List<PidController> _pidControllers;
+        private List<PidController> _pidControllers = new List<PidController>();
 
         private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
 
@@ -50,8 +50,8 @@ namespace Mwm.BeerFactoryV2.Service {
             _thermometers = thermometers.ToList();
             
 
-            //for (int index = 1; index <= (int)ThermometerId.FERM; index++ )
-            //    _thermometers.Add(new Thermometer((ThermometerId)index));
+            for (int index = 1; index <= (int)ThermometerId.FERM; index++ )
+                _thermometers.Add(new Thermometer(eventAggregator, (ThermometerId)index));
 
             _phases.Add(new Phase(PhaseId.FillStrikeWater, 20));
             _phases.Add(new Phase(PhaseId.HeatStrikeWater, 40));
@@ -61,9 +61,9 @@ namespace Mwm.BeerFactoryV2.Service {
             _phases.Add(new Phase(PhaseId.Boil, 90));
             _phases.Add(new Phase(PhaseId.Chill, 30));
 
-            //var hltSsr = new Ssr(eventManager, SsrId.HLT);
-            //hltSsr.Percentage = 25;
-            //hltSsr.Start();
+            var hltSsr = new Ssr(SsrId.HLT);
+            hltSsr.Percentage = 25;
+            hltSsr.Start();
 
             //var bkSsr = new Ssr(eventManager, SsrId.BK);
             //bkSsr.Percentage = 5;
@@ -71,41 +71,42 @@ namespace Mwm.BeerFactoryV2.Service {
 
             //ConfigureEvents();
 
-            //_hltPidController = new PidController(hltSsr, _thermometers.GetById(ThermometerId.MT_IN));
-            //_hltPidController.GainProportional = 18;
-            //_hltPidController.GainIntegral = 1.5;
-            //_hltPidController.GainDerivative = 22.5;
+            var _hltPidController = new PidController(eventAggregator, PidControllerId.BK, hltSsr, _thermometers.GetById(ThermometerId.BK));
+            _hltPidController.GainProportional = 18;
+            _hltPidController.GainIntegral = 1.5;
+            _hltPidController.GainDerivative = 22.5;
+            _pidControllers.Add(_hltPidController);
 
             //_hltPidController.SetPoint = 120;
             //_hltPidController.Start();
 
         }
 
-        public override void ThermometerChangeOccured(ThermometerChange thermometerChange) {
-            Logger.Information($"TemperatureChangeUi: {thermometerChange.Id} {thermometerChange.Value}");
+        //public override void ThermometerChangeOccured(ThermometerChange thermometerChange) {
+        //    Logger.Information($"TemperatureChangeUi: {thermometerChange.Id} {thermometerChange.Value}");
 
-            var thermometer = _thermometers.SingleOrDefault(t => t.Id == thermometerChange.Id);
+        //    var thermometer = _thermometers.SingleOrDefault(t => t.Id == thermometerChange.Id);
 
-            if (thermometer != null)
-                thermometer.Temperature = thermometerChange.Value;
+        //    if (thermometer != null)
+        //        thermometer.Temperature = thermometerChange.Value;
 
-            var pid = _pidControllers.SingleOrDefault(p => p.Thermometer.Id == thermometerChange.Id);
+        //    var pid = _pidControllers.SingleOrDefault(p => p.Thermometer.Id == thermometerChange.Id);
 
-            if (pid != null)
-                pid.Process();
-
-
+        //    if (pid != null)
+        //        pid.Process();
 
 
-            if (thermometerChange.Id == ThermometerId.HLT) {
-                TemperatureOne = thermometerChange.Value;
-                TemperatureChangeFired(new TemperatureChange {
-                    Index = (int)thermometerChange.Id,
-                    Value = thermometerChange.Value,
-                    Timestamp = thermometerChange.Timestamp
-                });
-            }
-        }
+
+
+        //    if (thermometerChange.Id == ThermometerId.HLT) {
+        //        TemperatureOne = thermometerChange.Value;
+        //        TemperatureChangeFired(new TemperatureChange {
+        //            Index = (int)thermometerChange.Id,
+        //            Value = thermometerChange.Value,
+        //            Timestamp = thermometerChange.Timestamp
+        //        });
+        //    }
+        //}
 
         //private void PrintStatusUi(ThermometerChange thermometerChange) {
         //    Logger.Information($"TemperatureChangeUi: {thermometerChange.Index} {thermometerChange.Value}");

@@ -31,7 +31,7 @@ namespace Skooter.ViewModels {
         }
 
         public override void TemperatureChangeOccured(TemperatureChange temperatureChange) {
-            if (temperatureChange.Index == 1)
+            if (temperatureChange.Id == ThermometerId.HLT)
                 Title = temperatureChange.Value.ToString();
         }
 

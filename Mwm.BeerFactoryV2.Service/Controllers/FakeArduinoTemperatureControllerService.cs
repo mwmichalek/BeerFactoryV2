@@ -23,10 +23,10 @@ using Mwm.BeerFactoryV2.Service.Components;
 namespace Mwm.BeerFactoryV2.Service.Controllers {
     public class FakeArduinoTemperatureControllerService : TemperatureControllerService {
 
-        private IBeerFactory _beerFactory;
+        private IEventAggregator _eventAggregator;
 
-        public FakeArduinoTemperatureControllerService(IBeerFactory beerFactory) {
-            _beerFactory = beerFactory;
+        public FakeArduinoTemperatureControllerService(IEventAggregator eventAggregator) {
+            _eventAggregator = eventAggregator;
         }
 
         private List<decimal> temperatures = new List<decimal> { 70.01m, 69.54m, 70.12m,
@@ -53,13 +53,22 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     int index = rnd.Next(0, 10);
                     temperatures[index] += rnd.NextDecimal();
 
+
+                    var thermometerId = (ThermometerId)Enum.Parse(typeof(ThermometerId), (index + 1).ToString());
+
+                    _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange {
+                        Id = thermometerId,
+                        Value = temperatures[index],
+                        Timestamp = DateTime.Now
+                    });
+
                     //await _beerFactory.UpdateTemperatureAsync((ThermometerId)(index + 1), temperatures[index]);
 
                     //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                     //    _eventAggregator.GetEvent<TemperatureChangeEvent>().Publish(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
                     //});
 
-                    //_eventManager.Publish<TemperatureChange>(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
+                    //_eventAggregator.Publish<TemperatureChange>(new TemperatureChange { Index = index + 1, Value = temperatures[index] });
                 } catch (Exception) {
 
                 }

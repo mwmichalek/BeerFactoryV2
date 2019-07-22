@@ -47,7 +47,10 @@ namespace Skooter {
             //var tempertureControllerService = new SerialUsbArduinoTemperatureControllerService(eventAggregator);
             //Container.RegisterInstance<ITemperatureControllerService>(tempertureControllerService);
 
-            Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<ITemperatureControllerService, SerialUsbArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ITemperatureControllerService, FakeArduinoTemperatureControllerService>(new ContainerControlledLifetimeManager());
+            
+
             Container.RegisterType<IBeerFactory, BeerFactory>(new ContainerControlledLifetimeManager());
 
             var temperatureControllerService = Container.Resolve<ITemperatureControllerService>();
