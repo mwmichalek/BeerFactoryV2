@@ -73,5 +73,14 @@ namespace Skooter.ViewModels {
             }
         }
 
+        private int _mtSetpoint;
+
+        public int MtSetpoint {
+            get { return _mtSetpoint; }
+            set {
+                SetProperty(ref _mtSetpoint, value);
+            }
+        }
+
     }
 }

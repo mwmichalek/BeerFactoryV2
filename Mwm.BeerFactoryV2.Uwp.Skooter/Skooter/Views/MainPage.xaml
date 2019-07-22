@@ -35,7 +35,7 @@
                 <RadioButton Grid.Column="1" HorizontalAlignment="Center" />
                 <RadioButton Grid.Column="2" HorizontalAlignment="Center" />
                 <TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Button Content="MyAwesomeCommand" Command="{Binding MyAwesomeCommand}" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <!--<Button Content="MyAwesomeCommand" Command="{Binding MyAwesomeCommand}" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
                 <TextBlock Grid.Column="5" Text="{x:Bind Path=ViewModel.Title, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
                 <!--<telerikInput:RadRangeSlider x:Name="ScoreSlider" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Minimum="80" Maximum="180"  
@@ -45,16 +45,22 @@
                 <Pivot x:Name="rootPivot" Title="PID SETTINGS" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3">
                     <PivotItem Header="HLT">
                         <Grid>
-                        
-                            <TextBlock Text="Strike Water Temperature Target"/>
+                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
                             <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
                             <telerikInput:RadRangeSlider x:Name="RatingSlider" Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
                                                          TickFrequency="10" SelectionStart="40" 
                                                          ShowRangeToolTip="True" SnapsTo="Ticks" LargeChange="10"
-                                                         Grid.Column="0" Grid.Row="1" Grid.RowSpan="3"
-                                                         Margin="0 40 0 40" Orientation="Vertical" HorizontalAlignment="Center"
+                                                         Grid.Row="1" 
+                                                         Margin="55 20 0 40" Orientation="Vertical" HorizontalAlignment="Center"
                                                          SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
            
                                 <!--<telerikInput:RadRangeSlider.TopLeftScaleStyle>
@@ -171,8 +177,6 @@
 
             </Grid>
             
-            <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.-->
         </Grid>
     </Grid>
 </Page>
