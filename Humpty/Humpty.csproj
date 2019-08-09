@@ -132,6 +132,7 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\BoilViewModel.cs" />
     <Compile Include="ViewModels\ChillViewModel.cs" />
+    <Compile Include="ViewModels\DisplayEventHandlerViewModelBase.cs" />
     <Compile Include="ViewModels\MashOutViewModel.cs" />
     <Compile Include="ViewModels\MashViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

@@ -1,13 +1,12 @@
 ﻿using System;
-
+using Prism.Events;
 using Prism.Windows.Mvvm;
 
-namespace Humpty.ViewModels
-{
-    public class StrikeWaterTransferViewModel : ViewModelBase
-    {
-        public StrikeWaterTransferViewModel()
-        {
+namespace Humpty.ViewModels {
+    public class StrikeWaterTransferViewModel : DisplayEventHandlerViewModelBase {
+
+        public StrikeWaterTransferViewModel(IEventAggregator eventAggregator) : base(eventAggregator) {
+
         }
     }
 }

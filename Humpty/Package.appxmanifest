@@ -40,6 +40,8 @@
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
 
       <Extensions>
@@ -49,6 +51,13 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="serialcommunication">
+
+      <Device Id="any">
+        <Function Type="name:serialPort" />
+      </Device>
+    </DeviceCapability>
+    <!---->
   </Capabilities>
 
   <genTemplate:Metadata>

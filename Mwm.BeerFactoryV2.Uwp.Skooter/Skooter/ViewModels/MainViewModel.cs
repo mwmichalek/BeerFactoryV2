@@ -9,15 +9,13 @@ using Prism.Windows.Mvvm;
 namespace Skooter.ViewModels {
     public class MainViewModel : DisplayEventHandlerViewModelBase {
 
-        private IEventAggregator _eventAggregator;
-
-        //public IBeerFactory BeerFactory { get; private set; }
-
         private bool _isEnabled = true;
 
         public bool IsEnabled {
             get { return Test == "Balls"; }
         }
+
+
 
         public DelegateCommand<string> MyAwesomeCommand { get; private set; }
 

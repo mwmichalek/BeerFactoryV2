@@ -1,13 +1,12 @@
 ﻿using System;
-
+using Prism.Events;
 using Prism.Windows.Mvvm;
 
-namespace Humpty.ViewModels
-{
-    public class BoilViewModel : ViewModelBase
-    {
-        public BoilViewModel()
-        {
+namespace Humpty.ViewModels {
+    public class BoilViewModel : DisplayEventHandlerViewModelBase {
+
+        public BoilViewModel(IEventAggregator eventAggregator) : base(eventAggregator) {
+
         }
     }
 }
