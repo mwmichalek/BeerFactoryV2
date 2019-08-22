@@ -24,12 +24,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
+    xmlns:telerik="using:Telerik.UI.Xaml.Controls.DataVisualization"
     xmlns:telerikInput ="using:Telerik.UI.Xaml.Controls.Input"
     xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
     Style="{StaticResource PageStyle}"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
-    xmlns:telerikDataViz="using:Telerik.UI.Xaml.Controls.DataVisualization"
+    
     prismMvvm:ViewModelLocator.AutoWireViewModel="True" 
     mc:Ignorable="d">
     <Grid
@@ -76,67 +76,29 @@
 
                 </Grid>
 
-                <telerikDataViz:RadRadialGauge MinValue="40" MaxValue="212"
+                <telerik:RadRadialGauge Name="hltGauge" MinValue="40" MaxValue="220"
                                                LabelStep="10"
                                                Margin="0 0 0 0" TickStep="10"
                                                Grid.Row="1" Grid.Column="1"
                                                Grid.RowSpan="2" Grid.ColumnSpan="2"
-                                               telerikDataViz:RadRadialGauge.MinAngle="-30" telerikDataViz:RadRadialGauge.MaxAngle="210"
+                                               telerik:RadRadialGauge.MinAngle="-30" telerik:RadRadialGauge.MaxAngle="210"
                                                VerticalAlignment="Center" LabelRadiusScale="1.10">
-                    <telerikDataViz:RadRadialGauge.LabelTemplate>
+                    <telerik:MarkerGaugeIndicator Value="99" Content="INDICATOR" Foreground="Green" Margin="0,0,30,0" IsRotated="False" />
+                    <telerik:ArrowGaugeIndicator Name="hltNeedle" Brush="Green" Thickness="3" ArrowTailRadius="2" Value="60"/>
+                    <!--<telerikDataViz:RadRadialGauge.LabelTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" Margin="-5 0 0 0" FontSize="15" Foreground="#595959"></TextBlock>
                         </DataTemplate>
                     </telerikDataViz:RadRadialGauge.LabelTemplate>
-                    <!--<telerikDataViz:SegmentedRadialGaugeIndicator  StartValue="0" Value="80">
+                    <telerikDataViz:SegmentedRadialGaugeIndicator  StartValue="0" Value="80">
                         <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="#595959" Length="50"/>
                         <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="Red" Length="30" />
                     </telerikDataViz:SegmentedRadialGaugeIndicator>
                     <telerikDataViz:RadialBarGaugeIndicator Value="55" Brush="Gray" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                     <telerikDataViz:RadialBarGaugeIndicator Value="0" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
                     <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>-->
-                </telerikDataViz:RadRadialGauge>
 
-
-                <!--<telerikDataViz:RadRadialGauge MinValue="40" MaxValue="212"
-                                               LabelStep="10"
-                                               Margin="0 0 0 0" TickStep="10"
-                                               Grid.Row="1" Grid.Column="2"
-                                               telerikDataViz:RadRadialGauge.MinAngle="-30" telerikDataViz:RadRadialGauge.MaxAngle="210"
-                                               VerticalAlignment="Center" LabelRadiusScale="1.10">
-                    <telerikDataViz:RadRadialGauge.LabelTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Margin="-5 0 0 0" FontSize="15" Foreground="#595959"></TextBlock>
-                        </DataTemplate>
-                    </telerikDataViz:RadRadialGauge.LabelTemplate>
-                    <telerikDataViz:SegmentedRadialGaugeIndicator  StartValue="0" Value="80">
-                        <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="#595959" Length="50"/>
-                        <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="Red" Length="30" />
-                    </telerikDataViz:SegmentedRadialGaugeIndicator>
-                    <telerikDataViz:RadialBarGaugeIndicator Value="55" Brush="Gray" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                    <telerikDataViz:RadialBarGaugeIndicator Value="0" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                    <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                </telerikDataViz:RadRadialGauge>-->
-
-                <!--<telerikDataViz:RadRadialGauge MinValue="40" MaxValue="212"
-                                               LabelStep="10"
-                                               Margin="0 0 0 0" TickStep="10"
-                                               Grid.Row="1" Grid.Column="3"
-                                               telerikDataViz:RadRadialGauge.MinAngle="-30" telerikDataViz:RadRadialGauge.MaxAngle="210"
-                                               VerticalAlignment="Center" LabelRadiusScale="1.10">
-                    <telerikDataViz:RadRadialGauge.LabelTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Margin="-5 0 0 0" FontSize="15" Foreground="#595959"></TextBlock>
-                        </DataTemplate>
-                    </telerikDataViz:RadRadialGauge.LabelTemplate>
-                    <telerikDataViz:SegmentedRadialGaugeIndicator  StartValue="0" Value="80">
-                        <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="#595959" Length="50"/>
-                        <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="Red" Length="30" />
-                    </telerikDataViz:SegmentedRadialGaugeIndicator>
-                    <telerikDataViz:RadialBarGaugeIndicator Value="55" Brush="Gray" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                    <telerikDataViz:RadialBarGaugeIndicator Value="0" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                    <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
-                </telerikDataViz:RadRadialGauge>-->
+                </telerik:RadRadialGauge>
 
             </Grid>
 

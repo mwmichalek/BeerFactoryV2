@@ -13,6 +13,7 @@ namespace Humpty.Views
         public StrikeWaterHeatPage()
         {
             InitializeComponent();
+            hltNeedle.Value = 120;
         }
     }
 }
