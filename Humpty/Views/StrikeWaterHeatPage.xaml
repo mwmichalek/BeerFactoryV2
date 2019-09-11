@@ -55,8 +55,8 @@
                 <RadioButton Grid.Column="1" HorizontalAlignment="Center" />
                 <RadioButton Grid.Column="2" HorizontalAlignment="Center" />
                 <TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-               
-                <TextBlock Grid.Column="5" Text="{x:Bind Path=ViewModel.Title, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <TextBlock Grid.Column="5" Text="{x:Bind Path=ViewModel.HltTemperature, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
 
                 <Grid>
@@ -84,7 +84,7 @@
                                                telerik:RadRadialGauge.MinAngle="-30" telerik:RadRadialGauge.MaxAngle="210"
                                                VerticalAlignment="Center" LabelRadiusScale="1.10">
                     <telerik:MarkerGaugeIndicator Value="99" Content="INDICATOR" Foreground="Green" Margin="0,0,30,0" IsRotated="False" />
-                    <telerik:ArrowGaugeIndicator Name="hltNeedle" Brush="Green" Thickness="3" ArrowTailRadius="2" Value="60"/>
+                    <telerik:ArrowGaugeIndicator Name="hltNeedle" Brush="Green" Thickness="3" ArrowTailRadius="2" Value="{Binding HltTemperature, Mode=TwoWay}"/>
                     <!--<telerikDataViz:RadRadialGauge.LabelTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" Margin="-5 0 0 0" FontSize="15" Foreground="#595959"></TextBlock>

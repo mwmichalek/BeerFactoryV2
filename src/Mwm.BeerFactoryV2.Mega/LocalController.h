@@ -66,6 +66,7 @@ private:
 	String _lastCmd;
 	String _lastVal;
 	int _isConnected;
+
 	LiquidCrystal_I2C _lcd = LiquidCrystal_I2C(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 	void postTemperature(int index, double temperature);

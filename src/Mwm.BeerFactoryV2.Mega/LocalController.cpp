@@ -110,12 +110,11 @@ void LocalController::update() {
 }
 
 void LocalController::processCommands() {
-	if (Serial.available()) {
-		String function = Serial.readString();
-		
-		if (function.startsWith("temps"))
-			postStatus();
 
+	if (Serial.available() > 0) {
+		String funcName = Serial.readString();
+		if (funcName.startsWith("temps"))
+			postStatus();
 	}
 }
 

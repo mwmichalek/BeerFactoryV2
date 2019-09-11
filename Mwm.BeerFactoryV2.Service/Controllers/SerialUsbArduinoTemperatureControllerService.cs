@@ -131,13 +131,16 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         int.TryParse(tempReadingValues[0], out int index);
                         decimal.TryParse(tempReadingValues[1], out decimal temperature);
 
-                        //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        var thermometerId = (ThermometerId)Enum.Parse(typeof(ThermometerId), (index).ToString());
 
-
-                        var thermometerId = (ThermometerId)Enum.Parse(typeof(ThermometerId), (index + 1).ToString());
-
-                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(new ThermometerChange { Id = thermometerId, Value = temperature, Timestamp = DateTime.Now });
-                        //});
+                        _eventAggregator.GetEvent<ThermometerChangeEvent>().Publish(
+                            new ThermometerChange {
+                                Id = thermometerId,
+                                Value = temperature,
+                                Timestamp = DateTime.Now
+                            }
+                        );
+   
                     }
                 }
             } catch (OperationCanceledException /*exception*/) {

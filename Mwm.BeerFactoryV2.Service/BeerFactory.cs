@@ -17,13 +17,15 @@ using Windows.Devices.Gpio;
 using Microsoft.IoT.DeviceCore.Pwm;
 using Microsoft.IoT.Devices.Pwm;
 using Prism.Mvvm;
-using Mwm.BeerFactoryV2.Service.Events;
 
 namespace Mwm.BeerFactoryV2.Service {
 
     public interface IBeerFactory {
         decimal TemperatureOne { get; set; }
+
+        List<Thermometer> Thermometers { get; }
     }
+
     public partial class BeerFactory : BeerFactoryEventHandler, IBeerFactory {
 
         private ILogger Logger { get; set; }
@@ -32,7 +34,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private List<PidController> _pidControllers = new List<PidController>();
 
-        private List<Thermometer> _thermometers { get; set; } = new List<Thermometer>();
+        public List<Thermometer> Thermometers { get; set; } = new List<Thermometer>();
 
         private decimal _temperatureOne = 0;
         public decimal TemperatureOne {
@@ -47,11 +49,11 @@ namespace Mwm.BeerFactoryV2.Service {
             //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusBack, ThreadOption.BackgroundThread);
             //_eventAggregator.GetEvent<ThermometerChangeEvent>().Subscribe(PrintStatusUi, ThreadOption.UIThread);
 
-            _thermometers = thermometers.ToList();
+            Thermometers = thermometers.ToList();
             
 
             for (int index = 1; index <= (int)ThermometerId.FERM; index++ )
-                _thermometers.Add(new Thermometer(eventAggregator, (ThermometerId)index));
+                Thermometers.Add(new Thermometer(eventAggregator, (ThermometerId)index));
 
             _phases.Add(new Phase(PhaseId.FillStrikeWater, 20));
             _phases.Add(new Phase(PhaseId.HeatStrikeWater, 40));
@@ -71,7 +73,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
             //ConfigureEvents();
 
-            var _hltPidController = new PidController(eventAggregator, PidControllerId.BK, hltSsr, _thermometers.GetById(ThermometerId.BK));
+            var _hltPidController = new PidController(eventAggregator, PidControllerId.BK, hltSsr, Thermometers.GetById(ThermometerId.BK));
             _hltPidController.GainProportional = 18;
             _hltPidController.GainIntegral = 1.5;
             _hltPidController.GainDerivative = 22.5;

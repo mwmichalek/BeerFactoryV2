@@ -127,7 +127,7 @@ void setup() {
 void loop() {
 	localController.update();
 	delay(1000);
-	localController.postStatus();
+	//localController.postStatus();
 	//cmdMessenger.feedinSerialData();
 }
 

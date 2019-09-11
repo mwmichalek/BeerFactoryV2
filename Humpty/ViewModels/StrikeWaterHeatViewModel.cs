@@ -1,15 +1,24 @@
 ﻿using System;
+using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Windows.Mvvm;
+using Serilog;
 
 namespace Humpty.ViewModels {
     public class StrikeWaterHeatViewModel : DisplayEventHandlerViewModelBase {
 
-        public StrikeWaterHeatViewModel(IEventAggregator eventAggregator) : base(eventAggregator) {
+        private ILogger Logger { get; set; }
+
+        public StrikeWaterHeatViewModel(IBeerFactory beerFactory, IEventAggregator eventAggregator) : base(eventAggregator) {
+            Logger = Log.Logger;
             MyAwesomeCommand = new DelegateCommand<string>(ExecuteMyAwesomeCommand, (str) => Test == "Balls").ObservesProperty(() => Test);
+
+            var hltThermometer = beerFactory.Thermometers.GetById(ThermometerId.HLT);
+            if (hltThermometer != null)
+                HltTemperature = (double)hltThermometer.Temperature;
         }
 
         public DelegateCommand<string> MyAwesomeCommand { get; private set; }
@@ -21,8 +30,11 @@ namespace Humpty.ViewModels {
         }
 
         public override void TemperatureChangeOccured(TemperatureChange temperatureChange) {
-            if (temperatureChange.Id == ThermometerId.HLT)
-                Title = temperatureChange.Value.ToString();
+
+            if (temperatureChange.Id == ThermometerId.HLT) {
+                Logger.Information($"HLT Change");
+                HltTemperature = (double)temperatureChange.Value;
+            }
         }
 
         public override void ConnectionStatusOccured(ConnectionStatus connectionStatus) {
@@ -54,6 +66,16 @@ namespace Humpty.ViewModels {
                 Title = tc.Value.ToString();
         }
 
+        private double _hltTemperature;
+
+        public double HltTemperature {
+            get { return _hltTemperature; }
+            set {
+                SetProperty(ref _hltTemperature, value);
+                Logger.Information($"HLT: {_hltTemperature}");
+            }
+        }
+
         private int _hltSetpoint;
 
         public int HltSetpoint {
@@ -64,13 +86,5 @@ namespace Humpty.ViewModels {
             }
         }
 
-        private int _mtSetpoint;
-
-        public int MtSetpoint {
-            get { return _mtSetpoint; }
-            set {
-                SetProperty(ref _mtSetpoint, value);
-            }
-        }
     }
 }
