@@ -32,7 +32,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         public decimal Change { get; set; }
 
-        private decimal _temperature;
+        
 
         private decimal _changeThreshold = 0.10m;
 
@@ -52,6 +52,9 @@ namespace Mwm.BeerFactoryV2.Service.Components {
             _changeWindowInMillis = changeWindowInMillis;
             Id = id;
         }
+
+
+        private decimal _temperature;
 
         public decimal Temperature {
             get { return _temperature; }
@@ -84,7 +87,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
                 // If change is big enough, broadcast Temperature Change
                 if (Math.Abs(Change) > _changeThreshold) {
-                    Logger.Information($"Id:{thermometerChange.Id}, Value:{thermometerChange.Value}, Change:{Change}");
+                    //Logger.Information($"Id:{thermometerChange.Id}, Value:{thermometerChange.Value}, Change:{Change}");
                     TemperatureChangeFired(new TemperatureChange {
                         Id = thermometerChange.Id,
                         Change = Change,
@@ -93,7 +96,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
                         Timestamp = thermometerChange.Timestamp
                     });
                 } else if (previousChange == null) { // First event 
-                    Logger.Information($"First Id:{thermometerChange.Id}, Value:{thermometerChange.Value}, Change:{Change}");
+                    //Logger.Information($"First Id:{thermometerChange.Id}, Value:{thermometerChange.Value}, Change:{Change}");
                     TemperatureChangeFired(new TemperatureChange {
                         Id = thermometerChange.Id,
                         Change = Change,

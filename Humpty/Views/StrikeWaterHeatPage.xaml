@@ -11,10 +11,12 @@
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
         <Grid
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            --><!--
+            -->
+<!--
                 The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.
-            --><!--
+            -->
+<!--
         </Grid>
     </Grid>
 </Page>-->
@@ -51,40 +53,60 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <RadioButton Grid.Column="0" HorizontalAlignment="Center" />
-                <RadioButton Grid.Column="1" HorizontalAlignment="Center" />
-                <RadioButton Grid.Column="2" HorizontalAlignment="Center" />
-                <TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Column="5" Text="{x:Bind Path=ViewModel.HltTemperature, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <!--<TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="2" Text="{Binding HltSetpoint, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
 
 
-                <Grid>
 
-                    <TextBlock Text="Strike Water Temperature Target"/>
 
-                    <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                    Grid.Row="1" Grid.Column="1"     />
+                <TextBlock Text="Strike Water Temperature Target"/>
 
-                    <telerikInput:RadRangeSlider x:Name="RatingSlider" Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
-                                                        TickFrequency="10" SelectionStart="40" 
-                                                        ShowRangeToolTip="True" LargeChange="10"
-                                                        Grid.Column="0" Grid.Row="1" Grid.RowSpan="3"
-                                                        Margin="0 40 0 40" Orientation="Vertical" HorizontalAlignment="Center"
-                                                        SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
-                    </telerikInput:RadRangeSlider>
+                <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Grid.Row="0" Grid.Column="0"     />
 
-                </Grid>
+                <telerikInput:RadRangeSlider x:Name="HtlSetpointSlider"
+                                                    Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
+                                                    TickFrequency="10" SelectionStart="32" 
+                                                    ShowRangeToolTip="False" LargeChange="10"
+                                                    Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"
+                                                    Margin="0 0 0 40"
+                                                    Height="500"
+                                                    Orientation="Vertical"
+                                                    VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                                    SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
+                </telerikInput:RadRangeSlider>
+
+
 
                 <telerik:RadRadialGauge Name="hltGauge" MinValue="40" MaxValue="220"
                                                LabelStep="10"
                                                Margin="0 0 0 0" TickStep="10"
                                                Grid.Row="1" Grid.Column="1"
-                                               Grid.RowSpan="2" Grid.ColumnSpan="2"
-                                               telerik:RadRadialGauge.MinAngle="-30" telerik:RadRadialGauge.MaxAngle="210"
-                                               VerticalAlignment="Center" LabelRadiusScale="1.10">
-                    <telerik:MarkerGaugeIndicator Value="99" Content="INDICATOR" Foreground="Green" Margin="0,0,30,0" IsRotated="False" />
-                    <telerik:ArrowGaugeIndicator Name="hltNeedle" Brush="Green" Thickness="3" ArrowTailRadius="2" Value="{Binding HltTemperature, Mode=TwoWay}"/>
+                                               Grid.RowSpan="3" Grid.ColumnSpan="3"
+                                               telerik:RadRadialGauge.MinAngle="0" telerik:RadRadialGauge.MaxAngle="180"
+                                               VerticalAlignment="Bottom" LabelRadiusScale="1.10">
+                    <!--<telerik:MarkerGaugeIndicator Value="{Binding HltSetpoint, Mode=TwoWay}" Content="{Binding HltSetpoint, Mode=TwoWay}" Foreground="Green" Margin="0,0,30,0" IsRotated="False" />-->
+                    <telerik:ArrowGaugeIndicator Name="hltNeedle" Brush="Gray" Thickness="3" ArrowTailRadius="2"
+
+                                                 Value="{Binding HltTemperature, Mode=TwoWay}"/>
+
+
+                    <!--<telerik:RadialBarGaugeIndicator  Value="{Binding HltSetpoint, Mode=TwoWay}" Brush="Green" Thickness="5" Margin="10" />-->
+
+                    <telerik:SegmentedRadialGaugeIndicator Value="220">
+                        <telerik:BarIndicatorSegment Stroke="Blue" Length="20"/>
+                        <telerik:BarIndicatorSegment Stroke="Orange" Length="152" />
+                        <telerik:BarIndicatorSegment Stroke="Red" Length="8" />
+                    </telerik:SegmentedRadialGaugeIndicator>
+
+                    <telerik:MarkerGaugeIndicator Value="{Binding HltSetpoint}">
+                        <telerik:MarkerGaugeIndicator.Content>
+                            <Rectangle Fill="Green" Width="10" Height="10" />
+                        </telerik:MarkerGaugeIndicator.Content>
+                    </telerik:MarkerGaugeIndicator>
+
                     <!--<telerikDataViz:RadRadialGauge.LabelTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}" Margin="-5 0 0 0" FontSize="15" Foreground="#595959"></TextBlock>
@@ -99,7 +121,35 @@
                     <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>-->
 
                 </telerik:RadRadialGauge>
+                <Ellipse Grid.Column="1" Grid.Row="3" 
+                         Height="150"  Width="150"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Margin="0 0 0 0"
+                         Stroke="Gray" StrokeThickness="3" />
+                <TextBlock Grid.Column="1" Grid.Row="3"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                           FontSize="20"
+                           Text="Set Point" />
+                <TextBlock Grid.Column="1" Grid.Row="3"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="50"
+                           Text="{Binding HltSetpoint, Mode=TwoWay}" />
 
+                <Ellipse Grid.Column="3" Grid.Row="3" 
+                         Height="150"  Width="150"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Margin="0 0 0 0"
+                         Stroke="Gray" StrokeThickness="3" />
+                
+                <TextBlock Grid.Column="3" Grid.Row="3"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                           FontSize="20"
+                           Text="Actual" />
+
+                <TextBlock Grid.Column="3" Grid.Row="3"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="50"
+                           Text="{Binding HltTemperature, Mode=TwoWay}" />
             </Grid>
 
         </Grid>

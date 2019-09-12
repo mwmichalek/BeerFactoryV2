@@ -13,6 +13,7 @@
     mc:Ignorable="d">
 
     <Grid>
+        
         <winui:NavigationView
             x:Name="navigationView"
             IsBackButtonVisible="Visible"
@@ -35,6 +36,13 @@
                 <winui:NavigationViewItem x:Uid="Shell_Sparge" helpers:NavHelper.NavigateTo="Sparge" />
                 <winui:NavigationViewItem x:Uid="Shell_Boil" helpers:NavHelper.NavigateTo="Boil" />
                 <winui:NavigationViewItem x:Uid="Shell_Chill" helpers:NavHelper.NavigateTo="Chill" />
+
+                <Grid>
+                    <Ellipse HorizontalAlignment="Center" Height="35" VerticalAlignment="Center" Width="35"
+                             Stroke="Yellow" Fill="Yellow" />
+
+                </Grid>
+
             </winui:NavigationView.MenuItems>
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="ItemInvoked">

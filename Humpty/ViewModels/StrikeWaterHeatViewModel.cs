@@ -14,65 +14,75 @@ namespace Humpty.ViewModels {
 
         public StrikeWaterHeatViewModel(IBeerFactory beerFactory, IEventAggregator eventAggregator) : base(eventAggregator) {
             Logger = Log.Logger;
-            MyAwesomeCommand = new DelegateCommand<string>(ExecuteMyAwesomeCommand, (str) => Test == "Balls").ObservesProperty(() => Test);
+            //MyAwesomeCommand = new DelegateCommand<string>(ExecuteMyAwesomeCommand, (str) => Test == "Balls").ObservesProperty(() => Test);
 
             var hltThermometer = beerFactory.Thermometers.GetById(ThermometerId.HLT);
             if (hltThermometer != null)
                 HltTemperature = (double)hltThermometer.Temperature;
         }
 
-        public DelegateCommand<string> MyAwesomeCommand { get; private set; }
+        //public DelegateCommand<string> MyAwesomeCommand { get; private set; }
 
-        private bool _isEnabled = true;
+        //private bool _isEnabled = true;
 
-        public bool IsEnabled {
-            get { return Test == "Balls"; }
-        }
+        //public bool IsEnabled {
+        //    get { return Test == "Balls"; }
+        //}
 
         public override void TemperatureChangeOccured(TemperatureChange temperatureChange) {
 
             if (temperatureChange.Id == ThermometerId.HLT) {
-                Logger.Information($"HLT Change");
-                HltTemperature = (double)temperatureChange.Value;
+                //Logger.Information($"HLT Change");
+                HltTemperature = Math.Round((double)temperatureChange.Value, 1);
             }
         }
 
         public override void ConnectionStatusOccured(ConnectionStatus connectionStatus) {
-            Title = $"ConnectionStatus: {connectionStatus.Status.ToString()}";
+            //Title = $"ConnectionStatus: {connectionStatus.Status.ToString()}";
         }
 
-        private void ExecuteMyAwesomeCommand(string balls) {
+        //private void ExecuteMyAwesomeCommand(string balls) {
 
-        }
+        //}
 
-        private string _title = "Balls";
+        //private string _title = "Balls";
 
-        public string Title {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
-        }
+        //public string Title {
+        //    get { return _title; }
+        //    set { SetProperty(ref _title, value); }
+        //}
 
-        private string _test = "Balls";
+        //private string _test = "Balls";
 
-        public string Test {
-            get { return _test; }
+        //public string Test {
+        //    get { return _test; }
+        //    set {
+        //        SetProperty(ref _test, value);
+        //    }
+        //}
+
+        //private void TempTest(ThermometerChange tc) {
+        //    if (tc.Id == ThermometerId.HLT)
+        //        Title = tc.Value.ToString();
+        //}
+
+
+        private bool _engaged;
+
+        public bool Engaged {
+            get { return _engaged; }
             set {
-                SetProperty(ref _test, value);
+                SetProperty(ref _engaged, value);
             }
         }
-
-        private void TempTest(ThermometerChange tc) {
-            if (tc.Id == ThermometerId.HLT)
-                Title = tc.Value.ToString();
-        }
-
+               
         private double _hltTemperature;
 
         public double HltTemperature {
             get { return _hltTemperature; }
             set {
                 SetProperty(ref _hltTemperature, value);
-                Logger.Information($"HLT: {_hltTemperature}");
+                //Logger.Information($"HLT: {_hltTemperature}");
             }
         }
 
@@ -82,7 +92,6 @@ namespace Humpty.ViewModels {
             get { return _hltSetpoint; }
             set {
                 SetProperty(ref _hltSetpoint, value);
-                Title = value.ToString();
             }
         }
 
