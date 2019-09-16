@@ -70,9 +70,10 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
         }
 
         public override void TemperatureChangeOccured(TemperatureChange temperatureChange) {
-            
+            if (temperatureChange.Id == Thermometer.Id) {
+                Process();
+            }
         }
-
 
         /// <summary>
         /// The controller output

@@ -37,10 +37,22 @@
                 <winui:NavigationViewItem x:Uid="Shell_Boil" helpers:NavHelper.NavigateTo="Boil" />
                 <winui:NavigationViewItem x:Uid="Shell_Chill" helpers:NavHelper.NavigateTo="Chill" />
 
-                <Grid>
-                    <Ellipse HorizontalAlignment="Center" Height="35" VerticalAlignment="Center" Width="35"
-                             Stroke="Yellow" Fill="Yellow" />
-
+                <Grid Width="200">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Ellipse x:Name="HltHeatingElement1"
+                             Grid.Column="0"
+                             HorizontalAlignment="Center" Height="35" VerticalAlignment="Center" Width="35"
+                             Stroke="Yellow" Fill="{x:Bind ViewModel.HltElement1FillColor, Mode=TwoWay}" />
+                    <Ellipse x:Name="BkHeatingElement1"
+                             Grid.Column="1"
+                             HorizontalAlignment="Center" Height="35" VerticalAlignment="Center" Width="35"
+                             Stroke="Yellow" Fill="{x:Bind ViewModel.BkElement1FillColor, Mode=TwoWay}" />
                 </Grid>
 
             </winui:NavigationView.MenuItems>

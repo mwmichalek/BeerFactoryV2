@@ -113,6 +113,9 @@
     <PackageReference Include="Syncfusion.Xamarin.SfGauge">
       <Version>17.2.0.40</Version>
     </PackageReference>
+    <PackageReference Include="System.Drawing.Common">
+      <Version>4.5.1</Version>
+    </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
       <Version>1.0.1.6</Version>
     </PackageReference>
@@ -136,6 +139,7 @@
     <Compile Include="ViewModels\MashOutViewModel.cs" />
     <Compile Include="ViewModels\MashViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel_Components.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SpargeViewModel.cs" />
     <Compile Include="ViewModels\StrikeWaterHeatViewModel.cs" />

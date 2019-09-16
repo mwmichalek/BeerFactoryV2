@@ -19,13 +19,21 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         BK = 5
     }
 
-    public class Ssr {
+    public class Ssr : BeerFactoryEventHandler {
 
         public SsrId Id { get; set; }
 
         public int Pin { get; set; }
 
-        public bool IsEngaged { get; set; }
+
+        private bool _isEngaged;
+
+        public bool IsEngaged {
+            get { return _isEngaged; }
+            set {
+                _isEngaged = value;
+            }
+        }
 
         private int _dutyCycleInMillis = 2000;
         public int DutyCycleInMillis {
@@ -39,7 +47,6 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         }
 
         private int _percentage = 50;
-
         public int Percentage {
             get {
                 return _percentage;
@@ -47,7 +54,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
             set {
                 _percentage = value;
                 CalculateDurations();
-                //SendNotification();
+                SendNotification();
             }
         }
 
@@ -59,7 +66,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private int millisOn = 1000;
         private int millisOff = 1000;
 
-        public Ssr(SsrId id) {
+        public Ssr(IEventAggregator eventAggregator, SsrId id) : base(eventAggregator) {
             Id = id;
             Pin = (int)id;
 
@@ -97,18 +104,34 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         private void On() {
             pin?.Write(GpioPinValue.High);
             IsEngaged = true;
-            //SendNotification();
+            SendNotification();
         }
 
         private void Off() {
             pin?.Write(GpioPinValue.Low);
             IsEngaged = false;
-            //SendNotification();
+            SendNotification();
+        }
+
+        private void SendNotification() {
+            SsrChangeFired(new SsrChange {
+                Id = Id,
+                Percentage = Percentage,
+                IsEngaged = IsEngaged
+            });
         }
 
         public void Stop() {
             isRunning = false;
         }
+    }
+
+    public static class SsrHelper {
+
+        public static Ssr GetById(this List<Ssr> ssrs, SsrId ssrId) {
+            return ssrs.SingleOrDefault(s => s.Id == ssrId);
+        }
+
     }
 
 }
