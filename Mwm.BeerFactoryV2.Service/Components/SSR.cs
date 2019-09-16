@@ -94,8 +94,10 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         private void Run() {
             while (isRunning) {
-                On();
-                Thread.Sleep(millisOn);
+                if (millisOn > 0) {
+                    On();
+                    Thread.Sleep(millisOn);
+                }
                 Off();
                 Thread.Sleep(millisOff);
             }
