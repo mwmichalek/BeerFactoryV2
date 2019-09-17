@@ -78,9 +78,14 @@ namespace Mwm.BeerFactoryV2.Service {
                                                       PidControllerId.HLT,
                                                       hltSsr, 
                                                       Thermometers.GetById(ThermometerId.HLT));
-            _hltPidController.GainProportional = 18;
-            _hltPidController.GainIntegral = 1.5;
-            _hltPidController.GainDerivative = 22.5;
+            //_hltPidController.GainProportional = 18;
+            //_hltPidController.GainIntegral = 1.5;
+            //_hltPidController.GainDerivative = 22.5;
+
+            _hltPidController.GainProportional = 0.5;
+            _hltPidController.GainIntegral = 0.5;
+            _hltPidController.GainDerivative = 0.5;
+
             _hltPidController.SetPoint = 120;
 
             _pidControllers.Add(_hltPidController);
