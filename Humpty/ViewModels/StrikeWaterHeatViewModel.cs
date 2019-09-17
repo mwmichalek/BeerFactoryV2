@@ -2,6 +2,7 @@
 using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
+using Mwm.BeerFactoryV2.Service.Pid;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Windows.Mvvm;
@@ -92,6 +93,12 @@ namespace Humpty.ViewModels {
             get { return _hltSetpoint; }
             set {
                 SetProperty(ref _hltSetpoint, value);
+                PidRequestFire(new PidRequest {
+                    Id = PidControllerId.HLT,
+                    IsEngaged = Engaged,
+                    SetPoint = _hltSetpoint,
+                    PidMode = PidMode.Temperature
+                });
             }
         }
 

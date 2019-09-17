@@ -96,6 +96,12 @@ namespace Mwm.BeerFactoryV2.Service {
 
         }
 
+        public override void PidRequestOccured(PidRequest pidRequest) {
+
+            var pidController = _pidControllers.SingleOrDefault(pid => pid.Id == pidRequest.Id);
+            pidController.SetPoint = pidRequest.SetPoint;
+        }
+
         //public override void ThermometerChangeOccured(ThermometerChange thermometerChange) {
         //    Logger.Information($"TemperatureChangeUi: {thermometerChange.Id} {thermometerChange.Value}");
 
