@@ -144,12 +144,6 @@
   <ItemGroup>
     <None Include="Humpty.Tests.xUnit_TemporaryKey.pfx" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Humpty\Humpty.csproj">
-      <Project>{6DB8731F-6948-46E3-AB3B-7395F087A8CD}</Project>
-      <Name>Humpty</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

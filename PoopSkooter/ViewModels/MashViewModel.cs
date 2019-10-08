@@ -2,11 +2,9 @@
 using Prism.Events;
 using Prism.Windows.Mvvm;
 
-namespace PoopSkooter.ViewModels
-{
+namespace PoopSkooter.ViewModels {
     public class MashViewModel : DisplayEventHandlerViewModelBase {
-        public MashViewModel()
-        {
+        public MashViewModel() {
         }
 
         public MashViewModel(IEventAggregator eventAggregator) : base(eventAggregator) {
