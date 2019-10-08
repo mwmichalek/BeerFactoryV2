@@ -1,0 +1,142 @@
+﻿<Page
+    x:Class="PoopSkooter.Views.StrikePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerik="using:Telerik.UI.Xaml.Controls.DataVisualization"
+    xmlns:telerikInput ="using:Telerik.UI.Xaml.Controls.Input"
+    xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
+    Style="{StaticResource PageStyle}"
+    xmlns:prismMvvm="using:Prism.Windows.Mvvm"
+    xmlns:sfinput="using:Syncfusion.UI.Xaml.Controls.Input" 
+    xmlns:sfgauge="using:Syncfusion.UI.Xaml.Gauges"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True" 
+    mc:Ignorable="d">
+    <Grid
+        x:Name="ContentArea"
+        Margin="{StaticResource MediumLeftRightMargin}">
+        <Grid
+            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--<TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="2" Text="{Binding HltSetpoint, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
+                <sfgauge:SfDigitalGauge />
+    
+
+                <sfinput:SfNumericUpDown x:Name="numericUpDown"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Width="200" 
+                                SpinButtonsAlignment="Both"
+                               Value="123.45"/>
+                <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Grid.Row="0" Grid.Column="0" Command="{Binding Path=UpdatePidEnabledCommand}" IsChecked="{Binding Path=Engaged, Mode=TwoWay}"  />
+
+                <!--<telerikInput:RadRangeSlider x:Name="HtlSetpointSlider"
+                                                    Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
+                                                    TickFrequency="10" SelectionStart="32" 
+                                                    ShowRangeToolTip="False" LargeChange="10"
+                                                    Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"
+                                                    Margin="0 0 0 40"
+                                                    Height="500"
+                                                    Orientation="Vertical"
+                                                    VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                        
+                                                    SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
+                </telerikInput:RadRangeSlider>-->
+
+                <!--<sfinput:SfNumericUpDown />-->
+
+
+
+                <telerik:RadRadialGauge Name="hltGauge" MinValue="40" MaxValue="220"
+                                               LabelStep="10"
+                                               Margin="0 0 0 0" TickStep="10"
+                                               Grid.Row="1" Grid.Column="1"
+                                               Grid.RowSpan="3" Grid.ColumnSpan="3"
+                                               telerik:RadRadialGauge.MinAngle="0" telerik:RadRadialGauge.MaxAngle="180"
+                                               VerticalAlignment="Bottom" LabelRadiusScale="1.10">
+                    <!--<telerik:MarkerGaugeIndicator Value="{Binding HltSetpoint, Mode=TwoWay}" Content="{Binding HltSetpoint, Mode=TwoWay}" Foreground="Green" Margin="0,0,30,0" IsRotated="False" />-->
+                    <telerik:ArrowGaugeIndicator Name="hltNeedle" Brush="Gray" Thickness="3" ArrowTailRadius="2"
+
+                                                 Value="{Binding HltTemperature, Mode=TwoWay}"/>
+
+
+                    <!--<telerik:RadialBarGaugeIndicator  Value="{Binding HltSetpoint, Mode=TwoWay}" Brush="Green" Thickness="5" Margin="10" />-->
+
+                    <telerik:SegmentedRadialGaugeIndicator Value="220">
+                        <telerik:BarIndicatorSegment Stroke="Blue" Length="20"/>
+                        <telerik:BarIndicatorSegment Stroke="Orange" Length="152" />
+                        <telerik:BarIndicatorSegment Stroke="Red" Length="8" />
+                    </telerik:SegmentedRadialGaugeIndicator>
+
+                    <telerik:MarkerGaugeIndicator Value="{Binding HltSetpoint}">
+                        <telerik:MarkerGaugeIndicator.Content>
+                            <Rectangle Fill="Green" Width="10" Height="10" />
+                        </telerik:MarkerGaugeIndicator.Content>
+                    </telerik:MarkerGaugeIndicator>
+
+                    <!--<telerikDataViz:RadRadialGauge.LabelTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Margin="-5 0 0 0" FontSize="15" Foreground="#595959"></TextBlock>
+                        </DataTemplate>
+                    </telerikDataViz:RadRadialGauge.LabelTemplate>
+                    <telerikDataViz:SegmentedRadialGaugeIndicator  StartValue="0" Value="80">
+                        <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="#595959" Length="50"/>
+                        <telerikDataViz:BarIndicatorSegment Thickness="2" Stroke="Red" Length="30" />
+                    </telerikDataViz:SegmentedRadialGaugeIndicator>
+                    <telerikDataViz:RadialBarGaugeIndicator Value="55" Brush="Gray" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
+                    <telerikDataViz:RadialBarGaugeIndicator Value="0" IsAnimated="True" Brush="Black" Thickness="12" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>
+                    <telerikDataViz:MarkerGaugeIndicator Value="50" Content="*" FontFamily="Segoe UI" FontSize="17" Foreground="Red" telerikDataViz:RadRadialGauge.IndicatorRadiusScale="0.83"/>-->
+
+                </telerik:RadRadialGauge>
+                <Ellipse Grid.Column="1" Grid.Row="3" 
+                         Height="150"  Width="150"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Margin="0 0 0 0"
+                         Stroke="Gray" StrokeThickness="3" />
+                <TextBlock Grid.Column="1" Grid.Row="3"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                           FontSize="20"
+                           Text="Set Point" />
+                <TextBlock Grid.Column="1" Grid.Row="3"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="50"
+                           Text="{Binding HltSetpoint, Mode=TwoWay}" />
+
+                <Ellipse Grid.Column="3" Grid.Row="3" 
+                         Height="150"  Width="150"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Margin="0 0 0 0"
+                         Stroke="Gray" StrokeThickness="3" />
+
+                <TextBlock Grid.Column="3" Grid.Row="3"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                           FontSize="20"
+                           Text="Actual" />
+
+                <TextBlock Grid.Column="3" Grid.Row="3"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="50"
+                           Text="{Binding HltTemperature, Mode=TwoWay}" />
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Page>

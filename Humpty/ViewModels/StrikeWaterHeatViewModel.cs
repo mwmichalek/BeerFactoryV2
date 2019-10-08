@@ -17,14 +17,23 @@ namespace Humpty.ViewModels {
             Logger = Log.Logger;
             //MyAwesomeCommand = new DelegateCommand<string>(ExecuteMyAwesomeCommand, (str) => Test == "Balls").ObservesProperty(() => Test);
 
+            UpdatePidEnabledCommand = new DelegateCommand(UpdatePid);
+            //UpdatePidSetPointCommand = new DelegateCommand(UpdatePid);
+
             var hltThermometer = beerFactory.Thermometers.GetById(ThermometerId.HLT);
             if (hltThermometer != null)
                 HltTemperature = (double)hltThermometer.Temperature;
         }
 
+        public StrikeWaterHeatViewModel() {
+        }
+
+        public StrikeWaterHeatViewModel(IEventAggregator eventAggregator) : base(eventAggregator) {
+        }
+
         //public DelegateCommand<string> MyAwesomeCommand { get; private set; }
 
-        //private bool _isEnabled = true;
+        private bool _isEnabled = true;
 
         //public bool IsEnabled {
         //    get { return Test == "Balls"; }
@@ -40,6 +49,20 @@ namespace Humpty.ViewModels {
 
         public override void ConnectionStatusOccured(ConnectionStatus connectionStatus) {
             //Title = $"ConnectionStatus: {connectionStatus.Status.ToString()}";
+        }
+
+
+        public DelegateCommand UpdatePidEnabledCommand { get; private set; }
+        
+
+        public void UpdatePid() {
+            PidRequestFire(new PidRequest {
+                Id = PidControllerId.HLT,
+                IsEngaged = Engaged,
+                SetPoint = _hltSetpoint,
+                PidMode = PidMode.Temperature
+            });
+
         }
 
         //private void ExecuteMyAwesomeCommand(string balls) {
@@ -74,6 +97,8 @@ namespace Humpty.ViewModels {
             get { return _engaged; }
             set {
                 SetProperty(ref _engaged, value);
+                //TODO: Switch to delegate
+                //UpdatePid();
             }
         }
                
@@ -87,18 +112,16 @@ namespace Humpty.ViewModels {
             }
         }
 
+        public DelegateCommand UpdatePidSetPointCommand { get; private set; }
+
         private int _hltSetpoint;
 
         public int HltSetpoint {
             get { return _hltSetpoint; }
             set {
                 SetProperty(ref _hltSetpoint, value);
-                PidRequestFire(new PidRequest {
-                    Id = PidControllerId.HLT,
-                    IsEngaged = Engaged,
-                    SetPoint = _hltSetpoint,
-                    PidMode = PidMode.Temperature
-                });
+                //TODO: Switch to delegate
+                //UpdatePid();
             }
         }
 

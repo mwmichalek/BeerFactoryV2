@@ -22,6 +22,9 @@ namespace Humpty.ViewModels {
 
         }
 
+        public SettingsViewModel() {
+        }
+
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
 
         public ElementTheme ElementTheme {

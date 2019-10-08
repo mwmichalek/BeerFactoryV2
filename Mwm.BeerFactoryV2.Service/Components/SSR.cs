@@ -46,7 +46,7 @@ namespace Mwm.BeerFactoryV2.Service.Components {
             }
         }
 
-        private int _percentage = 50;
+        private int _percentage = 0;
         public int Percentage {
             get {
                 return _percentage;
@@ -63,8 +63,8 @@ namespace Mwm.BeerFactoryV2.Service.Components {
 
         private bool isRunning = false;
 
-        private int millisOn = 1000;
-        private int millisOff = 1000;
+        private int millisOn = 0;
+        private int millisOff = 2000;
 
         public Ssr(IEventAggregator eventAggregator, SsrId id) : base(eventAggregator) {
             Id = id;

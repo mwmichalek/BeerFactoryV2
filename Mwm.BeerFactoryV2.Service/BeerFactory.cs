@@ -99,6 +99,7 @@ namespace Mwm.BeerFactoryV2.Service {
         public override void PidRequestOccured(PidRequest pidRequest) {
 
             var pidController = _pidControllers.SingleOrDefault(pid => pid.Id == pidRequest.Id);
+            pidController.IsEngaged = pidRequest.IsEngaged;
             pidController.SetPoint = pidRequest.SetPoint;
         }
 

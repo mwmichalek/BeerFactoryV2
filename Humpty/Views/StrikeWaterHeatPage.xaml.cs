@@ -10,7 +10,14 @@ namespace Humpty.Views {
 
         public StrikeWaterHeatPage() {
             InitializeComponent();
-            //hltNeedle.Value = 120;
+
+            //HtlSetpointSlider.
         }
+
+        private void ToggleButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+            ViewModel.UpdatePid();
+        }
+
+
     }
 }

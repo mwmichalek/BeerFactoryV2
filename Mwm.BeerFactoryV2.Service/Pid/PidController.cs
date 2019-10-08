@@ -69,6 +69,14 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
             SetPoint = setPoint;
         }
 
+        private bool isEngaged = false;
+
+        public bool IsEngaged {
+            get { return isEngaged; }
+            set { isEngaged = value; }
+        }
+
+
         public override void TemperatureChangeOccured(TemperatureChange temperatureChange) {
             if (temperatureChange.Id == Thermometer.Id) {
                 Process();
@@ -85,7 +93,10 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
 
             ProcessVariable = (double)Thermometer.Temperature;
 
-            if (ProcessVariable != 0) {
+            if (!isEngaged)
+                Ssr.Percentage = 0;
+
+            if (ProcessVariable != 0 && isEngaged) {
                 var currentTime = DateTime.Now;
                 if (lastRun == null)
                     lastRun = currentTime;

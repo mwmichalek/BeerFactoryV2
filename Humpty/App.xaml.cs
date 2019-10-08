@@ -22,6 +22,7 @@ namespace Humpty {
     [Windows.UI.Xaml.Data.Bindable]
     public sealed partial class App : PrismUnityApplication {
         public App() {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTU0MDU1QDMxMzcyZTMyMmUzMEJsYlJwMUxzTnlGQ0tocmtCUE1vT2kvT0w3VlFnY1J4d2RNVVlRZksxWmM9");
             InitializeComponent();
         }
 

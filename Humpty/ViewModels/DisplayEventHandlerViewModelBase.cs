@@ -11,6 +11,10 @@ namespace Humpty.ViewModels {
     public abstract class DisplayEventHandlerViewModelBase : ViewModelBase {
         private IEventAggregator _eventAggregator;
 
+        protected DisplayEventHandlerViewModelBase() {
+
+        }
+
         protected DisplayEventHandlerViewModelBase(IEventAggregator eventAggregator) {
             _eventAggregator = eventAggregator;
 

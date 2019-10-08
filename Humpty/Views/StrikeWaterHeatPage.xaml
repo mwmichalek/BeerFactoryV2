@@ -31,8 +31,9 @@
     xmlns:telerikPrimitives="using:Telerik.UI.Xaml.Controls.Primitives"
     Style="{StaticResource PageStyle}"
     xmlns:prismMvvm="using:Prism.Windows.Mvvm"
-    
-    prismMvvm:ViewModelLocator.AutoWireViewModel="True" 
+    xmlns:syncfusion="using:Syncfusion.SfGauge.XForms"
+    xmlns:my="using:Syncfusion.UI.Xaml.Gauges"
+    prismMvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid
         x:Name="ContentArea"
@@ -57,14 +58,14 @@
                 <!--<TextBox Grid.Column="3" Text="{x:Bind ViewModel.Test, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Column="2" Text="{Binding HltSetpoint, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
+                <my:SfDigitalGauge />
 
-
-
+                <!--<syncfusion:SfDigitalGauge Value="12345"  CharacterType="SegmentSeven" />-->
 
                 <TextBlock Text="Strike Water Temperature Target"/>
 
-                <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                Grid.Row="0" Grid.Column="0"     />
+                <ToggleButton Content="Engage" VerticalAlignment="Center" HorizontalAlignment="Center" Click="ToggleButton_Click"
+                                Grid.Row="0" Grid.Column="0" Command="{Binding Path=UpdatePidEnabledCommand}" IsChecked="{Binding Path=Engaged, Mode=TwoWay}"    />
 
                 <telerikInput:RadRangeSlider x:Name="HtlSetpointSlider"
                                                     Minimum="40" Maximum="212" LabelFormat="{}{0:N2}"
@@ -75,6 +76,7 @@
                                                     Height="500"
                                                     Orientation="Vertical"
                                                     VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                        
                                                     SelectionEnd="{Binding HltSetpoint, Mode=TwoWay}">
                 </telerikInput:RadRangeSlider>
 
