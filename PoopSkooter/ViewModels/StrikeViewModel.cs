@@ -22,6 +22,11 @@ namespace PoopSkooter.ViewModels {
             var hltThermometer = beerFactory.Thermometers.GetById(ThermometerId.HLT);
             if (hltThermometer != null)
                 HltTemperature = (double)hltThermometer.Temperature;
+
+
+            var hltPidController = beerFactory.PidControllers.GetById(PidControllerId.HLT);
+            if (hltPidController != null)
+                HltSetpoint = (int)hltPidController.SetPoint;
         }
 
         public StrikeViewModel() {
@@ -38,6 +43,13 @@ namespace PoopSkooter.ViewModels {
                 //Logger.Information($"HLT Change");
                 HltTemperature = Math.Round((double)temperatureChange.Value, 1);
             }
+        }
+
+        public override void SsrChangeOccured(SsrChange ssrChange) {
+            if (ssrChange.Id == SsrId.HLT) {
+                HltSsrPercentage = ssrChange.Percentage;
+            }
+            base.SsrChangeOccured(ssrChange);
         }
 
         public override void ConnectionStatusOccured(ConnectionStatus connectionStatus) {
@@ -101,6 +113,17 @@ namespace PoopSkooter.ViewModels {
             get { return _hltTemperature; }
             set {
                 SetProperty(ref _hltTemperature, value);
+                HltTemperatureStr = _hltTemperature.ToString("0.0");
+                //Logger.Information($"HLT: {_hltTemperature}");
+            }
+        }
+
+        private string _hltTemperatureStr;
+
+        public string HltTemperatureStr {
+            get { return _hltTemperatureStr; }
+            set {
+                SetProperty(ref _hltTemperatureStr, value);
                 //Logger.Information($"HLT: {_hltTemperature}");
             }
         }
@@ -113,6 +136,17 @@ namespace PoopSkooter.ViewModels {
             get { return _hltSetpoint; }
             set {
                 SetProperty(ref _hltSetpoint, value);
+                //TODO: Switch to delegate
+                //UpdatePid();
+            }
+        }
+
+        private int _hltSsrPercentage;
+
+        public int HltSsrPercentage {
+            get { return _hltSsrPercentage; }
+            set {
+                SetProperty(ref _hltSsrPercentage, value);
                 //TODO: Switch to delegate
                 //UpdatePid();
             }

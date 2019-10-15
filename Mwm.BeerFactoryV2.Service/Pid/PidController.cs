@@ -2,8 +2,10 @@
 using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -208,5 +210,13 @@ namespace Mwm.BeerFactoryV2.Service.Pid {
             if (variableToClamp >= OutputMax) { return OutputMax; }
             return variableToClamp;
         }
+    }
+
+    public static class PidControllerHelper {
+
+        public static PidController GetById(this List<PidController> pidControllers, PidControllerId pidControllerId) {
+            return pidControllers.SingleOrDefault(s => s.Id == pidControllerId);
+        }
+
     }
 }

@@ -24,6 +24,8 @@ namespace Mwm.BeerFactoryV2.Service {
         
         List<Thermometer> Thermometers { get; }
 
+        List<PidController> PidControllers { get; }
+
         List<Ssr> Ssrs { get; }
     }
 
@@ -33,7 +35,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         private List<Phase> _phases = new List<Phase>();
 
-        private List<PidController> _pidControllers = new List<PidController>();
+        public List<PidController> PidControllers { get; set; } = new List<PidController>();
 
         public List<Ssr> Ssrs { get; set; } = new List<Ssr>();
 
@@ -88,7 +90,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
             _hltPidController.SetPoint = 120;
 
-            _pidControllers.Add(_hltPidController);
+            PidControllers.Add(_hltPidController);
 
 
             
@@ -98,7 +100,7 @@ namespace Mwm.BeerFactoryV2.Service {
 
         public override void PidRequestOccured(PidRequest pidRequest) {
 
-            var pidController = _pidControllers.SingleOrDefault(pid => pid.Id == pidRequest.Id);
+            var pidController = PidControllers.SingleOrDefault(pid => pid.Id == pidRequest.Id);
             pidController.IsEngaged = pidRequest.IsEngaged;
             pidController.SetPoint = pidRequest.SetPoint;
         }

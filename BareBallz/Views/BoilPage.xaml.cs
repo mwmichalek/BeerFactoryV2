@@ -1,0 +1,18 @@
+﻿using System;
+
+using BareBallz.ViewModels;
+
+using Windows.UI.Xaml.Controls;
+
+namespace BareBallz.Views
+{
+    public sealed partial class BoilPage : Page
+    {
+        private BoilViewModel ViewModel => DataContext as BoilViewModel;
+
+        public BoilPage()
+        {
+            InitializeComponent();
+        }
+    }
+}

@@ -8,16 +8,16 @@
   IgnorableNamespaces="uap mp genTemplate">
 
   <Identity
-    Name="22ED935F-0426-4676-BE96-F2DDB51BDF73"
+    Name="77B1E85D-7E7D-44B7-A264-57ACCFADD7B9"
     Publisher="CN=mwmic"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="22ED935F-0426-4676-BE96-F2DDB51BDF73" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="77B1E85D-7E7D-44B7-A264-57ACCFADD7B9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>PoopSkooter</DisplayName>
+    <DisplayName>BareBallz</DisplayName>
     <PublisherDisplayName>mwmic</PublisherDisplayName>
-    <Logo>Assets\PinClipart.com_root-clip-art_916197.png</Logo>
+    <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
@@ -31,21 +31,15 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="PoopSkooter.App">
+      EntryPoint="BareBallz.App">
       <uap:VisualElements
         DisplayName="ms-resource:AppDisplayName"
-        Square150x150Logo="Assets\PinClipart.com_root-clip-art_916197.png"
-        Square44x44Logo="Assets\PinClipart.com_root-clip-art_916197.png"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
         Description="ms-resource:AppDescription"
-        BackgroundColor="white">
-        <uap:DefaultTile Wide310x150Logo="Assets\PinClipart.com_root-clip-art_916197.png" Square71x71Logo="Assets\PinClipart.com_root-clip-art_916197.png" Square310x310Logo="Assets\PinClipart.com_root-clip-art_916197.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\PinClipart.com_root-clip-art_916197.png" />
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
 
       <Extensions>
@@ -55,19 +49,13 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
-    <DeviceCapability Name="serialcommunication">
-
-      <Device Id="any">
-        <Function Type="name:serialPort" />
-      </Device>
-    </DeviceCapability>
   </Capabilities>
 
   <genTemplate:Metadata>
     <genTemplate:Item Name="generator" Value="Windows Template Studio"/>
     <genTemplate:Item Name="wizardVersion" Version="v3.4.19254.1" />
     <genTemplate:Item Name="templatesVersion" Version="v3.4.19254.1" />
-    <genTemplate:Item Name="projectType" Value="SplitView" />
+    <genTemplate:Item Name="projectType" Value="TabbedNav" />
     <genTemplate:Item Name="framework" Value="Prism" />
     <genTemplate:Item Name="platform" Value="Uwp" />
   </genTemplate:Metadata>
