@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.SignalR.Client;
 using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
@@ -11,6 +12,8 @@ using Serilog;
 namespace PoopSkooter.ViewModels {
     public class StrikeViewModel : DisplayEventHandlerViewModelBase {
         private ILogger Logger { get; set; }
+
+        private HubConnection connection;
 
         public StrikeViewModel(IBeerFactory beerFactory, IEventAggregator eventAggregator) : base(eventAggregator) {
             Logger = Log.Logger;
@@ -27,13 +30,32 @@ namespace PoopSkooter.ViewModels {
             var hltPidController = beerFactory.PidControllers.GetById(PidControllerId.HLT);
             if (hltPidController != null)
                 HltSetpoint = (int)hltPidController.SetPoint;
+
+
+            connection = new HubConnectionBuilder()
+                .WithUrl("https://emrsd-ws-bf.azurewebsites.net/ChatHub")
+                .Build();
+
+            connection.On<string, string>("ReceiveMessage", (user, message) => {
+                Logger.Information($"User: {user}, Message: {message}");
+            });
+
+            try {
+                connection.StartAsync();
+                
+            } catch (Exception ex) {
+           
+            }
+
         }
 
         public StrikeViewModel() {
+
         }
 
         public StrikeViewModel(IEventAggregator eventAggregator) : base(eventAggregator) {
         }
+
 
         //public DelegateCommand<string> MyAwesomeCommand { get; private set; }
 
@@ -42,6 +64,8 @@ namespace PoopSkooter.ViewModels {
             if (temperatureChange.Id == ThermometerId.HLT) {
                 //Logger.Information($"HLT Change");
                 HltTemperature = Math.Round((double)temperatureChange.Value, 1);
+                connection.InvokeAsync("SendMessage",
+                    "Temp Change", temperatureChange.Value.ToString());
             }
         }
 
