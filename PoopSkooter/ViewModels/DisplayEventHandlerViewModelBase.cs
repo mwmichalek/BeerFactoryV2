@@ -1,4 +1,5 @@
-﻿using Mwm.BeerFactoryV2.Service.Events;
+﻿using Common.Events;
+using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using Prism.Windows.Mvvm;
 using System;

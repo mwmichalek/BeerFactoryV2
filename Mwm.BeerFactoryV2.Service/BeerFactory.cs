@@ -17,6 +17,8 @@ using Windows.Devices.Gpio;
 using Microsoft.IoT.DeviceCore.Pwm;
 using Microsoft.IoT.Devices.Pwm;
 using Prism.Mvvm;
+using Common.Ids;
+using Common.Events;
 
 namespace Mwm.BeerFactoryV2.Service {
 

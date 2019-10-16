@@ -121,18 +121,18 @@
     <Compile Include="Controllers\ITemperatureControllerService.cs" />
     <Compile Include="Controllers\FakeArduinoTemperatureControllerService.cs" />
     <Compile Include="Controllers\OldUsbArduinoControllerService.cs" />
-    <Compile Include="Events\ConnectionStatus.cs" />
-    <Compile Include="Events\HeaterChange.cs" />
-    <Compile Include="Events\PidChange.cs" />
-    <Compile Include="Events\PidRequest.cs" />
-    <Compile Include="Events\PumpRequest.cs" />
+    <Compile Include="Events\ConnectionStatusEvent.cs" />
+    <Compile Include="Events\HeaterChangeEvent.cs" />
+    <Compile Include="Events\PidChangeEvent.cs" />
+    <Compile Include="Events\PidRequestEvent.cs" />
+    <Compile Include="Events\PumpRequestEvent.cs" />
     <Compile Include="Events\BeerFactoryEventHandler.cs" />
     <Compile Include="Events\PubSubEvents.cs" />
-    <Compile Include="Events\PumpChange.cs" />
+    <Compile Include="Events\PumpChangeEvent.cs" />
     <Compile Include="Events\IEventPayload.cs" />
-    <Compile Include="Events\SsrChange.cs" />
-    <Compile Include="Events\TemperatureChange.cs" />
-    <Compile Include="Events\ThermometerChange.cs" />
+    <Compile Include="Events\SsrChangeEvent.cs" />
+    <Compile Include="Events\TemperatureChangeEvent.cs" />
+    <Compile Include="Events\ThermometerChangeEvent.cs" />
     <Compile Include="Pid\PidController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\WebArduinoControllerService.cs" />
@@ -169,6 +169,10 @@
     <ProjectReference Include="..\CommandMessengerTransportSerialStandard\CommandMessengerTransportSerialStandard.csproj">
       <Project>{6d71068a-3b22-4c42-ba93-1f027bd153f2}</Project>
       <Name>CommandMessengerTransportSerialStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1710be63-409f-4181-aeb5-653f868b89c8}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

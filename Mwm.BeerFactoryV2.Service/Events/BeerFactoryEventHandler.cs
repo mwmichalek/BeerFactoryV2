@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Common.Events;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;

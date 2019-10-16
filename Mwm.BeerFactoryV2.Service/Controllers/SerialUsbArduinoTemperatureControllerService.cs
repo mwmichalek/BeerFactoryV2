@@ -18,6 +18,8 @@ using Windows.UI.Core;
 using SerialPortLib;
 using SerialArduino;
 using Mwm.BeerFactoryV2.Service.Components;
+using Common.Ids;
+using Common.Events;
 
 namespace Mwm.BeerFactoryV2.Service.Controllers {
     public class SerialUsbArduinoTemperatureControllerService : TemperatureControllerService {
@@ -51,7 +53,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                     if (setupResult) {
 
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                         _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Status = Status.Disconnected });
+                         _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { ConnectionState = ConnectionState.Disconnected });
                         //});
 
                         await RequestAllTemperatures();
@@ -61,7 +63,7 @@ namespace Mwm.BeerFactoryV2.Service.Controllers {
                         }
                     } else {
                         //await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { Status = Status.NotConnected });
+                        _eventAggregator.GetEvent<ConnectionStatusEvent>().Publish(new ConnectionStatus { ConnectionState = ConnectionState.NotConnected });
                         //});
                     }
                     

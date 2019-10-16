@@ -20,7 +20,9 @@
             IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
             IsSettingsVisible="True"
-            Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
+            Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+            OpenPaneLength="200"
+            >
             <winui:NavigationView.MenuItems>
                 <!--
                 TODO WTS: Change the symbols for each item as appropriate for your app
@@ -28,14 +30,14 @@
                 Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/projectTypes/navigationpane.md
                 Edit String/en-US/Resources.resw: Add a menu item title for each page
                 -->
-               
-                    <winui:NavigationViewItem x:Uid="Shell_Strike" Icon="Delete" helpers:NavHelper.NavigateTo="Strike" />
-                
-                
-                    <winui:NavigationViewItem x:Uid="Shell_Mash" Icon="Delete" helpers:NavHelper.NavigateTo="Mash" />
-               
-                
-                    <winui:NavigationViewItem x:Uid="Shell_Boil" Icon="Delete" helpers:NavHelper.NavigateTo="Boil" />
+
+                <winui:NavigationViewItem x:Uid="Shell_Strike" FontSize="32" FontFamily="Consolas" Icon="Delete" helpers:NavHelper.NavigateTo="Strike" />
+
+
+                <winui:NavigationViewItem x:Uid="Shell_Mash" FontSize="32" FontFamily="Consolas" Icon="Delete" helpers:NavHelper.NavigateTo="Mash" />
+
+
+                <winui:NavigationViewItem x:Uid="Shell_Boil" FontSize="32" FontFamily="Consolas" Icon="Delete" helpers:NavHelper.NavigateTo="Boil" />
                 
             </winui:NavigationView.MenuItems>
             <i:Interaction.Behaviors>
@@ -48,7 +50,8 @@
                                 <TextBlock
                                     Text="{Binding}"
                                     Style="{ThemeResource TitleTextBlockStyle}"
-                                    Margin="{StaticResource SmallLeftRightMargin}" />
+                                    Margin="{StaticResource SmallLeftRightMargin}"
+                                    FontSize="30"/>
                             </Grid>
                         </DataTemplate>
                     </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>

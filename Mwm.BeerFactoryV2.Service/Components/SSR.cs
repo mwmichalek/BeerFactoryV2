@@ -12,12 +12,11 @@ using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.Devices.Pwm;
 using Windows.UI.Core;
+using Common.Ids;
+using Common.Events;
 
 namespace Mwm.BeerFactoryV2.Service.Components {
-    public enum SsrId {
-        HLT = 4,
-        BK = 5
-    }
+    
 
     public class Ssr : BeerFactoryEventHandler {
 

@@ -1,4 +1,6 @@
-﻿using Mwm.BeerFactoryV2.Service.Events;
+﻿using Common.Events;
+using Common.Ids;
+using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using Serilog;
 using System;
@@ -10,18 +12,6 @@ using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Components {
 
-
-    public enum ThermometerId {
-        HLT = 1,
-        MT_IN = 2,
-        MT = 3,
-        MT_OUT = 4,
-        BK = 5,
-        HEX_IN = 6,
-        HEX_OUT = 7,
-        FERM = 8
-    }
-
     public class Thermometer : BeerFactoryEventHandler {
 
         private ILogger Logger { get; set; }
@@ -31,8 +21,6 @@ namespace Mwm.BeerFactoryV2.Service.Components {
         public ThermometerId Id { get; private set; }
 
         public decimal Change { get; set; }
-
-        
 
         private decimal _changeThreshold = 0.10m;
 
@@ -52,7 +40,6 @@ namespace Mwm.BeerFactoryV2.Service.Components {
             _changeWindowInMillis = changeWindowInMillis;
             Id = id;
         }
-
 
         private decimal _temperature;
 

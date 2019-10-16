@@ -240,6 +240,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1710BE63-409F-4181-AEB5-653F868B89C8}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mwm.BeerFactoryV2.Service\Mwm.BeerFactoryV2.Service.csproj">
       <Project>{91E576D3-F775-41D0-986A-845B5C7E991D}</Project>
       <Name>Mwm.BeerFactoryV2.Service</Name>

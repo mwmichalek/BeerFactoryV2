@@ -1,4 +1,6 @@
 ﻿using System;
+using Common.Events;
+using Common.Ids;
 using Microsoft.AspNetCore.SignalR.Client;
 using Mwm.BeerFactoryV2.Service;
 using Mwm.BeerFactoryV2.Service.Components;

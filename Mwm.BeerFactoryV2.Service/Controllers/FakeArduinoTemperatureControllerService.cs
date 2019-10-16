@@ -19,6 +19,8 @@ using SerialPortLib;
 using SerialArduino;
 using System.Linq;
 using Mwm.BeerFactoryV2.Service.Components;
+using Common.Ids;
+using Common.Events;
 
 namespace Mwm.BeerFactoryV2.Service.Controllers {
     public class FakeArduinoTemperatureControllerService : TemperatureControllerService {

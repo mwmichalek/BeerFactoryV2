@@ -85,8 +85,8 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             
-                            <RowDefinition Height="3*" />
                             <RowDefinition Height="*" />
+                            <RowDefinition Height="3*" />
                         </Grid.RowDefinitions>
 
                         <!--<sfgauge:SfCircularGauge  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"

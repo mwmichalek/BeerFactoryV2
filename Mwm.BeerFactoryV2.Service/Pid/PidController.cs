@@ -1,4 +1,6 @@
-﻿using Mwm.BeerFactoryV2.Service.Components;
+﻿using Common.Events;
+using Common.Ids;
+using Mwm.BeerFactoryV2.Service.Components;
 using Mwm.BeerFactoryV2.Service.Events;
 using Prism.Events;
 using System;
@@ -10,14 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mwm.BeerFactoryV2.Service.Pid {
-
-    public enum PidControllerId {
-        HLT = 1,
-        MT = 2,
-        BK = 3
-    }
-
-
 
     /// <summary>
     /// A (P)roportional, (I)ntegral, (D)erivative Controller
